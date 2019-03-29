@@ -12,7 +12,7 @@ include_directories(${SDL2_INCLUDE_DIRS} ${THREAD_INCLUDE_DIRS} ${SDL2TTF_INCLUD
 
 add_executable(${PROJECT_NAME} main.c navigateMenu.c outputLine.c subsystems.c)
 
-target_compile_options(${PROJECT_NAME} PUBLIC -std=c11)
+set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)
 
 target_link_libraries(${PROJECT_NAME}
   ${SDL2_LIBRARIES}
