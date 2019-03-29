@@ -50,10 +50,6 @@ int muhLoop() {
   
   if (SDL_VideoInit(NULL) != 0) {
     outputLine("Init error: %s", SDL_GetError());
-#ifdef NXDK
-    XSleep(2000);
-    XReboot();
-#endif
     thrd_exit(1);
   }
 
@@ -148,6 +144,7 @@ int main(void) {
   thrd_join(thr, NULL);
   
 #ifdef NXDK
+  XSleep(2000);
   XReboot();
 #endif
   SDL_Quit();
