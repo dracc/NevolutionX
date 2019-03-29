@@ -6,6 +6,9 @@
 #include <hal/video.h>
 #endif
 
+#include "outputLine.h"
+#include "navigateMenu.h"
+
 #include "stdio.h"
 #include "string.h"
 #include "stdarg.h"
@@ -13,6 +16,8 @@
 #include <SDL.h>
 #include "SDL_ttf.h"
 #include <threads.h>
+
+#define NUMITEMS 5
 
 #ifdef NXDK
 int _exit(int x)
@@ -28,54 +33,20 @@ const extern int SCREEN_WIDTH;
 const extern int SCREEN_HEIGHT;
 #endif
 
-void outputLine(char* format, ...) {
-  char buffer[4096];
-  va_list args;
-  va_start(args, format);
-  vsprintf(buffer, format, args);
-#ifdef NXDK
-  debugPrint("%s", buffer);
-#else
-  SDL_Log("%s", buffer);
-#endif
-  va_end(args);
-}
-
-typedef struct menuItem{
-  SDL_Texture* texture;
-  bool selected;
-  int height, width;
-} menuItem;
-
-void drawMenuItems(SDL_Renderer *renderer, menuItem const items[]) {
-  SDL_Rect viewport;
-  SDL_Rect position;
-  int i;
-
-  SDL_RenderGetViewport(renderer, &viewport);
-  SDL_RenderClear(renderer);
-  for (i = 0; i < 5; ++i) {
-    SDL_RenderCopy(renderer, items[i].texture, NULL, &position);
-    position.y += items[i].height;
-  }
-  SDL_RenderPresent(renderer);
-}
-
 int muhLoop() {
-  int i, done;
+  int i, done, currItem, oldItem;
 #ifndef NXDK
-  int SCREEN_WIDTH = 320, SCREEN_HEIGHT = 240;
+  int SCREEN_WIDTH, SCREEN_HEIGHT;
 #endif
   const char *driver;
   Uint32 windowFlags;
   SDL_Window *window;
   SDL_Renderer *renderer;
-  const char *items[] = {"Games", "Movies", "Music", "Pictures", "Settings"};
+  const char *items[NUMITEMS] = {"Games", "Movies", "Music", "Pictures", "Settings"};
   int window_width, window_height;
   SDL_Event event;
   TTF_Font *font;
-  SDL_Color color = {0xFF, 0x7F, 0xFF, 0xFF};
-  menuItem menuItems[5];
+  menuItem menuItems[NUMITEMS];
   
   if (SDL_VideoInit(NULL) != 0) {
     outputLine("Init error: %s", SDL_GetError());
@@ -96,7 +67,7 @@ int muhLoop() {
   outputLine("%s", driver);
 
   SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT,
-                              SDL_WINDOW_SHOWN, &window, &renderer);
+                              windowFlags, &window, &renderer);
   if (window == NULL || renderer == NULL) {
     outputLine("Error: %s", SDL_GetError());
     thrd_exit(1);
@@ -118,22 +89,11 @@ int muhLoop() {
 
   SDL_GetWindowSize(window, &window_width, &window_height);
 
-  for (i = 0; i < 5; ++i) {
-    SDL_Surface *tmp = TTF_RenderUTF8_Blended(font, items[i], color);
-    if (tmp == NULL) {
-      outputLine("TTF Error: %s", TTF_GetError());
-      thrd_exit(4);
-    }
-    menuItems[i].texture = SDL_CreateTextureFromSurface(renderer, tmp);
-    SDL_FreeSurface(tmp);
-    SDL_QueryTexture(menuItems[i].texture, NULL, NULL, &menuItems[i].width,
-                     &menuItems[i].height);
-  }
+  currItem = 0;
+  renderMenuItems(renderer, menuItems, items, font, currItem);
 
   done = 0;
   while (!done) {
-#ifdef NXDK
-#else
     while (SDL_PollEvent(&event)) {
       switch (event.type) {
       case SDL_WINDOWEVENT:
@@ -147,16 +107,29 @@ int muhLoop() {
       case SDL_QUIT:
         done = 1;
         break;
+#ifndef NXDK
+      case SDL_KEYDOWN:
+        switch (event.key.keysym.sym) {
+        case SDLK_UP:
+          if (currItem == 0) {
+            currItem = NUMITEMS - 1;
+          } else {
+            --currItem;
+          }
+          renderMenuItems(renderer, menuItems, items, font, currItem);
+          break;
+        case SDLK_DOWN:
+          currItem = (currItem + 1) % NUMITEMS;
+          renderMenuItems(renderer, menuItems, items, font, currItem);
+          break;
+        }
+        break;
+#endif
       default:
         break;
       }
     }
-#endif
     drawMenuItems(renderer, menuItems);
-  }
-  
-  for (i = 0; i < 30; ++i) {
-    outputLine("%d\n", i);
   }
   thrd_exit(0);
 }
