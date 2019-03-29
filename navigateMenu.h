@@ -1,3 +1,6 @@
+#ifndef NAVIGATEMENU_H
+#define NAVIGATEMENU_H
+
 #ifdef NXDK
 #include <xboxrt/debug.h>
 #include <pbkit/pbkit.h>
@@ -16,15 +19,17 @@
 #include "SDL_ttf.h"
 #include <threads.h>
 
-#define NUMITEMS 5
+#define NUMITEMS 4
 
 typedef struct menuItem{
   SDL_Texture* texture;
   int height, width;
 } menuItem;
 
-
 void drawMenuItems(SDL_Renderer *renderer, menuItem const items[]);
 
 void renderMenuItems(SDL_Renderer *renderer, menuItem menuItems[],
                      const char *items[], TTF_Font *font, int selected);
+int  menuLoop();
+
+#endif
