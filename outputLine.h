@@ -3,6 +3,7 @@
 
 #ifdef NXDK
 #include <xboxrt/debug.h>
+#include "stdio.h"
 #endif
 
 #include "stdarg.h"

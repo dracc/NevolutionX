@@ -70,7 +70,7 @@ int muhLoop() {
   }
 
   if (TTF_Init() != 0) {
-    outputLine("TTF Error: %s", TTF_GetError());
+    outputLine("TTF Init Error: %s", TTF_GetError());
     thrd_exit(2);
   }
 
@@ -79,7 +79,7 @@ int muhLoop() {
 
   font = TTF_OpenFont("DejaVuSansMono.ttf", 16);
   if (font == NULL) {
-    outputLine("TTF Error: %s", TTF_GetError());
+    outputLine("TTF OpenFont() Error: %s", TTF_GetError());
     thrd_exit(3);
   }
 
