@@ -26,11 +26,11 @@ void shutdown_systems(int systems) {
   if (systems <= 1) {
     SDL_Quit();
   }
-  #ifdef NXDK
+#ifdef NXDK
   if (systems <= 2) {
     pb_kill();
   }
   XSleep(2000);
   XReboot();
-  #endif
+#endif
 }

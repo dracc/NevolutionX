@@ -20,13 +20,9 @@ void drawMenuItems(SDL_Renderer *renderer, menuItem const items[]) {
     SDL_RenderCopy(renderer, items[i].texture, NULL, &position);
     position.y += items[i].height;
   }
-  SDL_RenderPresent(renderer);
-  #ifdef NXDK
-  XVideoWaitForVBlank();
-  #endif
 }
 
-void renderMenuItems(SDL_Renderer *renderer, menuItem menuItems[],
+void updateMenuItemTextures(SDL_Renderer *renderer, menuItem menuItems[],
                      const char *items[], TTF_Font *font, int selected) {
 
   int i;
@@ -95,7 +91,7 @@ int menuLoop() {
   SDL_GetWindowSize(window, &window_width, &window_height);
 
   currItem = 0;
-  renderMenuItems(renderer, menuItems, items, font, currItem);
+  updateMenuItemTextures(renderer, menuItems, items, font, currItem);
 
   done = 0;
   while (!done) {
@@ -121,11 +117,11 @@ int menuLoop() {
           } else {
             --currItem;
           }
-          renderMenuItems(renderer, menuItems, items, font, currItem);
+          updateMenuItemTextures(renderer, menuItems, items, font, currItem);
           break;
         case SDLK_DOWN:
           currItem = (currItem + 1) % NUMITEMS;
-          renderMenuItems(renderer, menuItems, items, font, currItem);
+          updateMenuItemTextures(renderer, menuItems, items, font, currItem);
           break;
         }
         break;
@@ -135,6 +131,14 @@ int menuLoop() {
       }
     }
     drawMenuItems(renderer, menuItems);
+    finishRendering(renderer);
   }
   thrd_exit(0);
+}
+
+void finishRendering(SDL_Renderer *renderer) {
+  SDL_RenderPresent(renderer);
+#ifdef NXDK
+//  XVideoWaitForVBlank();
+#endif
 }

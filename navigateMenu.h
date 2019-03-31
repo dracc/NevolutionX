@@ -28,8 +28,10 @@ typedef struct menuItem{
 
 void drawMenuItems(SDL_Renderer *renderer, menuItem const items[]);
 
-void renderMenuItems(SDL_Renderer *renderer, menuItem menuItems[],
+void updateMenuItemTextures(SDL_Renderer *renderer, menuItem menuItems[],
                      const char *items[], TTF_Font *font, int selected);
 int  menuLoop();
+
+void finishRendering(SDL_Renderer *renderer);
 
 #endif
