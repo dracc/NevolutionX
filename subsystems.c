@@ -5,6 +5,7 @@ int init_systems() {
   if (pb_init() != 0) {
     return 3;
   }
+  pb_show_debug_screen();
 #endif
 
   if (SDL_VideoInit(NULL) != 0) {

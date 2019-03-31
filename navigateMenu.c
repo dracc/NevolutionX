@@ -8,16 +8,18 @@ int  SCREEN_WIDTH = 640, SCREEN_HEIGHT = 480;
 #endif
 
 void drawMenuItems(SDL_Renderer *renderer, menuItem const items[]) {
-  SDL_Rect viewport;
   SDL_Rect position = {20, 20, 0, 0};
-  int i;
+  int i, renderResult;
 
-  SDL_RenderGetViewport(renderer, &viewport);
   SDL_RenderClear(renderer);
   for (i = 0; i < NUMITEMS; ++i) {
     position.h = items[i].height;
     position.w = items[i].width;
-    SDL_RenderCopy(renderer, items[i].texture, NULL, &position);
+    renderResult = SDL_RenderCopy(renderer, items[i].texture, NULL, &position);
+    if (renderResult != 0) {
+      outputLine("menuItem renderCopy failed: %s", SDL_GetError());
+      thrd_exit(3);
+    }
     position.y += items[i].height;
   }
 }
@@ -30,7 +32,9 @@ void updateMenuItemTextures(SDL_Renderer *renderer, menuItem menuItems[],
   SDL_Color colorPassive = {0x7F, 0xFF, 0xFF, 0xFF};
   SDL_Color color;
   for (i = 0; i < NUMITEMS; ++i) {
-    SDL_DestroyTexture(menuItems[i].texture);
+    if(menuItems[i].texture != NULL) {
+      SDL_DestroyTexture(menuItems[i].texture);
+    }
     if (i == selected) {
       color = colorSelected;
     } else {
@@ -42,6 +46,10 @@ void updateMenuItemTextures(SDL_Renderer *renderer, menuItem menuItems[],
       thrd_exit(4);
     }
     menuItems[i].texture = SDL_CreateTextureFromSurface(renderer, tmp);
+    if (menuItems[i].texture == NULL) {
+      outputLine("Texture creation failed: %s", SDL_GetError());
+      thrd_exit(5);
+    }
     SDL_FreeSurface(tmp);
     SDL_QueryTexture(menuItems[i].texture, NULL, NULL, &(menuItems[i].width),
                      &(menuItems[i].height));
@@ -59,7 +67,7 @@ int menuLoop() {
   int window_width, window_height;
   SDL_Event event;
   TTF_Font *font;
-  menuItem menuItems[NUMITEMS];
+  menuItem menuItems[NUMITEMS] = {{NULL, 0, 0}};
   
 #ifdef NXDK
   windowFlags = SDL_WINDOW_SHOWN;
@@ -72,19 +80,30 @@ int menuLoop() {
   window = SDL_CreateWindow("NevolutionX",
                             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                             SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags);
-  renderer = SDL_CreateRenderer(window, -1, renderFlags);
-                    
-  if (window == NULL || renderer == NULL) {
-    outputLine("Error: %s", SDL_GetError());
+  if (window == NULL) {
+    outputLine("Window creation error: %s", SDL_GetError());
     thrd_exit(1);
   }
 
-  SDL_SetRenderDrawColor(renderer, 0x40, 0x40, 0xE0, 0xFF);
-  SDL_RenderClear(renderer);
+  renderer = SDL_CreateRenderer(window, -1, renderFlags);
+  if (renderer == NULL) {
+    outputLine("Renderer creation error: %s", SDL_GetError());
+    thrd_exit(1);
+  }
+
+  if (SDL_SetRenderDrawColor(renderer, 0x40, 0x40, 0xE0, 0xFF) != 0) {
+    outputLine("SetRenderDrawColor error: %s", SDL_GetError());
+    thrd_exit(2);
+  }
+
+  if (SDL_RenderClear(renderer) != 0) {
+    outputLine("RenderClear error: %s", SDL_GetError());
+    thrd_exit(3);
+  }
 
   font = TTF_OpenFont("DejaVuSansMono.ttf", 16);
   if (font == NULL) {
-    outputLine("TTF OpenFont() Error: %s", TTF_GetError());
+    outputLine("TTF_OpenFont() Error: %s", TTF_GetError());
     thrd_exit(3);
   }
 
@@ -139,6 +158,6 @@ int menuLoop() {
 void finishRendering(SDL_Renderer *renderer) {
   SDL_RenderPresent(renderer);
 #ifdef NXDK
-//  XVideoWaitForVBlank();
+  XVideoWaitForVBlank();
 #endif
 }

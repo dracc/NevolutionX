@@ -23,8 +23,8 @@ int main(void) {
   int init = init_systems();
   if (init == 0) {
     thrd_t thr;
-    
     thrd_create(&thr, menuLoop, NULL);
+
     thrd_join(thr, NULL);
   }
   shutdown_systems(init);
