@@ -3,6 +3,8 @@
 
 #ifdef NXDK
 #include <pbkit/pbkit.h>
+#include <hal/input.h>
+#include <hal/xbox.h>
 #endif
 
 #include "outputLine.h"

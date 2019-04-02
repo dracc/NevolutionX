@@ -7,6 +7,7 @@
 #include <hal/input.h>
 #include <hal/xbox.h>
 #include <hal/video.h>
+#include "xpadinput.h"
 #endif
 
 #include "outputLine.h"

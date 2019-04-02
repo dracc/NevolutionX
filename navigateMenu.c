@@ -149,6 +149,15 @@ int menuLoop() {
         break;
       }
     }
+#ifdef NXDK
+    XInput_GetEvents();
+    for (i = 0; i < XInputGetPadCount(); ++i) {
+      if (getKeyDown(&g_Pads[i], XPAD_Y)) {
+        currItem = (currItem + 1) % NUMITEMS;
+        updateMenuItemTextures(renderer, menuItems, items, font, currItem);
+      }
+    }
+#endif
     drawMenuItems(renderer, menuItems);
     finishRendering(renderer);
   }

@@ -2,6 +2,7 @@
 
 int init_systems() {
 #ifdef NXDK
+  XInput_Init();
   if (pb_init() != 0) {
     return 3;
   }
@@ -28,6 +29,7 @@ void shutdown_systems(int systems) {
     SDL_Quit();
   }
 #ifdef NXDK
+  XInput_Quit();
   if (systems <= 2) {
     pb_kill();
   }
