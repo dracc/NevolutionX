@@ -7,12 +7,13 @@ const extern int SCREEN_HEIGHT;
 int  SCREEN_WIDTH = 640, SCREEN_HEIGHT = 480;
 #endif
 
-void drawMenuItems(SDL_Renderer *renderer, menuItem const items[]) {
+void drawMenuItems(SDL_Renderer *renderer, menuItem const items[],
+                   int itemCount) {
   SDL_Rect position = {20, 20, 0, 0};
   int i, renderResult;
 
   SDL_RenderClear(renderer);
-  for (i = 0; i < NUMITEMS; ++i) {
+  for (i = 0; i < itemCount; ++i) {
     position.h = items[i].height;
     position.w = items[i].width;
     renderResult = SDL_RenderCopy(renderer, items[i].texture, NULL, &position);
@@ -25,13 +26,14 @@ void drawMenuItems(SDL_Renderer *renderer, menuItem const items[]) {
 }
 
 void updateMenuItemTextures(SDL_Renderer *renderer, menuItem menuItems[],
-                     const char *items[], TTF_Font *font, int selected) {
+                            const char *items[], TTF_Font *font, int selected,
+                            int itemCount) {
 
   int i;
   SDL_Color colorSelected = {0xFF, 0x7F, 0xFF, 0xFF};
   SDL_Color colorPassive = {0x7F, 0xFF, 0xFF, 0xFF};
   SDL_Color color;
-  for (i = 0; i < NUMITEMS; ++i) {
+  for (i = 0; i < itemCount; ++i) {
     if(menuItems[i].texture != NULL) {
       SDL_DestroyTexture(menuItems[i].texture);
     }
@@ -58,7 +60,8 @@ void updateMenuItemTextures(SDL_Renderer *renderer, menuItem menuItems[],
 
 
 int menuLoop() {
-  int i, done, currItem, oldItem;
+  int i, done, currItem;
+  int itemCount = NUMITEMS;
   const char *driver;
   Uint32 windowFlags,renderFlags;
   SDL_Window *window;
@@ -110,7 +113,7 @@ int menuLoop() {
   SDL_GetWindowSize(window, &window_width, &window_height);
 
   currItem = 0;
-  updateMenuItemTextures(renderer, menuItems, items, font, currItem);
+  updateMenuItemTextures(renderer, menuItems, items, font, currItem, itemCount);
 
   done = 0;
   while (!done) {
@@ -132,15 +135,15 @@ int menuLoop() {
         switch (event.key.keysym.sym) {
         case SDLK_UP:
           if (currItem == 0) {
-            currItem = NUMITEMS - 1;
+            currItem = itemCount - 1;
           } else {
             --currItem;
           }
-          updateMenuItemTextures(renderer, menuItems, items, font, currItem);
+          updateMenuItemTextures(renderer, menuItems, items, font, currItem, itemCount);
           break;
         case SDLK_DOWN:
-          currItem = (currItem + 1) % NUMITEMS;
-          updateMenuItemTextures(renderer, menuItems, items, font, currItem);
+          currItem = (currItem + 1) % itemCount;
+          updateMenuItemTextures(renderer, menuItems, items, font, currItem, itemCount);
           break;
         }
         break;
@@ -152,13 +155,21 @@ int menuLoop() {
 #ifdef NXDK
     XInput_GetEvents();
     for (i = 0; i < XInputGetPadCount(); ++i) {
-      if (getKeyDown(&g_Pads[i], XPAD_Y)) {
-        currItem = (currItem + 1) % NUMITEMS;
-        updateMenuItemTextures(renderer, menuItems, items, font, currItem);
+      if (getDigitalKeyDown(&g_Pads[i], XPAD_DPAD_UP)) {
+        if (currItem == 0) {
+          currItem = itemCount - 1;
+        } else {
+          --currItem;
+        }
+        updateMenuItemTextures(renderer, menuItems, items, font, currItem, itemCount);
+      }
+      if (getDigitalKeyDown(&g_Pads[i], XPAD_DPAD_DOWN)) {
+        currItem = (currItem + 1) % itemCount;
+        updateMenuItemTextures(renderer, menuItems, items, font, currItem, itemCount);
       }
     }
 #endif
-    drawMenuItems(renderer, menuItems);
+    drawMenuItems(renderer, menuItems, itemCount);
     finishRendering(renderer);
   }
   thrd_exit(0);
