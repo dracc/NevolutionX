@@ -7,70 +7,22 @@ const extern int SCREEN_HEIGHT;
 int  SCREEN_WIDTH = 640, SCREEN_HEIGHT = 480;
 #endif
 
-void drawMenuItems(SDL_Renderer *renderer, menuItem const items[],
-                   int itemCount) {
-  SDL_Rect position = {20, 20, 0, 0};
-  int i, renderResult;
-
-  SDL_RenderClear(renderer);
-  for (i = 0; i < itemCount; ++i) {
-    position.h = items[i].height;
-    position.w = items[i].width;
-    renderResult = SDL_RenderCopy(renderer, items[i].texture, NULL, &position);
-    if (renderResult != 0) {
-      outputLine("menuItem renderCopy failed: %s", SDL_GetError());
-      thrd_exit(3);
-    }
-    position.y += items[i].height;
-  }
-}
-
-void updateMenuItemTextures(SDL_Renderer *renderer, menuItem menuItems[],
-                            const char *items[], TTF_Font *font, int selected,
-                            int itemCount) {
-
-  int i;
-  SDL_Color colorSelected = {0xFF, 0x7F, 0xFF, 0xFF};
-  SDL_Color colorPassive = {0x7F, 0xFF, 0xFF, 0xFF};
-  SDL_Color color;
-  for (i = 0; i < itemCount; ++i) {
-    if(menuItems[i].texture != NULL) {
-      SDL_DestroyTexture(menuItems[i].texture);
-    }
-    if (i == selected) {
-      color = colorSelected;
-    } else {
-      color = colorPassive;
-    }
-    SDL_Surface *tmp = TTF_RenderText_Blended(font, items[i], color);
-    if (tmp == NULL) {
-      outputLine("TTF Error: %s", TTF_GetError());
-      thrd_exit(4);
-    }
-    menuItems[i].texture = SDL_CreateTextureFromSurface(renderer, tmp);
-    if (menuItems[i].texture == NULL) {
-      outputLine("Texture creation failed: %s", SDL_GetError());
-      thrd_exit(5);
-    }
-    SDL_FreeSurface(tmp);
-    SDL_QueryTexture(menuItems[i].texture, NULL, NULL, &(menuItems[i].width),
-                     &(menuItems[i].height));
-  }
-}
-
-
 int menuLoop() {
-  int i, done, currItem;
-  int itemCount = NUMITEMS;
+  int i, done, currItem = 0;
   const char *driver;
   Uint32 windowFlags,renderFlags;
   SDL_Window *window;
   SDL_Renderer *renderer;
-  const char *items[NUMITEMS] = {"Games", "Launch DVD", "Applications", "Settings"};
   int window_width, window_height;
   SDL_Event event;
   TTF_Font *font;
-  menuItem menuItems[NUMITEMS] = {{NULL, 0, 0}};
+  menuItemList menuItems = mil_createNew();
+  menuItemList *currList = &menuItems;
+
+  mil_append_c(currList, "Games");
+  mil_append_c(currList, "Launch DVD");
+  mil_append_c(currList, "Applications");
+  mil_append_c(currList, "Settings");
   
 #ifdef NXDK
   windowFlags = SDL_WINDOW_SHOWN;
@@ -104,8 +56,8 @@ int menuLoop() {
     thrd_exit(3);
   }
 
-  font = TTF_OpenFont("DejaVuSansMono.ttf", 16);
-  if (font == NULL) {
+  menuItems.font = TTF_OpenFont("DejaVuSansMono.ttf", 16);
+  if (menuItems.font == NULL) {
     outputLine("TTF_OpenFont() Error: %s", TTF_GetError());
     thrd_exit(3);
   }
@@ -113,7 +65,7 @@ int menuLoop() {
   SDL_GetWindowSize(window, &window_width, &window_height);
 
   currItem = 0;
-  updateMenuItemTextures(renderer, menuItems, items, font, currItem, itemCount);
+  mil_generateTextures(renderer, currList, currItem);
 
   done = 0;
   while (!done) {
@@ -135,15 +87,15 @@ int menuLoop() {
         switch (event.key.keysym.sym) {
         case SDLK_UP:
           if (currItem == 0) {
-            currItem = itemCount - 1;
+            currItem = currList->length - 1;
           } else {
             --currItem;
           }
-          updateMenuItemTextures(renderer, menuItems, items, font, currItem, itemCount);
+          mil_updatePrevCurrAndNextTexture(renderer, currList, currItem);
           break;
         case SDLK_DOWN:
-          currItem = (currItem + 1) % itemCount;
-          updateMenuItemTextures(renderer, menuItems, items, font, currItem, itemCount);
+          currItem = (currItem + 1) % currList->length;
+          mil_updatePrevCurrAndNextTexture(renderer, currList, currItem);
           break;
         }
         break;
@@ -157,21 +109,24 @@ int menuLoop() {
     for (i = 0; i < XInputGetPadCount(); ++i) {
       if (getDigitalKeyDown(&g_Pads[i], XPAD_DPAD_UP)) {
         if (currItem == 0) {
-          currItem = itemCount - 1;
+          currItem = menuItems.length - 1;
         } else {
           --currItem;
         }
-        updateMenuItemTextures(renderer, menuItems, items, font, currItem, itemCount);
+        mil_updatePrevCurrAndNextTexture(renderer, currList, currItem);
       }
       if (getDigitalKeyDown(&g_Pads[i], XPAD_DPAD_DOWN)) {
-        currItem = (currItem + 1) % itemCount;
-        updateMenuItemTextures(renderer, menuItems, items, font, currItem, itemCount);
+        currItem = (currItem + 1) % currList->length;
+        mil_updatePrevCurrAndNextTexture(renderer, currList, currItem);
       }
     }
 #endif
-    drawMenuItems(renderer, menuItems, itemCount);
+    mil_drawMenuItems(renderer, currList);
     finishRendering(renderer);
   }
+  mil_free(&menuItems);
+  SDL_DestroyRenderer(renderer);
+  SDL_DestroyWindow(window);
   thrd_exit(0);
 }
 

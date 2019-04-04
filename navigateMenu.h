@@ -11,6 +11,7 @@
 #endif
 
 #include "outputLine.h"
+#include "menuItemList.h"
 
 #include "stdio.h"
 #include "string.h"
@@ -20,19 +21,6 @@
 #include "SDL_ttf.h"
 #include <threads.h>
 
-#define NUMITEMS 4
-
-typedef struct menuItem{
-  SDL_Texture* texture;
-  int height, width;
-} menuItem;
-
-void drawMenuItems(SDL_Renderer *renderer, menuItem const items[],
-                   int itemCount);
-
-void updateMenuItemTextures(SDL_Renderer *renderer, menuItem menuItems[],
-                            const char *items[], TTF_Font *font, int selected,
-                            int itemCount);
 int  menuLoop();
 
 void finishRendering(SDL_Renderer *renderer);

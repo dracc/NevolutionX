@@ -10,7 +10,13 @@ find_package(Threads REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS} ${THREAD_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIRS})
 
-add_executable(${PROJECT_NAME} main.c navigateMenu.c outputLine.c subsystems.c)
+add_executable(${PROJECT_NAME}
+  main.c
+  navigateMenu.c
+  outputLine.c
+  subsystems.c
+  menuItemList.c
+  )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)
 
