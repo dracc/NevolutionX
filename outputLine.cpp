@@ -1,6 +1,6 @@
 #include "outputLine.h"
 
-void outputLine(char* format, ...) {
+void outputLine(const char* format, ...) {
   char buffer[4096];
   va_list args;
   va_start(args, format);

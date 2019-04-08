@@ -1,2 +1,8 @@
 DejaVuSansMono.ttf
 build/
+bin/
+*.d
+*.exe
+*.obj
+*.lib
+*.pdb
