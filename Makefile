@@ -1,14 +1,23 @@
 DEBUG = y
 XBE_TITLE = NevolutionX
-SRCS += $(CURDIR)/main.cpp $(CURDIR)/outputLine.cpp $(CURDIR)/xbeMenuItem.cpp \
-	$(CURDIR)/menuItem.cpp $(CURDIR)/subsystems.cpp $(CURDIR)/findXBE.cpp \
-	$(CURDIR)/renderer.cpp $(CURDIR)/folderparse.cpp $(CURDIR)/font.cpp \
-	$(CURDIR)/xpadinput.cpp
+INCDIR = $(CURDIR)/Includes
+RESOURCEDIR = $(CURDIR)/Resources
+
+SRCS += $(CURDIR)/main.cpp $(INCDIR)/outputLine.cpp $(INCDIR)/xbeMenuItem.cpp \
+	$(INCDIR)/menuItem.cpp $(INCDIR)/subsystems.cpp $(INCDIR)/findXBE.cpp \
+	$(INCDIR)/renderer.cpp $(INCDIR)/folderparse.cpp $(INCDIR)/font.cpp \
+	$(INCDIR)/xpadinput.cpp
+
 NXDK_DIR = $(CURDIR)/../nxdk
 NXDK_SDL = y
 GEN_XISO = ${XBE_TITLE}.iso
+
+CXXFLAGS += -I$(INCDIR)
+
 new_all: copy_font all
+
 include $(NXDK_DIR)/Makefile
+
 copy_font:
 	@mkdir -p $(OUTPUT_DIR)
-	@cp vegur.ttf $(OUTPUT_DIR)/vegur.ttf
+	@cp $(RESOURCEDIR)/vegur.ttf $(OUTPUT_DIR)/vegur.ttf
