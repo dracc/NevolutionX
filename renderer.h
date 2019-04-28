@@ -6,7 +6,7 @@
 #endif
 
 #include <SDL.h>
-#include "gameMenuItem.h"
+#include "xbeMenuItem.h"
 #include "menuItem.h"
 #include "vector.hpp"
 
@@ -30,7 +30,7 @@ public:
 
   SDL_Texture* surfaceToTexture(SDL_Surface* surf);
 
-  SDL_Texture* compileList(vector<gameMenuItem> &l);
+  SDL_Texture* compileList(vector<xbeMenuItem> &l);
   SDL_Texture* compileList(vector<menuItem> &l);
 
 private:

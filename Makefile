@@ -1,6 +1,6 @@
 DEBUG = y
 XBE_TITLE = NevolutionX
-SRCS += $(CURDIR)/main.cpp $(CURDIR)/outputLine.cpp $(CURDIR)/gameMenuItem.cpp \
+SRCS += $(CURDIR)/main.cpp $(CURDIR)/outputLine.cpp $(CURDIR)/xbeMenuItem.cpp \
 	$(CURDIR)/menuItem.cpp $(CURDIR)/subsystems.cpp $(CURDIR)/findXBE.cpp \
 	$(CURDIR)/renderer.cpp $(CURDIR)/folderparse.cpp $(CURDIR)/font.cpp \
 	$(CURDIR)/xpadinput.cpp

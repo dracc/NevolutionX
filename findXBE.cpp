@@ -2,7 +2,7 @@
 
 int findXBE(void* list) {
   xbeFinderArg *itm = static_cast<xbeFinderArg*>(list);
-  vector<gameMenuItem>* gmi_list = itm->list;
+  vector<xbeMenuItem>* gmi_list = itm->list;
   char* path = const_cast<char*>(itm->path);//("C:\\");
   char* mask = const_cast<char*>("*");
 #ifdef NXDK
@@ -21,7 +21,7 @@ int findXBE(void* list) {
       sprintf(tmp, "%s%s\\default.xbe", path, fData.f_FileName);
       tmpFILE = fopen(tmp, "rb");
       if (tmpFILE != nullptr) {
-        gameMenuItem* itm = new gameMenuItem(fData.f_FileName, tmp);
+        xbeMenuItem* itm = new xbeMenuItem(fData.f_FileName, tmp);
         gmi_list->push_back(*itm);
         fclose(tmpFILE);
         tmpFILE = nullptr;
@@ -31,7 +31,7 @@ int findXBE(void* list) {
   closeFolder(fHandle);
 #else
   for (int i = 0; i < 7; ++i) {
-    gmi_list->push_back(gameMenuItem(path, mask));
+    gmi_list->push_back(xbeMenuItem(path, mask));
   }
 #endif
   return 0;

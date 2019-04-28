@@ -1,7 +1,7 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include "gameMenuItem.h"
+#include "xbeMenuItem.h"
 #include "renderer.h"
 #include "vector.hpp"
 
@@ -19,7 +19,7 @@ public:
   ~Font();
 
   size_t createTextures(vector<menuItem> &items, Renderer* r);
-  size_t createTextures(vector<gameMenuItem> &items, Renderer* r);
+  size_t createTextures(vector<xbeMenuItem> &items, Renderer* r);
 
   size_t setActive(menuItem* item, Renderer* r);
   size_t setPassive(menuItem* item, Renderer* r);

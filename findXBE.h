@@ -2,7 +2,7 @@
 #define FINDXBE_H
 
 #include "vector.hpp"
-#include "gameMenuItem.h"
+#include "xbeMenuItem.h"
 
 #ifdef NXDK
 #include "folderparse.h"
@@ -11,7 +11,7 @@
 #endif
 
 struct xbeFinderArg {
-  vector<gameMenuItem> *list;
+  vector<xbeMenuItem> *list;
   char *path;
 };
 
