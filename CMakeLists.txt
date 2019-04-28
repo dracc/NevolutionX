@@ -15,7 +15,7 @@ add_executable(${PROJECT_NAME}
   outputLine.cpp
   subsystems.cpp
   menuItem.cpp
-  gameMenuItem.cpp
+  xbeMenuItem.cpp
   renderer.cpp
   findXBE.cpp
   font.cpp

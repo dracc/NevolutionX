@@ -79,7 +79,7 @@ SDL_Texture* Renderer::surfaceToTexture(SDL_Surface* surf) {
   return SDL_CreateTextureFromSurface(renderer, surf);
 }
 
-SDL_Texture* Renderer::compileList(vector<gameMenuItem> &l) {
+SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l) {
   if (l.empty()) {
     return nullptr;
   }

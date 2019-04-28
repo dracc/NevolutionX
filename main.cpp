@@ -1,7 +1,7 @@
 #include "vector.hpp"
 #include "findXBE.h"
 #include "font.h"
-#include "gameMenuItem.h"
+#include "xbeMenuItem.h"
 #include "menuItem.h"
 #include "outputLine.h"
 #include "renderer.h"
@@ -23,7 +23,7 @@ int main(void) {
   int init = init_systems();
   int mainMenuSelection = 0;
   vector<menuItem> mainMenu;
-  vector<gameMenuItem> gamesList;
+  vector<xbeMenuItem> gamesList;
   if (init == 0) {
     // Create the worker thread for populating the games list
     xbeFinderArg xfa;
@@ -108,7 +108,7 @@ int main(void) {
             mainMenuSelection = 0;
             break;
           }
-          gamesList.push_back(gameMenuItem("<- back",""));
+          gamesList.push_back(xbeMenuItem("<- back",""));
           ret = f.createTextures(gamesList, &r);
           if (ret != gamesList.size()) {
             outputLine("Games list textures could not be created.\n");
