@@ -8,7 +8,6 @@ int init_systems() {
   }
   pb_show_debug_screen();
 #endif
-
   if (SDL_VideoInit(NULL) != 0) {
     outputLine("Init error: %s", SDL_GetError());
     return 2;
