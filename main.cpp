@@ -1,4 +1,4 @@
-#include "vector.hpp"
+#include <vector.hpp>
 #include "findXBE.h"
 #include "font.h"
 #include "xbeMenuItem.h"
@@ -29,7 +29,7 @@ int main(void) {
     xbeFinderArg xfa;
     xfa.list = &gamesList;
 //    xfa.path = const_cast<char*>("C:\\");
-    xfa.path = const_cast<char*>("F:\\Games");
+    xfa.path = const_cast<char*>("F:\\Games\\");
     thrd_t thr;
     int thread_status = 1;
     thrd_create(&thr, findXBE, &xfa);
