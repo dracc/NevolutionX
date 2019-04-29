@@ -27,6 +27,7 @@ public:
   void drawTexture(SDL_Texture* tex, SDL_Rect src, SDL_Rect dst);
   void drawTexture(SDL_Texture* tex, SDL_Rect dst);
   void drawTexture(SDL_Texture* tex, int x, int y);
+  void drawMenuTexture(SDL_Texture* tex);
 
   SDL_Texture* surfaceToTexture(SDL_Surface* surf);
 
@@ -42,6 +43,8 @@ private:
   int SCREEN_HEIGHT;
   int SCREEN_WIDTH;
 #endif
+  int overscanCompX;
+  int overscanCompY;
 };
 
 #endif

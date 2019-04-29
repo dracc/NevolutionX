@@ -19,6 +19,8 @@ Renderer::Renderer() {
   SCREEN_WIDTH = 640;
   SCREEN_HEIGHT = 480;
 #endif
+  overscanCompX = SCREEN_WIDTH * 0.075;
+  overscanCompY = SCREEN_HEIGHT * 0.075;
 }
 
 Renderer::~Renderer() {
@@ -71,6 +73,12 @@ void Renderer::drawTexture(SDL_Texture* tex, SDL_Rect dst) {
 
 void Renderer::drawTexture(SDL_Texture* tex, int x, int y) {
   SDL_Rect dst = {x, y, 0, 0};
+  SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
+  drawTexture(tex, dst);
+}
+
+void Renderer::drawMenuTexture(SDL_Texture* tex) {
+  SDL_Rect dst = {overscanCompX, overscanCompY, 0, 0};
   SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
   drawTexture(tex, dst);
 }

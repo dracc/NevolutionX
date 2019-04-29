@@ -56,7 +56,7 @@ int main(void) {
     if (menuListTexture == nullptr) {
       outputLine("Main menu list texture could not be compiled.\n");
     }
-    r.drawTexture(menuListTexture, 0, 0);
+    r.drawMenuTexture(menuListTexture);
     r.flip();
     int currItem = 0, prevItem = 0, listSize = mainMenu.size();
 
@@ -88,7 +88,7 @@ int main(void) {
           prevItem = currItem;
           menuListTexture = r.compileList(mainMenu);
           r.clear();
-          r.drawTexture(menuListTexture, 0, 0);
+          r.drawMenuTexture(menuListTexture);
           r.flip();
         }
 #ifdef NXDK
@@ -116,7 +116,7 @@ int main(void) {
             break;
           }
           menuListTexture = r.compileList(gamesList);
-          r.drawTexture(menuListTexture, 0, 0);
+          r.drawMenuTexture(menuListTexture);
           r.flip();
           break;
         }
@@ -125,7 +125,7 @@ int main(void) {
           f.setActive(&gamesList.at(currItem), &r);
           prevItem = currItem;
           menuListTexture = r.compileList(gamesList);
-          r.drawTexture(menuListTexture, 0, 0);
+          r.drawMenuTexture(menuListTexture);
           r.flip();
         }
 #ifdef NXDK
