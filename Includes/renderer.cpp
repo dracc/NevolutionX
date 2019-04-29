@@ -53,6 +53,9 @@ int Renderer::clear() {
 }
 
 void Renderer::flip() {
+  setDrawColor(0, 0, 0, 0xFF);
+  SDL_RenderDrawRect(renderer, nullptr);
+  setDrawColor();
   SDL_RenderPresent(renderer);
 #ifdef NXDK
   XVideoWaitForVBlank();
