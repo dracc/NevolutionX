@@ -13,13 +13,14 @@
 void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
                   int &listSize, int &currItem, int &prevItem, int &mMS) {
   f.setPassive(mI, r);
-  listSize = 4;
+  listSize = 5;
   currItem = 0;
   prevItem = 1;
   mMS = 0;
 }
 
 #ifdef NXDK
+#include <hal/xbox.h>
 // FIXME: This will probably be extraneous soon (SDL2 has a fix upstream)
 extern "C" void _exit(int rc) {}
 
@@ -55,6 +56,7 @@ int main(void) {
     mainMenu.push_back(menuItem("Applications"));
     mainMenu.push_back(menuItem("Launch DVD"));
     mainMenu.push_back(menuItem("Settings"));
+    mainMenu.push_back(menuItem("Reboot"));
 
     int ret = f.createTextures(mainMenu, &r);
     if (ret != mainMenu.size()) {
@@ -171,6 +173,11 @@ int main(void) {
         // Settings menu. Not sure what we want/need here.
         // "it's a problem for the future".
         mainMenuSelection = 0;
+        break;
+      case 5:
+#ifdef NXDK
+        XReboot();
+#endif
         break;
       default:
         break;
