@@ -1,5 +1,19 @@
 #include "renderer.h"
 
+int min(int lhs, int rhs) {
+  if (lhs > rhs) {
+    return rhs;
+  }
+  return lhs;
+}
+
+int max(int lhs, int rhs) {
+  if (lhs < rhs) {
+    return rhs;
+  }
+  return lhs;
+}
+
 #ifdef NXDK
 extern "C" {
 const extern int SCREEN_HEIGHT;
@@ -97,7 +111,7 @@ void Renderer::drawMenuTexture(SDL_Texture* tex, int numItems, int currItem) {
     src->w = dst.w;
     src->h = screenHeight;
     src->x = 0;
-    src->y = fmin(fmax(rowHeight * currItem - screenHeight, 0), dst.h - screenHeight);
+    src->y = min(max((rowHeight * currItem) - screenHeight, 0), dst.h - screenHeight);
   }
   SDL_RenderCopy(renderer, tex, src, &dst);
 }

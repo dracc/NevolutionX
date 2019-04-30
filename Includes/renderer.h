@@ -5,11 +5,13 @@
 #include <hal/video.h>
 #endif
 
-#include <math.h>
 #include <SDL.h>
 #include "xbeMenuItem.h"
 #include "menuItem.h"
 #include "vector.hpp"
+
+int min(int lhs, int rhs);
+int max(int lhs, int rhs);
 
 class Renderer {
 public:
