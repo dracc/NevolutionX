@@ -105,6 +105,7 @@ SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l) {
   SDL_Rect dst = {0, 0, 0, h};
   SDL_SetRenderTarget(renderer, ret);
   setDrawColor();
+  clear();
   for (size_t i = 0; i < l.size(); ++i) {
     if (l[i].getTexture() == nullptr) {
       continue;

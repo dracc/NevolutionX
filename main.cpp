@@ -116,6 +116,7 @@ int main(void) {
             break;
           }
           menuListTexture = r.compileList(gamesList);
+          r.clear();
           r.drawMenuTexture(menuListTexture);
           r.flip();
           break;
@@ -125,6 +126,7 @@ int main(void) {
           f.setActive(&gamesList.at(currItem), &r);
           prevItem = currItem;
           menuListTexture = r.compileList(gamesList);
+          r.clear();
           r.drawMenuTexture(menuListTexture);
           r.flip();
         }
