@@ -10,6 +10,15 @@
 
 #include <threads.h>
 
+void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
+                  int &listSize, int &currItem, int &prevItem, int &mMS) {
+  f.setPassive(mI, r);
+  listSize = 4;
+  currItem = 0;
+  prevItem = 1;
+  mMS = 0;
+}
+
 #ifdef NXDK
 // FIXME: This will probably be extraneous soon (SDL2 has a fix upstream)
 extern "C" void _exit(int rc) {}
@@ -136,19 +145,13 @@ int main(void) {
           if (currItem != (gamesList.size() - 1)) {
             XLaunchXBE(gamesList[currItem].getXBEPath());
           }
-          f.setPassive(&gamesList[currItem], &r);
-          listSize = mainMenu.size();
-          currItem = 0;
-          prevItem = 1;
-          mainMenuSelection = 0;
+          goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
+                       mainMenuSelection);
           break;
         }
         if (getAnalogKeyDown(&g_Pads[0], XPAD_B)) {
-          f.setPassive(&gamesList[currItem], &r);
-          listSize = mainMenu.size();
-          currItem = 0;
-          prevItem = 1;
-          mainMenuSelection = 0;
+          goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
+                       mainMenuSelection);
           break;
         }
 #endif
