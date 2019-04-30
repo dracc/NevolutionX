@@ -131,7 +131,7 @@ int main(void) {
           r.destroyTexture(menuListTexture);
           menuListTexture = r.compileList(gamesList);
           r.clear();
-          r.drawMenuTexture(menuListTexture);
+          r.drawMenuTexture(menuListTexture, gamesList.size(), currItem);
           r.flip();
         }
 #ifdef NXDK

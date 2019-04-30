@@ -66,11 +66,11 @@ int Renderer::setDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
   return SDL_SetRenderDrawColor(renderer, r, g, b, a);
 }
 
-void Renderer::drawTexture(SDL_Texture* tex, SDL_Rect src, SDL_Rect dst) {
+void Renderer::drawTexture(SDL_Texture* tex, SDL_Rect &src, SDL_Rect &dst) {
   SDL_RenderCopy(renderer, tex, &src, &dst);
 }
 
-void Renderer::drawTexture(SDL_Texture* tex, SDL_Rect dst) {
+void Renderer::drawTexture(SDL_Texture* tex, SDL_Rect &dst) {
   SDL_RenderCopy(renderer, tex, nullptr, &dst);
 }
 
@@ -84,6 +84,22 @@ void Renderer::drawMenuTexture(SDL_Texture* tex) {
   SDL_Rect dst = {overscanCompX, overscanCompY, 0, 0};
   SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
   drawTexture(tex, dst);
+}
+
+void Renderer::drawMenuTexture(SDL_Texture* tex, int numItems, int currItem) {
+  SDL_Rect dst = {overscanCompX, overscanCompY, 0, 0};
+  SDL_Rect *src = nullptr;
+  SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
+  int screenHeight = SCREEN_HEIGHT - (overscanCompY * 2);
+  int rowHeight = dst.h / numItems;
+  if (dst.h > screenHeight) {
+    src = new SDL_Rect();
+    src->w = dst.w;
+    src->h = screenHeight;
+    src->x = 0;
+    src->y = fmin(fmax(rowHeight * currItem - screenHeight, 0), dst.h - screenHeight);
+  }
+  SDL_RenderCopy(renderer, tex, src, &dst);
 }
 
 SDL_Texture* Renderer::surfaceToTexture(SDL_Surface* surf) {
