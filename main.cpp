@@ -143,6 +143,14 @@ int main(void) {
           mainMenuSelection = 0;
           break;
         }
+        if (getAnalogKeyDown(&g_Pads[0], XPAD_B)) {
+          f.setPassive(&gamesList[currItem], &r);
+          listSize = mainMenu.size();
+          currItem = 0;
+          prevItem = 1;
+          mainMenuSelection = 0;
+          break;
+        }
 #endif
         break;
       case 2:
