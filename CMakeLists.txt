@@ -8,18 +8,18 @@ PKG_SEARCH_MODULE(SDL2TTF REQUIRED SDL2_ttf)
 find_package(SDL2 REQUIRED)
 find_package(Threads REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIRS} ${THREAD_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIRS})
+include_directories(${SDL2_INCLUDE_DIRS} ${THREAD_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/Includes)
 
 add_executable(${PROJECT_NAME}
   main.cpp
-  outputLine.cpp
-  subsystems.cpp
-  menuItem.cpp
-  xbeMenuItem.cpp
-  renderer.cpp
-  findXBE.cpp
-  font.cpp
-  xpadinput.cpp
+  Includes/outputLine.cpp
+  Includes/subsystems.cpp
+  Includes/menuItem.cpp
+  Includes/xbeMenuItem.cpp
+  Includes/renderer.cpp
+  Includes/findXBE.cpp
+  Includes/font.cpp
+  Includes/xpadinput.cpp
   )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
