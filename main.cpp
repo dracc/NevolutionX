@@ -86,7 +86,6 @@ int main(void) {
           f.setPassive(&mainMenu[prevItem], &r);
           f.setActive(&mainMenu[currItem], &r);
           prevItem = currItem;
-          r.destroyTexture(menuListTexture);
           menuListTexture = r.compileList(mainMenu);
           r.clear();
           r.drawMenuTexture(menuListTexture);
@@ -116,7 +115,6 @@ int main(void) {
             mainMenuSelection = 0;
             break;
           }
-          r.destroyTexture(menuListTexture);
           menuListTexture = r.compileList(gamesList);
           r.clear();
           r.drawMenuTexture(menuListTexture);
@@ -128,7 +126,6 @@ int main(void) {
           f.setActive(&gamesList.at(currItem), &r);
           prevItem = currItem;
           listSize = gamesList.size();
-          r.destroyTexture(menuListTexture);
           menuListTexture = r.compileList(gamesList);
           r.clear();
           r.drawMenuTexture(menuListTexture);

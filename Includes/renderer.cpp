@@ -84,6 +84,8 @@ void Renderer::drawMenuTexture(SDL_Texture* tex) {
   SDL_Rect dst = {overscanCompX, overscanCompY, 0, 0};
   SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
   drawTexture(tex, dst);
+  SDL_DestroyTexture(tex);
+  tex = nullptr;
 }
 
 SDL_Texture* Renderer::surfaceToTexture(SDL_Surface* surf) {
