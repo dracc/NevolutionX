@@ -172,12 +172,17 @@ int main(void) {
       case 4:
         // Settings menu. Not sure what we want/need here.
         // "it's a problem for the future".
+        prevItem = 0;
+        currItem = 3;
         mainMenuSelection = 0;
         break;
       case 5:
 #ifdef NXDK
         XReboot();
 #endif
+        prevItem = 0;
+        currItem = 4;
+        mainMenuSelection = 0;
         break;
       default:
         break;
