@@ -90,6 +90,11 @@ SDL_Texture* Renderer::surfaceToTexture(SDL_Surface* surf) {
   return SDL_CreateTextureFromSurface(renderer, surf);
 }
 
+void Renderer::destroyTexture(SDL_Texture* tex) {
+  SDL_DestroyTexture(tex);
+  tex = nullptr;
+}
+
 SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l) {
   if (l.empty()) {
     return nullptr;

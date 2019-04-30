@@ -31,6 +31,8 @@ public:
 
   SDL_Texture* surfaceToTexture(SDL_Surface* surf);
 
+  void destroyTexture(SDL_Texture* tex);
+
   SDL_Texture* compileList(vector<xbeMenuItem> &l);
   SDL_Texture* compileList(vector<menuItem> &l);
 
