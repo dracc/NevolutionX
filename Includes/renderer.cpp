@@ -111,9 +111,14 @@ void Renderer::drawMenuTexture(SDL_Texture* tex, int numItems, int currItem) {
     src->w = dst.w;
     src->h = screenHeight;
     src->x = 0;
-    src->y = min(max((rowHeight * currItem) - screenHeight, 0), dst.h - screenHeight);
+    src->y = min(max((rowHeight * currItem) - (screenHeight / 2), 0), dst.h - screenHeight);
+    dst.h = screenHeight;
   }
   SDL_RenderCopy(renderer, tex, src, &dst);
+  if (src != nullptr) {
+    free(src);
+  }
+  destroyTexture(tex);
 }
 
 SDL_Texture* Renderer::surfaceToTexture(SDL_Surface* surf) {
