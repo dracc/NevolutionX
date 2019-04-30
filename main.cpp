@@ -125,6 +125,7 @@ int main(void) {
           f.setPassive(&gamesList.at(prevItem), &r);
           f.setActive(&gamesList.at(currItem), &r);
           prevItem = currItem;
+          listSize = gamesList.size();
           menuListTexture = r.compileList(gamesList);
           r.clear();
           r.drawMenuTexture(menuListTexture);
@@ -136,6 +137,7 @@ int main(void) {
             XLaunchXBE(gamesList[currItem].getXBEPath());
           }
           f.setPassive(&gamesList[currItem], &r);
+          listSize = mainMenu.size();
           currItem = 0;
           prevItem = 1;
           mainMenuSelection = 0;
