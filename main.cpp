@@ -126,7 +126,7 @@ int main(void) {
             mainMenuSelection = 0;
             break;
           }
-          menuListTexture = r.compileList(gamesList);
+          menuListTexture = r.compileList(gamesList, 0);
           r.clear();
           r.drawMenuTexture(menuListTexture);
           r.flip();
@@ -137,9 +137,9 @@ int main(void) {
           f.setActive(&gamesList.at(currItem), &r);
           prevItem = currItem;
           listSize = gamesList.size();
-          menuListTexture = r.compileList(gamesList);
+          menuListTexture = r.compileList(gamesList, currItem);
           r.clear();
-          r.drawMenuTexture(menuListTexture, gamesList.size(), currItem);
+          r.drawMenuTexture(menuListTexture);
           r.flip();
         }
 #ifdef NXDK

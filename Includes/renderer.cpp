@@ -132,6 +132,50 @@ void Renderer::destroyTexture(SDL_Texture* tex) {
   tex = nullptr;
 }
 
+SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l, int currItem) {
+  if (l.empty()) {
+    return nullptr;
+  }
+  int h;
+  size_t i, j;
+  if (l.size() <= 13) {
+    i = 0;
+    j = l.size();
+  } else {
+    if (currItem > (l.size() - 7)) {
+      i = l.size() - 13;
+      j = l.size();
+    } else if (currItem < 6) {
+      i = 0;
+      j = 13;
+    } else {
+      i = currItem - 6;
+      j = currItem + 7;
+    }
+  }
+  SDL_QueryTexture(l[0].getTexture(), nullptr, nullptr, nullptr, &h);
+  SDL_Texture *ret = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
+                                       SDL_TEXTUREACCESS_TARGET, 300,
+                                       h*13);
+  if (ret == nullptr) {
+    return nullptr;
+  }
+  SDL_Rect dst = {0, 0, 0, h};
+  SDL_SetRenderTarget(renderer, ret);
+  setDrawColor();
+  clear();
+  for (; i < j; ++i) {
+    if (l[i].getTexture() == nullptr) {
+      continue;
+    }
+    SDL_QueryTexture(l[i].getTexture(), nullptr, nullptr, &dst.w, &dst.h);
+    drawTexture(l[i].getTexture(), dst);
+    dst.y += h;
+  }
+  SDL_SetRenderTarget(renderer, nullptr);
+  return ret;
+}
+
 SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l) {
   if (l.empty()) {
     return nullptr;
