@@ -1,5 +1,19 @@
 #include "renderer.h"
 
+int min(int lhs, int rhs) {
+  if (lhs > rhs) {
+    return rhs;
+  }
+  return lhs;
+}
+
+int max(int lhs, int rhs) {
+  if (lhs < rhs) {
+    return rhs;
+  }
+  return lhs;
+}
+
 #ifdef NXDK
 extern "C" {
 const extern int SCREEN_HEIGHT;
@@ -66,11 +80,11 @@ int Renderer::setDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
   return SDL_SetRenderDrawColor(renderer, r, g, b, a);
 }
 
-void Renderer::drawTexture(SDL_Texture* tex, SDL_Rect src, SDL_Rect dst) {
+void Renderer::drawTexture(SDL_Texture* tex, SDL_Rect &src, SDL_Rect &dst) {
   SDL_RenderCopy(renderer, tex, &src, &dst);
 }
 
-void Renderer::drawTexture(SDL_Texture* tex, SDL_Rect dst) {
+void Renderer::drawTexture(SDL_Texture* tex, SDL_Rect &dst) {
   SDL_RenderCopy(renderer, tex, nullptr, &dst);
 }
 
@@ -86,6 +100,27 @@ void Renderer::drawMenuTexture(SDL_Texture* tex) {
   drawTexture(tex, dst);
   SDL_DestroyTexture(tex);
   tex = nullptr;
+}
+
+void Renderer::drawMenuTexture(SDL_Texture* tex, int numItems, int currItem) {
+  SDL_Rect dst = {overscanCompX, overscanCompY, 0, 0};
+  SDL_Rect *src = nullptr;
+  SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
+  int screenHeight = SCREEN_HEIGHT - (overscanCompY * 2);
+  int rowHeight = dst.h / numItems;
+  if (dst.h > screenHeight) {
+    src = new SDL_Rect();
+    src->w = dst.w;
+    src->h = screenHeight;
+    src->x = 0;
+    src->y = min(max((rowHeight * currItem) - (screenHeight / 2), 0), dst.h - screenHeight);
+    dst.h = screenHeight;
+  }
+  SDL_RenderCopy(renderer, tex, src, &dst);
+  if (src != nullptr) {
+    free(src);
+  }
+  destroyTexture(tex);
 }
 
 SDL_Texture* Renderer::surfaceToTexture(SDL_Surface* surf) {

@@ -10,6 +10,9 @@
 #include "menuItem.h"
 #include "vector.hpp"
 
+int min(int lhs, int rhs);
+int max(int lhs, int rhs);
+
 class Renderer {
 public:
   Renderer();
@@ -24,9 +27,11 @@ public:
   int setDrawColor(uint8_t r = 0x40, uint8_t g = 0x40,
                    uint8_t b = 0xE0, uint8_t a = 0xFF);
 
-  void drawTexture(SDL_Texture* tex, SDL_Rect src, SDL_Rect dst);
-  void drawTexture(SDL_Texture* tex, SDL_Rect dst);
+  void drawTexture(SDL_Texture* tex, SDL_Rect &src, SDL_Rect &dst);
+  void drawTexture(SDL_Texture* tex, SDL_Rect &dst);
   void drawTexture(SDL_Texture* tex, int x, int y);
+
+  void drawMenuTexture(SDL_Texture* tex, int numItems, int currItem);
   void drawMenuTexture(SDL_Texture* tex);
 
   SDL_Texture* surfaceToTexture(SDL_Surface* surf);

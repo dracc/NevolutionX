@@ -128,7 +128,7 @@ int main(void) {
           listSize = gamesList.size();
           menuListTexture = r.compileList(gamesList);
           r.clear();
-          r.drawMenuTexture(menuListTexture);
+          r.drawMenuTexture(menuListTexture, gamesList.size(), currItem);
           r.flip();
         }
 #ifdef NXDK
