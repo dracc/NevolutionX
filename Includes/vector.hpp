@@ -29,11 +29,7 @@ public:
   void clear() {
     for (int i = 0; i < m_length; ++i) {
       items[i]->~T();
-      free(items[i]);
-      items[i] = nullptr;
-    }
-    for (int i = m_length; i < m_size; ++i) {
-      free(items[i]);
+      delete(items[i]);
       items[i] = nullptr;
     }
     m_length = 0;
