@@ -12,12 +12,13 @@ private:
 public:
   menuItem(char* text);
   menuItem(const char* text);
+  menuItem(const menuItem& itm);
   ~menuItem();
 
-  const char* getLabel();
-  void setLabel(char* text);
+  const char* getLabel() const;
+  void setLabel(const char* text);
 
-  SDL_Texture* getTexture();
+  SDL_Texture* getTexture() const;
   void setTexture(SDL_Texture* t);
 };
 #endif

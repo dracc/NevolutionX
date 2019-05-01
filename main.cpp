@@ -145,7 +145,7 @@ int main(void) {
 #ifdef NXDK
         if (getAnalogKeyDown(&g_Pads[0], XPAD_A)) {
           if (currItem != (gamesList.size() - 1)) {
-            XLaunchXBE(gamesList[currItem].getXBEPath());
+            XLaunchXBE(const_cast<char*>(gamesList[currItem].getXBEPath()));
           }
           goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
                        mainMenuSelection);

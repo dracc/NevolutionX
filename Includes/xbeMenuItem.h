@@ -9,9 +9,10 @@ private:
 public:
   xbeMenuItem(char* text, char* p);
   xbeMenuItem(const char* text, const char* p);
+  xbeMenuItem(xbeMenuItem const& item);
   ~xbeMenuItem();
-  char* getXBEPath();
-  void setXBEPath(char* p);
+  const char* getXBEPath() const;
+  void setXBEPath(const char* p);
 };
 
 #endif

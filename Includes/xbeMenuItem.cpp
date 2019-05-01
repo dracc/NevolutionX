@@ -9,17 +9,23 @@ xbeMenuItem::xbeMenuItem(char* text, char* p) :
 xbeMenuItem::xbeMenuItem(const char* text, const char* p) :
   xbeMenuItem(const_cast<char*>(text), const_cast<char*>(p)) {}
 
+xbeMenuItem::xbeMenuItem(xbeMenuItem const& item) :
+  xbeMenuItem(item.getLabel(), item.getXBEPath()) {
+  this->setTexture(item.getTexture());
+}
+
 xbeMenuItem::~xbeMenuItem() {
-  if (getTexture() != nullptr) {
-    SDL_DestroyTexture(getTexture());
-    setTexture(nullptr);
+  if (xbePath != nullptr) {
+    free(xbePath);
+    xbePath = nullptr;
   }
 }
 
-char* xbeMenuItem::getXBEPath() {
+const char* xbeMenuItem::getXBEPath() const {
   return xbePath;
 }
 
-void xbeMenuItem::setXBEPath(char* p) {
-  xbePath = p;
+void xbeMenuItem::setXBEPath(const char* p) {
+  xbePath = static_cast<char*>(realloc(xbePath, strlen(p) * sizeof(char) + 1));
+  strcpy(xbePath, p);
 }
