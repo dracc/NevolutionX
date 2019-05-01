@@ -35,6 +35,7 @@ int main(void) {
   vector<menuItem> mainMenu;
   vector<xbeMenuItem> gamesList;
   if (init == 0) {
+    bool running = true;
     // Create the worker thread for populating the games list
     xbeFinderArg xfa;
     xfa.list = &gamesList;
@@ -71,7 +72,7 @@ int main(void) {
     r.flip();
     int currItem = 0, prevItem = 0, listSize = mainMenu.size();
 
-    while (1) {
+    while (running) {
       // FIXME: Abstract the input- and menu navigation process
 #ifdef NXDK
       XInput_GetEvents();
@@ -177,9 +178,7 @@ int main(void) {
         mainMenuSelection = 0;
         break;
       case 5:
-#ifdef NXDK
-        XReboot();
-#endif
+        running = false;
         prevItem = 0;
         currItem = 4;
         mainMenuSelection = 0;
@@ -189,8 +188,6 @@ int main(void) {
       }
     }
   }
-  mainMenu.clear();
-  gamesList.clear();
   shutdown_systems(init);
   return init;
 }
