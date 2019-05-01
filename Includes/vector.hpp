@@ -6,7 +6,7 @@
 template<class T>
 class vector {
 private:
-  T* items;
+  T** items;
   size_t m_length;
   size_t m_size;
 public:
@@ -15,7 +15,7 @@ public:
 
   vector() {
     m_size = 4;
-    items = (T*)malloc(m_size * sizeof(T));
+    items = static_cast<T**>(malloc(m_size * sizeof(T*)));
     m_length = 0;
   }
 
@@ -23,11 +23,18 @@ public:
     if (!empty()) {
       clear();
     }
+    free(items);
   }
 
   void clear() {
     for (int i = 0; i < m_length; ++i) {
-      items[i].~T();
+      items[i]->~T();
+      free(items[i]);
+      items[i] = nullptr;
+    }
+    for (int i = m_length; i < m_size; ++i) {
+      free(items[i]);
+      items[i] = nullptr;
     }
     m_length = 0;
   };
@@ -35,14 +42,16 @@ public:
   void push_back(const T & item) {
     if (m_length == m_size) {
       m_size = m_size<<1;
-      items = static_cast<T*>(realloc(items, m_size * sizeof(T)));
+      items = static_cast<T**>(realloc(items, m_size * sizeof(T*)));
     }
-    items[m_length] = item;
+    T* t = new T(item);
+    items[m_length] = t;
     ++m_length;
   }
 
   void pop_back() {
-    items[m_length - 1].~T;
+    items[m_length - 1]->~T;
+    free(items[m_length - 1]);
     items[m_length - 1] = nullptr;
     --m_length;
   }
@@ -68,11 +77,11 @@ public:
       // is not yet implemented in NXDK.
 #endif
     }
-    return items[key];
+    return *items[key];
   }
 
   T& operator[](size_t key) {
-    return items[key];
+    return *items[key];
   }
 
   iterator begin() {
@@ -84,18 +93,18 @@ public:
   }
 
   T& front() {
-    return items[0];
+    return *items[0];
   }
 
   T& back() {
-    return items[m_length - 1];
+    return *items[m_length - 1];
   }
 
   T erase(size_t key) {
     if (m_length <= key) {
       return nullptr;
     }
-    T ret = items[key];
+    T ret = *items[key];
     for (size_t i = key; i < m_length - 1; ++i) {
       items[i] = items[i + 1];
     }
