@@ -22,11 +22,8 @@ const extern int SCREEN_WIDTH;
 #endif
 
 Renderer::Renderer() {
-  window = nullptr;
-  renderer = nullptr;
 #ifdef NXDK
   windowFlags = SDL_WINDOW_SHOWN;
-  renderFlags = 0;
 #else
   windowFlags = SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE;
   renderFlags = SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED;
@@ -44,6 +41,9 @@ Renderer::~Renderer() {
   if (window != nullptr) {
     SDL_DestroyWindow(window);
   }
+  if (background != nullptr) {
+    SDL_DestroyTexture(background);
+  }
 }
 
 int Renderer::init() {
@@ -57,13 +57,32 @@ int Renderer::init() {
   if (renderer == nullptr) {
     return 2;
   }
+  SDL_SetRenderDrawBlendMode(getRenderer(), SDL_BLENDMODE_BLEND);
   setDrawColor();
   clear();
   return 0;
 }
 
+int Renderer::init(const char* bg) {
+  int ret = init();
+  if (ret != 0) {
+    return ret;
+  }
+  SDL_Surface *bgsurf = SDL_LoadBMP(const_cast<char*>(bg));
+  if (bgsurf == nullptr) {
+    return 3;
+  }
+  background = SDL_CreateTextureFromSurface(renderer, bgsurf);
+  SDL_FreeSurface(bgsurf);
+  if (background == nullptr) {
+    return 4;
+  }
+  return ret;
+}
+
 int Renderer::clear() {
-  return SDL_RenderClear(renderer);
+  int ret = SDL_RenderClear(renderer);
+  return ret;
 }
 
 void Renderer::flip() {
@@ -92,6 +111,12 @@ void Renderer::drawTexture(SDL_Texture* tex, int x, int y) {
   SDL_Rect dst = {x, y, 0, 0};
   SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
   drawTexture(tex, dst);
+}
+
+void Renderer::drawBackground() {
+  if (background != nullptr) {
+    drawTexture(background, 0, 0);
+  }
 }
 
 void Renderer::drawMenuTexture(SDL_Texture* tex) {
