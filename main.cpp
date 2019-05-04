@@ -47,7 +47,7 @@ int main(void) {
 
     // Create render system
     Renderer r;
-    r.init();
+    r.init("480p.bmp");
 
     // Create font because do it
     Font f("vegur.ttf");
@@ -68,6 +68,7 @@ int main(void) {
     if (menuListTexture == nullptr) {
       outputLine("Main menu list texture could not be compiled.\n");
     }
+    r.drawBackground();
     r.drawMenuTexture(menuListTexture);
     r.flip();
     int currItem = 0, prevItem = 0, listSize = mainMenu.size();
@@ -100,6 +101,7 @@ int main(void) {
           prevItem = currItem;
           menuListTexture = r.compileList(mainMenu);
           r.clear();
+          r.drawBackground();
           r.drawMenuTexture(menuListTexture);
           r.flip();
         }
@@ -129,6 +131,7 @@ int main(void) {
           }
           menuListTexture = r.compileList(gamesList, 0);
           r.clear();
+          r.drawBackground();
           r.drawMenuTexture(menuListTexture);
           r.flip();
           break;
@@ -140,6 +143,7 @@ int main(void) {
           listSize = gamesList.size();
           menuListTexture = r.compileList(gamesList, currItem);
           r.clear();
+          r.drawBackground();
           r.drawMenuTexture(menuListTexture);
           r.flip();
         }
