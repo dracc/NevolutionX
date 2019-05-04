@@ -185,6 +185,7 @@ SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l, size_t currItem) {
   if (ret == nullptr) {
     return nullptr;
   }
+  SDL_SetTextureBlendMode(ret, SDL_BLENDMODE_BLEND);
   SDL_Rect dst = {0, 0, 0, h};
   SDL_SetRenderTarget(renderer, ret);
   setDrawColor();
@@ -214,6 +215,7 @@ SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l) {
     return nullptr;
   }
   SDL_Rect dst = {0, 0, 0, h};
+  SDL_SetTextureBlendMode(ret, SDL_BLENDMODE_BLEND);
   SDL_SetRenderTarget(renderer, ret);
   setDrawColor();
   clear();
@@ -242,6 +244,7 @@ SDL_Texture* Renderer::compileList(vector<menuItem> &l) {
     return nullptr;
   }
   SDL_Rect dst = {0, 0, 0, h};
+  SDL_SetTextureBlendMode(ret, SDL_BLENDMODE_BLEND);
   SDL_SetRenderTarget(renderer, ret);
   setDrawColor();
   clear();
