@@ -1,6 +1,7 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
+#include <assert.h>
 #include <stdlib.h>
 
 template<class T>
@@ -16,6 +17,9 @@ public:
   vector() {
     m_size = 4;
     items = static_cast<T**>(malloc(m_size * sizeof(T*)));
+    for (int i = 0; i < m_size; ++i) {
+      items[i] = nullptr;
+    }
     m_length = 0;
   }
 
@@ -24,6 +28,7 @@ public:
       clear();
     }
     free(items);
+    items = nullptr;
   }
 
   void clear() {
@@ -39,6 +44,9 @@ public:
     if (m_length == m_size) {
       m_size = m_size<<1;
       items = static_cast<T**>(realloc(items, m_size * sizeof(T*)));
+      for (int i = m_length; i < m_size; ++i) {
+        items[i] = nullptr;
+      }
     }
     T* t = new T(item);
     items[m_length] = t;
@@ -46,8 +54,11 @@ public:
   }
 
   void pop_back() {
+    if (empty()) {
+      return;
+    }
     items[m_length - 1]->~T;
-    free(items[m_length - 1]);
+    delete(items[m_length - 1]);
     items[m_length - 1] = nullptr;
     --m_length;
   }
@@ -71,6 +82,7 @@ public:
 #else
       // We should probably do something here but `throw`
       // is not yet implemented in NXDK.
+      assert(false);
 #endif
     }
     return *items[key];
