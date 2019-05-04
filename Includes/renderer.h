@@ -32,6 +32,8 @@ public:
   void drawTexture(SDL_Texture* tex, SDL_Rect &dst);
   void drawTexture(SDL_Texture* tex, int x, int y);
 
+  void blitSurface(SDL_Surface* bg, SDL_Surface* fg, int offset);
+
   void drawBackground();
   void drawMenuTexture(SDL_Texture* tex, int numItems, int currItem);
   void drawMenuTexture(SDL_Texture* tex);

@@ -113,6 +113,12 @@ void Renderer::drawTexture(SDL_Texture* tex, int x, int y) {
   drawTexture(tex, dst);
 }
 
+void Renderer::blitSurface(SDL_Surface* bg, SDL_Surface* fg, int offset) {
+  SDL_Rect dst = {offset, offset, fg->w, fg->h};
+  SDL_SetSurfaceBlendMode(fg, SDL_BLENDMODE_BLEND);
+  SDL_BlitSurface(fg, NULL, bg, &dst);
+}
+
 void Renderer::drawBackground() {
   if (background != nullptr) {
     drawTexture(background, 0, 0);
