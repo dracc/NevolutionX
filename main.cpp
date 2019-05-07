@@ -59,7 +59,7 @@ int main(void) {
     mainMenu.push_back(menuItem("Settings"));
     mainMenu.push_back(menuItem("Reboot"));
 
-    int ret = f.createTextures(mainMenu, &r);
+    size_t ret = f.createTextures(mainMenu, &r);
     if (ret != mainMenu.size()) {
       outputLine("Main menu textures could not be created.\n");
     }

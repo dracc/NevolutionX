@@ -17,7 +17,7 @@ public:
   vector() {
     m_size = 4;
     items = static_cast<T**>(malloc(m_size * sizeof(T*)));
-    for (int i = 0; i < m_size; ++i) {
+    for (size_t i = 0; i < m_size; ++i) {
       items[i] = nullptr;
     }
     m_length = 0;
@@ -32,7 +32,7 @@ public:
   }
 
   void clear() {
-    for (int i = 0; i < m_length; ++i) {
+    for (size_t i = 0; i < m_length; ++i) {
       items[i]->~T();
       delete(items[i]);
       items[i] = nullptr;
@@ -44,7 +44,7 @@ public:
     if (m_length == m_size) {
       m_size = m_size<<1;
       items = static_cast<T**>(realloc(items, m_size * sizeof(T*)));
-      for (int i = m_length; i < m_size; ++i) {
+      for (size_t i = m_length; i < m_size; ++i) {
         items[i] = nullptr;
       }
     }

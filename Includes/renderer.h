@@ -38,7 +38,7 @@ public:
 
   void destroyTexture(SDL_Texture* tex);
 
-  SDL_Texture* compileList(vector<xbeMenuItem> &l, int currItem);
+  SDL_Texture* compileList(vector<xbeMenuItem> &l, size_t currItem);
   SDL_Texture* compileList(vector<xbeMenuItem> &l);
   SDL_Texture* compileList(vector<menuItem> &l);
 
