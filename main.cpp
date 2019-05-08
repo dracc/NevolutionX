@@ -9,6 +9,7 @@
 #include "xpadinput.h"
 
 #include <threads.h>
+#include <SDL.h>
 
 void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
                   int &listSize, int &currItem, int &prevItem, int &mMS) {
@@ -34,6 +35,17 @@ int main(void) {
   vector<xbeMenuItem> gamesList;
   if (init == 0) {
     bool running = true;
+
+    // Open our GameController
+    SDL_GameController *sgc = SDL_GameControllerOpen(0);
+    if (sgc == nullptr) {
+      outputLine("Joystick Error: %s", SDL_GetError());
+      XSleep(2000);
+    }
+
+    // Set a hint that we want to use our gamecontroller always
+    SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
+
     // Create the worker thread for populating the games list
     xbeFinderArg xfa;
     xfa.list = &gamesList;
@@ -71,25 +83,70 @@ int main(void) {
     r.flip();
     int currItem = 0, prevItem = 0, listSize = mainMenu.size();
 
+    SDL_Event event;
+
     while (running) {
-      // FIXME: Abstract the input- and menu navigation process
+      while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+          if (thread_status == 1) {
+            thrd_join(thr, &thread_status);
+          }
+          running = false;
+          break;
+        } else if (event.type == SDL_CONTROLLERBUTTONDOWN) {
+          if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP) {
+            prevItem = currItem;
+            if (currItem == 0) {
+              currItem = listSize - 1;
+            } else {
+              --currItem;
+            }
+          } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN) {
+            prevItem = currItem;
+            currItem = (currItem + 1) % listSize;
+          } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_A) {
+            switch (mainMenuSelection) {
+            case 0:
+              mainMenuSelection = currItem + 1;
+              currItem = 0;
+              prevItem = 1;
+              break;
+            case 1:
+              if (currItem != (gamesList.size() - 1)) {
 #ifdef NXDK
-      XInput_GetEvents();
-      for (size_t i = 0; i < XInputGetPadCount(); ++i) {
-        if (getDigitalKeyDown(&g_Pads[i], XPAD_DPAD_UP)) {
-          prevItem = currItem;
-          if (currItem == 0) {
-            currItem = listSize - 1;
-          } else {
-            --currItem;
+                XLaunchXBE(const_cast<char*>(gamesList[currItem].getXBEPath()));
+#endif
+              }
+              goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
+                           mainMenuSelection);
+              break;
+//            case 2:
+//              break;
+            case 3:
+#ifdef NXDK
+              XLaunchXBE(const_cast<char*>("D:\\default.xbe"));
+#endif
+              mainMenuSelection = 0;
+              break;
+//            case 4:
+//              break;
+//            case 5:
+//              break;
+            default:
+              break;
+            }
+          } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_B) {
+            switch (mainMenuSelection) {
+            case 1:
+              goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
+                           mainMenuSelection);
+              break;
+            default:
+              break;
+            }
           }
         }
-        if (getDigitalKeyDown(&g_Pads[i], XPAD_DPAD_DOWN)) {
-          prevItem = currItem;
-          currItem = (currItem + 1) % listSize;
-        }
       }
-#endif
       // FIXME: Loads of repetitions ahead - break out into functions
       switch (mainMenuSelection) {
       case 0:
@@ -103,13 +160,6 @@ int main(void) {
           r.drawMenuTexture(menuListTexture);
           r.flip();
         }
-#ifdef NXDK
-        if (getAnalogKeyDown(&g_Pads[0], XPAD_A)) {
-          mainMenuSelection = currItem + 1;
-          currItem = 0;
-          prevItem = 1;
-        }
-#endif
         break;
       case 1:
         if (thread_status == 1) {
@@ -145,31 +195,10 @@ int main(void) {
           r.drawMenuTexture(menuListTexture);
           r.flip();
         }
-#ifdef NXDK
-        if (getAnalogKeyDown(&g_Pads[0], XPAD_A)) {
-          if (currItem != (gamesList.size() - 1)) {
-            XLaunchXBE(const_cast<char*>(gamesList[currItem].getXBEPath()));
-          }
-          goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
-                       mainMenuSelection);
-          break;
-        }
-        if (getAnalogKeyDown(&g_Pads[0], XPAD_B)) {
-          goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
-                       mainMenuSelection);
-          break;
-        }
-#endif
         break;
       case 2:
         // FIXME: Essentially the same deal as case 1;
         // ought to be trivial to create a function for this mess.
-        mainMenuSelection = 0;
-        break;
-      case 3:
-#ifdef NXDK
-        XLaunchXBE(const_cast<char*>("D:\\default.xbe"));
-#endif
         mainMenuSelection = 0;
         break;
       case 4:
