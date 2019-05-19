@@ -21,8 +21,6 @@ void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
 
 #ifdef NXDK
 #include <hal/xbox.h>
-// FIXME: This will probably be extraneous soon (SDL2 has a fix upstream)
-extern "C" void _exit(int rc) {}
 
 // Create some sloppy replacements for needed CPP functions
 void * __cdecl operator new(unsigned int size) { return malloc(size); }
