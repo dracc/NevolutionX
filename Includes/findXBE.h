@@ -6,6 +6,7 @@
 
 #ifdef NXDK
 #include "folderparse.h"
+#include "xbe.h"
 #include <hal/xbox.h>
 #include <stdio.h>
 #endif
