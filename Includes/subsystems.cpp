@@ -1,7 +1,12 @@
 #include "subsystems.h"
 
+#ifdef NXDK
+#include <hal/video.h>
+#endif
+
 int init_systems() {
 #ifdef NXDK
+  XVideoSetMode(640,480,32,REFRESH_DEFAULT);
   XInput_Init();
   if (pb_init() != 0) {
     return 3;
