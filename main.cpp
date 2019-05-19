@@ -9,7 +9,6 @@
 #include "xpadinput.h"
 
 #include <threads.h>
-#include <hal/video.h>
 
 void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
                   int &listSize, int &currItem, int &prevItem, int &mMS) {
@@ -31,8 +30,6 @@ void __cdecl operator delete(void* itm) { free(itm); }
 #endif
 
 int main(void) {
-  XVideoSetMode(640,480,32,REFRESH_DEFAULT);
-
   int init = init_systems();
   int mainMenuSelection = 0;
   vector<menuItem> mainMenu;
