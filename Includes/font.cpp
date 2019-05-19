@@ -2,13 +2,19 @@
 
 Font::Font(const char* path) {
   font = TTF_OpenFont(path, 24);
+  outline_font = TTF_OpenFont(path, 24);
   active = {0x7F, 0x7F, 0xFF, 0xFF};
   passive = {0xFF, 0x7F, 0xFF, 0xFF};
+  outline_color = {0x40, 0x40, 0x40, 0x7F};
+  TTF_SetFontOutline(outline_font, outline_size);
 }
 
 Font::~Font() {
   if (font != nullptr) {
     TTF_CloseFont(font);
+  }
+  if (outline_font != nullptr) {
+    TTF_CloseFont(outline_font);
   }
 }
 
@@ -19,15 +25,19 @@ bool Font::textureHelper(menuItem* mI, SDL_Color const& c, Renderer* r) {
   if (mI->getTexture() != nullptr) {
     SDL_DestroyTexture(mI->getTexture());
   }
-  SDL_Surface *tmpSurf = TTF_RenderText_Blended(font, mI->getLabel(), c);
-  if (tmpSurf == nullptr) {
+  SDL_Surface *bgSurf = TTF_RenderText_Blended(outline_font, mI->getLabel(),
+                                               outline_color);
+  SDL_Surface *fgSurf = TTF_RenderText_Blended(font, mI->getLabel(), c);
+  if (bgSurf == nullptr || fgSurf == nullptr) {
     return false;
   }
-  mI->setTexture(r->surfaceToTexture(tmpSurf));
+  r->blitSurface(bgSurf, fgSurf, outline_size);
+  mI->setTexture(r->surfaceToTexture(bgSurf));
   if (mI->getTexture() == nullptr) {
     return false;
   }
-  SDL_FreeSurface(tmpSurf);
+  SDL_FreeSurface(bgSurf);
+  SDL_FreeSurface(fgSurf);
   return true;
 }
 

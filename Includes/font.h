@@ -12,7 +12,9 @@ class Font {
 private:
   bool textureHelper(menuItem* mI, SDL_Color const& c, Renderer* r);
   TTF_Font* font;
-  SDL_Color active, passive;
+  TTF_Font* outline_font;
+  SDL_Color active, passive, outline_color;
+  int outline_size = 1;
 public:
   Font(const char* path);
   ~Font();
