@@ -15,6 +15,7 @@ int max(int lhs, int rhs) {
 }
 
 #ifdef NXDK
+#include "outputLine.h"
 extern "C" {
 const extern int SCREEN_HEIGHT;
 const extern int SCREEN_WIDTH;
@@ -70,11 +71,13 @@ int Renderer::init(const char* bg) {
   }
   SDL_Surface *bgsurf = SDL_LoadBMP(const_cast<char*>(bg));
   if (bgsurf == nullptr) {
+    outputLine("Creating background surface failed.\n");
     return 3;
   }
   background = SDL_CreateTextureFromSurface(renderer, bgsurf);
   SDL_FreeSurface(bgsurf);
   if (background == nullptr) {
+    outputLine("Creating background texture failed.\n");
     return 4;
   }
   return ret;

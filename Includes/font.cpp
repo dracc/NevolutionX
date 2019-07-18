@@ -1,8 +1,19 @@
 #include "font.h"
 
+#ifdef NXDK
+#include "outputLine.h"
+#endif
+
 Font::Font(const char* path) {
+  outputLine("Opening font %s\n", path);
   font = TTF_OpenFont(path, 24);
+  if (font == nullptr) {
+      outputLine("Main font could not be opened; %s\n", TTF_GetError());
+  }
   outline_font = TTF_OpenFont(path, 24);
+  if (outline_font == nullptr) {
+      outputLine("Outline font could not be opened; %s\n", TTF_GetError());
+  }
   active = {0x7F, 0x7F, 0xFF, 0xFF};
   passive = {0xFF, 0x7F, 0xFF, 0xFF};
   outline_color = {0x40, 0x40, 0x40, 0x7F};
@@ -10,6 +21,7 @@ Font::Font(const char* path) {
 }
 
 Font::~Font() {
+  outputLine("\nFont destructor called.\n\n");
   if (font != nullptr) {
     TTF_CloseFont(font);
   }
@@ -20,6 +32,7 @@ Font::~Font() {
 
 bool Font::textureHelper(menuItem* mI, SDL_Color const& c, Renderer* r) {
   if (mI == nullptr) {
+    outputLine("menuItem nullptr check failed.\n");
     return false;
   }
   if (mI->getTexture() != nullptr) {
