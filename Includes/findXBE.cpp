@@ -9,7 +9,7 @@ int findXBE(void* list) {
 #ifdef NXDK
   char tmp[64];
   char xbeName[XBENAMESIZE + 1];
-  char xbeData[SECTORSIZE];
+  char *xbeData = static_cast<char*>(malloc(SECTORSIZE));
   FILE* tmpFILE = nullptr;
   fileData fData;
   HANDLE fHandle = openFolder(path);
@@ -26,6 +26,11 @@ int findXBE(void* list) {
       if (tmpFILE != nullptr) {
         read_bytes = fread(xbeData, 1, SECTORSIZE, tmpFILE);
         XBE *xbe = (XBE*)xbeData;
+        if (xbe->sizeOfHeaders > read_bytes) {
+          xbeData = static_cast<char*>(realloc(xbeData, xbe->sizeOfHeaders));
+          xbe = (XBE*)xbeData;
+          read_bytes += fread(&xbeData[read_bytes], 1, xbe->sizeOfHeaders - read_bytes, tmpFILE);
+        }
         if(xbe->type != XBETYPEMAGIC ||
            xbe->baseAddress != BASEADDRESS ||
            xbe->baseAddress > xbe->certAddress ||
@@ -54,6 +59,7 @@ int findXBE(void* list) {
       }
     }
   }
+  free(xbeData);
   closeFolder(fHandle);
 #else
   char* mask = const_cast<char*>("*");
