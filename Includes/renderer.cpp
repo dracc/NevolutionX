@@ -69,7 +69,7 @@ int Renderer::init(const char* bg) {
   if (ret != 0) {
     return ret;
   }
-  SDL_Surface *bgsurf = SDL_LoadBMP(const_cast<char*>(bg));
+  SDL_Surface *bgsurf = SDL_LoadBMP(bg);
   if (bgsurf == nullptr) {
     outputLine("Creating background surface failed.\n");
     return 3;
