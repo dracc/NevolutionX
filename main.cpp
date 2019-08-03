@@ -137,11 +137,11 @@ int main(void) {
             }
           } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_B) {
             switch (mainMenuSelection) {
-            case 1:
-              goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
-                           mainMenuSelection);
+            case 0:
               break;
             default:
+              goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
+                           mainMenuSelection);
               break;
             }
           }
