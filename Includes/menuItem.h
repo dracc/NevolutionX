@@ -1,8 +1,7 @@
 #ifndef MENUITEM_H
 #define MENUITEM_H
 
-#include <stdlib.h>
-#include <string.h>
+#include "strdup.h"
 #include <SDL.h>
 
 class menuItem {

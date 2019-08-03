@@ -1,8 +1,7 @@
 #include "menuItem.h"
 
 menuItem::menuItem(char* text) {
-  label = (char*)malloc(strlen(text) * sizeof(char) + 1);
-  strcpy(label, text);
+  label = strdup(text);
   texture = nullptr;
 }
 
@@ -31,8 +30,7 @@ const char* menuItem::getLabel() const {
 }
 
 void menuItem::setLabel(const char* text) {
-  label = (char*)realloc(label, strlen(text) * sizeof(char) + 1);
-  strcpy(label, text);
+  label = strdup(text);
 }
 
 SDL_Texture* menuItem::getTexture() const{

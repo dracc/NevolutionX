@@ -2,8 +2,7 @@
 
 xbeMenuItem::xbeMenuItem(char* text, char* p) :
   menuItem(text) {
-  xbePath = (char*)malloc(strlen(p) * sizeof(char) + 1);
-  strcpy(xbePath, p);
+  xbePath = strdup(p);
 }
 
 xbeMenuItem::xbeMenuItem(const char* text, const char* p) :
@@ -11,7 +10,7 @@ xbeMenuItem::xbeMenuItem(const char* text, const char* p) :
 
 xbeMenuItem::xbeMenuItem(xbeMenuItem const& item) :
   xbeMenuItem(item.getLabel(), item.getXBEPath()) {
-  this->setTexture(item.getTexture());
+  setTexture(item.getTexture());
 }
 
 xbeMenuItem::~xbeMenuItem() {
@@ -26,6 +25,5 @@ const char* xbeMenuItem::getXBEPath() const {
 }
 
 void xbeMenuItem::setXBEPath(const char* p) {
-  xbePath = static_cast<char*>(realloc(xbePath, strlen(p) * sizeof(char) + 1));
-  strcpy(xbePath, p);
+  xbePath = strdup(p);
 }
