@@ -33,7 +33,6 @@ int readFolder(HANDLE handle, pFileData findFileData) {
   BYTE rawFileData[FIND_DATA_SIZE];
   PFILE_DIRECTORY_INFORMATION fileInfo = (PFILE_DIRECTORY_INFORMATION)rawFileData;
   FILE_INFORMATION_CLASS fileInfoClass = FileDirectoryInformation;
-  OBJECT_ATTRIBUTES Attribs;
 
   const char *mask = "*";
   ANSI_STRING fMask;
