@@ -33,6 +33,7 @@ int main(void) {
   int mainMenuSelection = 0;
   vector<menuItem> mainMenu;
   vector<xbeMenuItem> gamesList;
+  vector<xbeMenuItem> appsList;
   if (init == 0) {
     bool running = true;
 
@@ -47,13 +48,21 @@ int main(void) {
     SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
 
     // Create the worker thread for populating the games list
-    xbeFinderArg xfa;
-    xfa.list = &gamesList;
-//    xfa.path = const_cast<char*>("C:\\");
-    xfa.path = const_cast<char*>("F:\\Games\\");
-    thrd_t thr;
-    int thread_status = 1;
-    thrd_create(&thr, findXBE, &xfa);
+    xbeFinderArg xfaG;
+    xfaG.list = &gamesList;
+//    xfaG.path = const_cast<char*>("C:\\");
+    xfaG.path = const_cast<char*>("F:\\Games\\");
+    thrd_t thrG;
+    int thread_statusG = 1;
+    thrd_create(&thrG, findXBE, &xfaG);
+
+    // Create the worker thread for populating the applications list
+    xbeFinderArg xfaA;
+    xfaA.list = &appsList;
+    xfaA.path = const_cast<char*>("F:\\Apps\\");
+    thrd_t thrA;
+    int thread_statusA = 1;
+    thrd_create(&thrA, findXBE, &xfaA);
 
     // Create render system
     Renderer r;
@@ -88,8 +97,11 @@ int main(void) {
     while (running) {
       while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
-          if (thread_status == 1) {
-            thrd_join(thr, &thread_status);
+          if (thread_statusG == 1) {
+            thrd_join(thrG, &thread_statusG);
+          }
+          if (thread_statusA == 1) {
+            thrd_join(thrA, &thread_statusA);
           }
           running = false;
           break;
@@ -120,8 +132,15 @@ int main(void) {
               goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
                            mainMenuSelection);
               break;
-//            case 2:
-//              break;
+            case 2:
+              if (currItem != (appsList.size() - 1)) {
+#ifdef NXDK
+                XLaunchXBE(const_cast<char*>(appsList[currItem].getXBEPath()));
+#endif
+              }
+              goToMainMenu(&appsList[currItem], &r, f, listSize, currItem, prevItem,
+                           mainMenuSelection);
+              break;
             case 3:
 #ifdef NXDK
               XLaunchXBE(const_cast<char*>("D:\\default.xbe"));
@@ -162,10 +181,10 @@ int main(void) {
         }
         break;
       case 1:
-        if (thread_status == 1) {
-          thrd_join(thr, &thread_status);
+        if (thread_statusG == 1) {
+          thrd_join(thrG, &thread_statusG);
           // FIXME: This check sucks.
-          if (thread_status != 0) {
+          if (thread_statusG != 0) {
             outputLine("Games list gathering failed.\n");
             mainMenuSelection = 0;
             break;
@@ -197,9 +216,39 @@ int main(void) {
         }
         break;
       case 2:
-        // FIXME: Essentially the same deal as case 1;
-        // ought to be trivial to create a function for this mess.
-        mainMenuSelection = 0;
+        if (thread_statusA == 1) {
+          thrd_join(thrA, &thread_statusA);
+          // FIXME: This check sucks.
+          if (thread_statusA != 0) {
+            outputLine("Apps list gathering failed.\n");
+            mainMenuSelection = 0;
+            break;
+          }
+          appsList.push_back(xbeMenuItem("<- back",""));
+          ret = f.createTextures(appsList, &r);
+          if (ret != appsList.size()) {
+            outputLine("Games list textures could not be created.\n");
+            mainMenuSelection = 0;
+            break;
+          }
+          menuListTexture = r.compileList(appsList, 0);
+          r.clear();
+          r.drawBackground();
+          r.drawMenuTexture(menuListTexture);
+          r.flip();
+          break;
+        }
+        if (prevItem != currItem) {
+          f.setPassive(&appsList.at(prevItem), &r);
+          f.setActive(&appsList.at(currItem), &r);
+          prevItem = currItem;
+          listSize = appsList.size();
+          menuListTexture = r.compileList(appsList, currItem);
+          r.clear();
+          r.drawBackground();
+          r.drawMenuTexture(menuListTexture);
+          r.flip();
+        }
         break;
       case 4:
         // Settings menu. Not sure what we want/need here.
