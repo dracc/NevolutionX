@@ -2,7 +2,7 @@
 #define OUTPUTLINE_H
 
 #ifdef NXDK
-#include <xboxrt/debug.h>
+#include <hal/debug.h>
 #include "stdio.h"
 #else
 #include <SDL.h>
