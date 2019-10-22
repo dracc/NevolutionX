@@ -11,11 +11,6 @@ int init_systems() {
   void *p = NULL;
   while (XVideoListModes(&xmode, 0, 0, &p)) {}
   XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
-
-  if (pb_init() != 0) {
-    return 3;
-  }
-  pb_show_debug_screen();
 #endif
   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_GAMECONTROLLER) != 0) {
     outputLine("Init error: %s", SDL_GetError());
@@ -37,9 +32,6 @@ void shutdown_systems(int systems) {
     SDL_Quit();
   }
 #ifdef NXDK
-  if (systems <= 2) {
-    pb_kill();
-  }
   Sleep(2000);
   XReboot();
 #endif
