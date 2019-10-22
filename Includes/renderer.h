@@ -24,6 +24,7 @@ public:
   void flip();
 
   SDL_Renderer* getRenderer() {return renderer;}
+  int getHeight() const {return height;}
 
   int setDrawColor(uint8_t r = 0x40, uint8_t g = 0x40,
                    uint8_t b = 0xE0, uint8_t a = 0x00);
@@ -52,10 +53,9 @@ private:
   SDL_Texture *background = nullptr;
   Uint32 renderFlags = 0;
   Uint32 windowFlags = 0;
-#ifndef NXDK
-  int SCREEN_HEIGHT = 0;
-  int SCREEN_WIDTH = 0;
-#endif
+
+  int height = 0;
+  int width = 0;
   int overscanCompX = 0;
   int overscanCompY = 0;
 };

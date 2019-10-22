@@ -2,11 +2,16 @@
 
 #ifdef NXDK
 #include <hal/video.h>
+#include <winapi/synchapi.h>
 #endif
 
 int init_systems() {
 #ifdef NXDK
-  XVideoSetMode(640,480,32,REFRESH_DEFAULT);
+  VIDEO_MODE xmode;
+  void *p = NULL;
+  while (XVideoListModes(&xmode, 0, 0, &p)) {}
+  XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
+
   if (pb_init() != 0) {
     return 3;
   }
@@ -35,7 +40,7 @@ void shutdown_systems(int systems) {
   if (systems <= 2) {
     pb_kill();
   }
-  XSleep(2000);
+  Sleep(2000);
   XReboot();
 #endif
 }

@@ -1,5 +1,7 @@
 #include "renderer.h"
 
+#include "outputLine.h"
+
 int min(int lhs, int rhs) {
   if (lhs > rhs) {
     return rhs;
@@ -14,25 +16,20 @@ int max(int lhs, int rhs) {
   return lhs;
 }
 
-#ifdef NXDK
-#include "outputLine.h"
-extern "C" {
-const extern int SCREEN_HEIGHT;
-const extern int SCREEN_WIDTH;
-}
-#endif
-
 Renderer::Renderer() {
 #ifdef NXDK
+  VIDEO_MODE xmode = XVideoGetMode();
+  height = xmode.height;
+  width = xmode.width;
   windowFlags = SDL_WINDOW_SHOWN;
 #else
+  height = 640;
+  width = 480;
   windowFlags = SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE;
   renderFlags = SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED;
-  SCREEN_WIDTH = 640;
-  SCREEN_HEIGHT = 480;
 #endif
-  overscanCompX = SCREEN_WIDTH * 0.075;
-  overscanCompY = SCREEN_HEIGHT * 0.075;
+  overscanCompX = width * 0.075;
+  overscanCompY = height * 0.075;
 }
 
 Renderer::~Renderer() {
@@ -50,7 +47,7 @@ Renderer::~Renderer() {
 int Renderer::init() {
   window = SDL_CreateWindow("NevolutionX",
                             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                            SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags);
+                            width, height, windowFlags);
   if (window == nullptr) {
     return 1;
   }
@@ -64,12 +61,15 @@ int Renderer::init() {
   return 0;
 }
 
-int Renderer::init(const char* bg) {
+int Renderer::init(const char* bgpath) {
   int ret = init();
   if (ret != 0) {
     return ret;
   }
-  SDL_Surface *bgsurf = SDL_LoadBMP(bg);
+  char* bgname = (char*)malloc(strlen(bgpath)+10);
+  sprintf(bgname, "%s/%d.bmp", bgpath, height);
+  SDL_Surface *bgsurf = SDL_LoadBMP(bgname);
+  free(bgname);
   if (bgsurf == nullptr) {
     outputLine("Creating background surface failed.\n");
     return 3;
@@ -140,7 +140,7 @@ void Renderer::drawMenuTexture(SDL_Texture* tex, int numItems, int currItem) {
   SDL_Rect dst = {overscanCompX, overscanCompY, 0, 0};
   SDL_Rect *src = nullptr;
   SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
-  int screenHeight = SCREEN_HEIGHT - (overscanCompY * 2);
+  int screenHeight = height - (overscanCompY * 2);
   int rowHeight = dst.h / numItems;
   if (dst.h > screenHeight) {
     src = new SDL_Rect();

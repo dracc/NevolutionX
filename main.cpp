@@ -11,6 +11,14 @@
 #include <threads.h>
 #include <SDL.h>
 
+#ifdef NXDK
+#include <winapi/synchapi.h>
+
+// Create some sloppy replacements for needed CPP functions
+void * __cdecl operator new(unsigned int size) { return malloc(size); }
+void __cdecl operator delete(void* itm) { free(itm); }
+#endif
+
 void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
                   int &listSize, int &currItem, int &prevItem, int &mMS) {
   f.setPassive(mI, r);
@@ -19,14 +27,6 @@ void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
   prevItem = 1;
   mMS = 0;
 }
-
-#ifdef NXDK
-#include <hal/xbox.h>
-
-// Create some sloppy replacements for needed CPP functions
-void * __cdecl operator new(unsigned int size) { return malloc(size); }
-void __cdecl operator delete(void* itm) { free(itm); }
-#endif
 
 int main(void) {
   int init = init_systems();
@@ -41,7 +41,7 @@ int main(void) {
     SDL_GameController *sgc = SDL_GameControllerOpen(0);
     if (sgc == nullptr) {
       outputLine("Joystick Error: %s", SDL_GetError());
-      XSleep(2000);
+      Sleep(2000);
     }
 
     // Set a hint that we want to use our gamecontroller always
@@ -66,7 +66,7 @@ int main(void) {
 
     // Create render system
     Renderer r;
-    r.init("480p.bmp");
+    r.init(".");
 
     // Create font because do it
     Font f("vegur.ttf");
