@@ -21,5 +21,6 @@ include $(NXDK_DIR)/Makefile
 
 copy_resources:
 	@mkdir -p $(OUTPUT_DIR)
-	@cp $(RESOURCEDIR)/480p.bmp $(OUTPUT_DIR)/480p.bmp
+	@cp $(RESOURCEDIR)/480.bmp $(OUTPUT_DIR)/480.bmp
+	@cp $(RESOURCEDIR)/720.bmp $(OUTPUT_DIR)/720.bmp
 	@cp $(RESOURCEDIR)/vegur.ttf $(OUTPUT_DIR)/vegur.ttf
