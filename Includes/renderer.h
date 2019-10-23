@@ -58,6 +58,9 @@ private:
   int width = 0;
   int overscanCompX = 0;
   int overscanCompY = 0;
+  size_t menuItemCount = 0;
+  size_t lowerHalf = 0;
+  size_t upperHalf = 0;
 };
 
 #endif

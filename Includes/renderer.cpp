@@ -1,6 +1,7 @@
 #include "renderer.h"
 
 #include "outputLine.h"
+#include <math.h>
 
 int min(int lhs, int rhs) {
   if (lhs > rhs) {
@@ -16,6 +17,10 @@ int max(int lhs, int rhs) {
   return lhs;
 }
 
+// One line of text with the default font is 31 pixels high.
+// FIXME: Should probably be dynamic and dependent of font settings.
+const unsigned int FONT_TEX_SIZE = 31;
+
 Renderer::Renderer() {
 #ifdef NXDK
   VIDEO_MODE xmode = XVideoGetMode();
@@ -30,6 +35,9 @@ Renderer::Renderer() {
 #endif
   overscanCompX = width * 0.075;
   overscanCompY = height * 0.075;
+  menuItemCount = (height - (overscanCompY * 2)) / FONT_TEX_SIZE;
+  lowerHalf = menuItemCount/2;
+  upperHalf = ceil(menuItemCount/2.0);
 }
 
 Renderer::~Renderer() {
@@ -172,25 +180,25 @@ SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l, size_t currItem) {
   }
   int h;
   size_t i, j;
-  if (l.size() <= 13) {
+  if (l.size() <= menuItemCount) {
     i = 0;
     j = l.size();
   } else {
-    if (currItem > (l.size() - 7)) {
-      i = l.size() - 13;
+      if (currItem > (l.size() - lowerHalf)) {
+      i = l.size() - menuItemCount;
       j = l.size();
-    } else if (currItem < 6) {
+    } else if (currItem < upperHalf) {
       i = 0;
-      j = 13;
+      j = menuItemCount;
     } else {
-      i = currItem - 6;
-      j = currItem + 7;
+      i = currItem - upperHalf;
+      j = currItem + lowerHalf;
     }
   }
   SDL_QueryTexture(l[0].getTexture(), nullptr, nullptr, nullptr, &h);
   SDL_Texture *ret = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
                                        SDL_TEXTUREACCESS_TARGET, 300,
-                                       h*13);
+                                       h*menuItemCount);
   if (ret == nullptr) {
     return nullptr;
   }
