@@ -1,4 +1,4 @@
-#include <vector.hpp>
+#include <vector>
 #include "findXBE.h"
 #include "font.h"
 #include "xbeMenuItem.h"
@@ -8,15 +8,12 @@
 #include "subsystems.h"
 #include "xpadinput.h"
 
+#include <type_traits>
 #include <threads.h>
 #include <SDL.h>
 
 #ifdef NXDK
-#include <winapi/synchapi.h>
-
-// Create some sloppy replacements for needed CPP functions
-void * __cdecl operator new(unsigned int size) { return malloc(size); }
-void __cdecl operator delete(void* itm) { free(itm); }
+#include <windows.h>
 #endif
 
 void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
@@ -31,9 +28,9 @@ void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
 int main(void) {
   int init = init_systems();
   int mainMenuSelection = 0;
-  vector<menuItem> mainMenu;
-  vector<xbeMenuItem> gamesList;
-  vector<xbeMenuItem> appsList;
+  std::vector<menuItem> mainMenu;
+  std::vector<xbeMenuItem> gamesList;
+  std::vector<xbeMenuItem> appsList;
   if (init == 0) {
     bool running = true;
 
