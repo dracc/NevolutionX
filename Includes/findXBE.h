@@ -1,7 +1,7 @@
 #ifndef FINDXBE_H
 #define FINDXBE_H
 
-#include "vector.hpp"
+#include <vector>
 #include "xbeMenuItem.h"
 
 #ifdef NXDK
@@ -12,7 +12,7 @@
 #endif
 
 struct xbeFinderArg {
-  vector<xbeMenuItem> *list;
+  std::vector<xbeMenuItem> *list;
   char *path;
 };
 

@@ -54,7 +54,7 @@ bool Font::textureHelper(menuItem* mI, SDL_Color const& c, Renderer* r) {
   return true;
 }
 
-size_t Font::createTextures(vector<menuItem> &items, Renderer* r) {
+size_t Font::createTextures(std::vector<menuItem> &items, Renderer* r) {
   if (r->getRenderer() == nullptr || items.empty()) {
     return 0;
   }
@@ -68,7 +68,7 @@ size_t Font::createTextures(vector<menuItem> &items, Renderer* r) {
 }
 
 // FIXME: This function should not be necessary.
-size_t Font::createTextures(vector<xbeMenuItem> &items, Renderer* r) {
+size_t Font::createTextures(std::vector<xbeMenuItem> &items, Renderer* r) {
   if (r->getRenderer() == nullptr || items.empty()) {
     return 0;
   }

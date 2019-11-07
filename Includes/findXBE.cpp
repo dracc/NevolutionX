@@ -4,7 +4,7 @@
 
 int findXBE(void* list) {
   xbeFinderArg *itm = static_cast<xbeFinderArg*>(list);
-  vector<xbeMenuItem>* gmi_list = itm->list;
+  std::vector<xbeMenuItem>* gmi_list = itm->list;
   char* path = const_cast<char*>(itm->path);//("C:\\");
 #ifdef NXDK
   char tmp[64];

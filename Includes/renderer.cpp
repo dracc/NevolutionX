@@ -174,7 +174,7 @@ void Renderer::destroyTexture(SDL_Texture* tex) {
   tex = nullptr;
 }
 
-SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l, size_t currItem) {
+SDL_Texture* Renderer::compileList(std::vector<xbeMenuItem> &l, size_t currItem) {
   if (l.empty()) {
     return nullptr;
   }
@@ -219,7 +219,7 @@ SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l, size_t currItem) {
   return ret;
 }
 
-SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l) {
+SDL_Texture* Renderer::compileList(std::vector<xbeMenuItem> &l) {
   if (l.empty()) {
     return nullptr;
   }
@@ -248,7 +248,7 @@ SDL_Texture* Renderer::compileList(vector<xbeMenuItem> &l) {
   return ret;
 }
 
-SDL_Texture* Renderer::compileList(vector<menuItem> &l) {
+SDL_Texture* Renderer::compileList(std::vector<menuItem> &l) {
   if (l.empty()) {
     return nullptr;
   }

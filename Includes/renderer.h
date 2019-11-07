@@ -5,10 +5,10 @@
 #include <hal/video.h>
 #endif
 
+#include <vector>
 #include <SDL.h>
 #include "xbeMenuItem.h"
 #include "menuItem.h"
-#include "vector.hpp"
 
 int min(int lhs, int rhs);
 int max(int lhs, int rhs);
@@ -43,9 +43,9 @@ public:
 
   void destroyTexture(SDL_Texture* tex);
 
-  SDL_Texture* compileList(vector<xbeMenuItem> &l, size_t currItem);
-  SDL_Texture* compileList(vector<xbeMenuItem> &l);
-  SDL_Texture* compileList(vector<menuItem> &l);
+  SDL_Texture* compileList(std::vector<xbeMenuItem> &l, size_t currItem);
+  SDL_Texture* compileList(std::vector<xbeMenuItem> &l);
+  SDL_Texture* compileList(std::vector<menuItem> &l);
 
 private:
   SDL_Renderer *renderer = nullptr;

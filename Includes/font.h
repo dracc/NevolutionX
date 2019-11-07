@@ -3,7 +3,7 @@
 
 #include "xbeMenuItem.h"
 #include "renderer.h"
-#include "vector.hpp"
+#include <vector>
 
 #include <SDL.h>
 #include "SDL_ttf.h"
@@ -19,8 +19,8 @@ public:
   Font(const char* path);
   ~Font();
 
-  size_t createTextures(vector<menuItem> &items, Renderer* r);
-  size_t createTextures(vector<xbeMenuItem> &items, Renderer* r);
+  size_t createTextures(std::vector<menuItem> &items, Renderer* r);
+  size_t createTextures(std::vector<xbeMenuItem> &items, Renderer* r);
 
   size_t setActive(menuItem* item, Renderer* r);
   size_t setPassive(menuItem* item, Renderer* r);
