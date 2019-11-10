@@ -1,4 +1,5 @@
 #include "xbeMenuItem.h"
+#include <cstring>
 
 xbeMenuItem::xbeMenuItem(char* text, char* p) :
   menuItem(text) {
@@ -26,4 +27,8 @@ const char* xbeMenuItem::getXBEPath() const {
 
 void xbeMenuItem::setXBEPath(const char* p) {
   xbePath = strdup(p);
+}
+
+bool xbeMenuItem::operator<(xbeMenuItem const& rhs) const {
+  return std::strcmp(getLabel(), rhs.getLabel());
 }
