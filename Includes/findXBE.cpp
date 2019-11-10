@@ -1,4 +1,5 @@
 #include "findXBE.h"
+#include <algorithm>
 
 #define SECTORSIZE 0x1000
 
@@ -67,5 +68,6 @@ int findXBE(void* list) {
     gmi_list->push_back(xbeMenuItem(path, mask));
   }
 #endif
+  sort(gmi_list->begin(), gmi_list->end());
   return 0;
 }

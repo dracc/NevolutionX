@@ -13,6 +13,7 @@ public:
   ~xbeMenuItem();
   const char* getXBEPath() const;
   void setXBEPath(const char* p);
+  bool operator<(xbeMenuItem const& rhs) const;
 };
 
 #endif
