@@ -1,18 +1,17 @@
 #ifndef XBEMENUITEM_H
 #define XBEMENUITEM_H
 
+#include <string>
 #include "menuItem.h"
 
 class xbeMenuItem: public menuItem {
 private:
-  char* xbePath;
+  std::string xbePath;
 public:
-  xbeMenuItem(char* text, char* p);
-  xbeMenuItem(const char* text, const char* p);
+  xbeMenuItem(std::string const& text, std::string const& p);
   xbeMenuItem(xbeMenuItem const& item);
-  ~xbeMenuItem();
-  const char* getXBEPath() const;
-  void setXBEPath(const char* p);
+  std::string getXBEPath() const;
+  void setXBEPath(std::string const& p);
   bool operator<(xbeMenuItem const& rhs) const;
 };
 

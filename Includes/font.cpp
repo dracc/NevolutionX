@@ -38,9 +38,10 @@ bool Font::textureHelper(menuItem* mI, SDL_Color const& c, Renderer* r) {
   if (mI->getTexture() != nullptr) {
     SDL_DestroyTexture(mI->getTexture());
   }
-  SDL_Surface *bgSurf = TTF_RenderText_Blended(outline_font, mI->getLabel(),
+  SDL_Surface *bgSurf = TTF_RenderText_Blended(outline_font,
+                                               mI->getLabel().c_str(),
                                                outline_color);
-  SDL_Surface *fgSurf = TTF_RenderText_Blended(font, mI->getLabel(), c);
+  SDL_Surface *fgSurf = TTF_RenderText_Blended(font, mI->getLabel().c_str(), c);
   if (bgSurf == nullptr || fgSurf == nullptr) {
     return false;
   }

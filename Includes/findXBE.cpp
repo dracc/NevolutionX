@@ -6,7 +6,7 @@
 int findXBE(void* list) {
   xbeFinderArg *itm = static_cast<xbeFinderArg*>(list);
   std::vector<xbeMenuItem>* gmi_list = itm->list;
-  char* path = const_cast<char*>(itm->path);//("C:\\");
+  const char* path = itm->path.c_str();
 #ifdef NXDK
   char tmp[64];
   char xbeName[XBENAMESIZE + 1];
@@ -63,11 +63,11 @@ int findXBE(void* list) {
   free(xbeData);
   closeFolder(fHandle);
 #else
-  char* mask = const_cast<char*>("*");
+  const char* mask = "*";
   for (int i = 0; i < 7; ++i) {
     gmi_list->push_back(xbeMenuItem(path, mask));
   }
 #endif
-  sort(gmi_list->begin(), gmi_list->end());
+  std::sort(gmi_list->begin(), gmi_list->end());
   return 0;
 }

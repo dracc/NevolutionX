@@ -2,7 +2,7 @@
 
 #define FIND_DATA_SIZE (sizeof(FILE_DIRECTORY_INFORMATION) + 1024)
 
-HANDLE openFolder(char *directoryName) {
+HANDLE openFolder(const char *directoryName) {
   IO_STATUS_BLOCK IOStatusBlock;
   HANDLE ret = nullptr;
   ANSI_STRING fName;

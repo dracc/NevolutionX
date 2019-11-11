@@ -1,21 +1,20 @@
 #ifndef MENUITEM_H
 #define MENUITEM_H
 
-#include <string.h>
+#include <string>
 #include <SDL.h>
 
 class menuItem {
 private:
   SDL_Texture* texture;
-  char* label;
+  std::string label;
 public:
-  menuItem(char* text);
-  menuItem(const char* text);
+  menuItem(std::string const& text);
   menuItem(const menuItem& itm);
   ~menuItem();
 
-  const char* getLabel() const;
-  void setLabel(const char* text);
+  std::string getLabel() const;
+  void setLabel(std::string const& text);
 
   SDL_Texture* getTexture() const;
   void setTexture(SDL_Texture* t);

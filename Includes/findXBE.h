@@ -2,6 +2,7 @@
 #define FINDXBE_H
 
 #include <vector>
+#include <string>
 #include "xbeMenuItem.h"
 
 #ifdef NXDK
@@ -13,7 +14,7 @@
 
 struct xbeFinderArg {
   std::vector<xbeMenuItem> *list;
-  char *path;
+  std::string path;
 };
 
 int findXBE(void* list);

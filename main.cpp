@@ -47,8 +47,7 @@ int main(void) {
     // Create the worker thread for populating the games list
     xbeFinderArg xfaG;
     xfaG.list = &gamesList;
-//    xfaG.path = const_cast<char*>("C:\\");
-    xfaG.path = const_cast<char*>("F:\\Games\\");
+    xfaG.path = "F:\\Games\\";
     thrd_t thrG;
     int thread_statusG = 1;
     thrd_create(&thrG, findXBE, &xfaG);
@@ -56,7 +55,7 @@ int main(void) {
     // Create the worker thread for populating the applications list
     xbeFinderArg xfaA;
     xfaA.list = &appsList;
-    xfaA.path = const_cast<char*>("F:\\Apps\\");
+    xfaA.path = "F:\\Apps\\";
     thrd_t thrA;
     int thread_statusA = 1;
     thrd_create(&thrA, findXBE, &xfaA);
@@ -123,7 +122,7 @@ int main(void) {
             case 1:
               if (currItem != (gamesList.size() - 1)) {
 #ifdef NXDK
-                XLaunchXBE(const_cast<char*>(gamesList[currItem].getXBEPath()));
+                XLaunchXBE(const_cast<char*>(gamesList[currItem].getXBEPath().c_str()));
 #endif
               }
               goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
@@ -132,7 +131,7 @@ int main(void) {
             case 2:
               if (currItem != (appsList.size() - 1)) {
 #ifdef NXDK
-                XLaunchXBE(const_cast<char*>(appsList[currItem].getXBEPath()));
+                XLaunchXBE(const_cast<char*>(appsList[currItem].getXBEPath().c_str()));
 #endif
               }
               goToMainMenu(&appsList[currItem], &r, f, listSize, currItem, prevItem,
