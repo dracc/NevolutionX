@@ -1,34 +1,24 @@
 #include "xbeMenuItem.h"
 #include <cstring>
 
-xbeMenuItem::xbeMenuItem(char* text, char* p) :
+xbeMenuItem::xbeMenuItem(std::string const& text, std::string const& p) :
   menuItem(text) {
-  xbePath = strdup(p);
+  xbePath = p;
 }
-
-xbeMenuItem::xbeMenuItem(const char* text, const char* p) :
-  xbeMenuItem(const_cast<char*>(text), const_cast<char*>(p)) {}
 
 xbeMenuItem::xbeMenuItem(xbeMenuItem const& item) :
   xbeMenuItem(item.getLabel(), item.getXBEPath()) {
   setTexture(item.getTexture());
 }
 
-xbeMenuItem::~xbeMenuItem() {
-  if (xbePath != nullptr) {
-    free(xbePath);
-    xbePath = nullptr;
-  }
-}
-
-const char* xbeMenuItem::getXBEPath() const {
+std::string xbeMenuItem::getXBEPath() const {
   return xbePath;
 }
 
-void xbeMenuItem::setXBEPath(const char* p) {
-  xbePath = strdup(p);
+void xbeMenuItem::setXBEPath(std::string const& p) {
+  xbePath = p;
 }
 
 bool xbeMenuItem::operator<(xbeMenuItem const& rhs) const {
-  return std::strcmp(getLabel(), rhs.getLabel());
+  return getLabel() < rhs.getLabel();
 }

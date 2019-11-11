@@ -18,7 +18,7 @@ typedef struct _fileData {
   char *f_FileName;
 } fileData, *pFileData;
 
-HANDLE openFolder(char *directoryName);
+HANDLE openFolder(const char *directoryName);
 
 int readFolder(HANDLE handle, pFileData findFileData);
 

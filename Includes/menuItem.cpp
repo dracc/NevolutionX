@@ -1,12 +1,8 @@
 #include "menuItem.h"
 
-menuItem::menuItem(char* text) {
-  label = strdup(text);
+menuItem::menuItem(std::string const& text) {
+  label = text;
   texture = nullptr;
-}
-
-menuItem::menuItem(const char* text) :
-  menuItem(const_cast<char*>(text)) {
 }
 
 menuItem::menuItem(const menuItem& itm) :
@@ -19,18 +15,14 @@ menuItem::~menuItem() {
     SDL_DestroyTexture(texture);
     texture = nullptr;
   }
-  if (label != nullptr) {
-    free(label);
-    label = nullptr;
-  }
 }
 
-const char* menuItem::getLabel() const {
+std::string menuItem::getLabel() const {
   return label;
 }
 
-void menuItem::setLabel(const char* text) {
-  label = strdup(text);
+void menuItem::setLabel(std::string const& text) {
+  label = text;
 }
 
 SDL_Texture* menuItem::getTexture() const{
