@@ -150,7 +150,8 @@ int main(void) {
             default:
               break;
             }
-          } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_B) {
+          } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_B ||
+                     event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK) {
             switch (mainMenuSelection) {
             case 0:
               break;
