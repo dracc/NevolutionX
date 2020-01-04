@@ -1,4 +1,3 @@
-DEBUG = y
 XBE_TITLE = NevolutionX
 INCDIR = $(CURDIR)/Includes
 RESOURCEDIR = $(CURDIR)/Resources
