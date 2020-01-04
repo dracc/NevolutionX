@@ -1,10 +1,6 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#ifdef NXDK
-#include <hal/video.h>
-#endif
-
 #include <vector>
 #include <SDL.h>
 #include "xbeMenuItem.h"

@@ -13,6 +13,7 @@
 
 #ifdef NXDK
 #include <windows.h>
+#include <hal/xbox.h>
 #endif
 
 void goToMainMenu(menuItem *mI, Renderer *r, Font &f,

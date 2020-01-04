@@ -2,7 +2,11 @@
 
 #include "outputLine.h"
 #include <algorithm>
-#include <math.h>
+#include <cmath>
+
+#ifdef NXDK
+#include <hal/video.h>
+#endif
 
 // One line of text with the default font is 31 pixels high.
 // FIXME: Should probably be dynamic and dependent of font settings.
