@@ -1,21 +1,8 @@
 #include "renderer.h"
 
 #include "outputLine.h"
+#include <algorithm>
 #include <math.h>
-
-int min(int lhs, int rhs) {
-  if (lhs > rhs) {
-    return rhs;
-  }
-  return lhs;
-}
-
-int max(int lhs, int rhs) {
-  if (lhs < rhs) {
-    return rhs;
-  }
-  return lhs;
-}
 
 // One line of text with the default font is 31 pixels high.
 // FIXME: Should probably be dynamic and dependent of font settings.
@@ -155,7 +142,7 @@ void Renderer::drawMenuTexture(SDL_Texture* tex, int numItems, int currItem) {
     src->w = dst.w;
     src->h = screenHeight;
     src->x = 0;
-    src->y = min(max((rowHeight * currItem) - (screenHeight / 2), 0), dst.h - screenHeight);
+    src->y = std::min(std::max((rowHeight * currItem) - (screenHeight / 2), 0), dst.h - screenHeight);
     dst.h = screenHeight;
   }
   SDL_RenderCopy(renderer, tex, src, &dst);
