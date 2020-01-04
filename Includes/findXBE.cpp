@@ -1,31 +1,35 @@
 #include "findXBE.h"
 #include <algorithm>
 
+#ifdef NXDK
+#include <windows.h>
+#endif
+
 #define SECTORSIZE 0x1000
 
 int findXBE(void* list) {
   xbeFinderArg *itm = static_cast<xbeFinderArg*>(list);
   std::vector<xbeMenuItem>* gmi_list = itm->list;
+  std::string searchmask = itm->path + "*";
   const char* path = itm->path.c_str();
 #ifdef NXDK
   char tmp[64];
   char xbeName[XBENAMESIZE + 1];
   char *xbeData = static_cast<char*>(malloc(SECTORSIZE));
   FILE* tmpFILE = nullptr;
-  fileData fData;
-  HANDLE fHandle = openFolder(path);
-  size_t read_bytes;
-  if (fHandle == nullptr) {
+  WIN32_FIND_DATAA fData;
+  HANDLE fHandle = FindFirstFileA(searchmask.c_str(), &fData);
+  if (fHandle == INVALID_HANDLE_VALUE) {
     return -1;
   }
 
-  while (readFolder(fHandle, &fData) == STATUS_SUCCESS) {
-    if (fData.f_Attributes & FILE_ATTRIBUTE_DIRECTORY) {
+  do {
+    if (fData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
       tmp[0] = '\0';
-      sprintf(tmp, "%s%s\\default.xbe", path, fData.f_FileName);
+      sprintf(tmp, "%s%s\\default.xbe", path, fData.cFileName);
       tmpFILE = fopen(tmp, "rb");
       if (tmpFILE != nullptr) {
-        read_bytes = fread(xbeData, 1, SECTORSIZE, tmpFILE);
+        size_t read_bytes = fread(xbeData, 1, SECTORSIZE, tmpFILE);
         XBE *xbe = (XBE*)xbeData;
         if (xbe->sizeOfHeaders > read_bytes) {
           xbeData = static_cast<char*>(realloc(xbeData, xbe->sizeOfHeaders));
@@ -59,9 +63,9 @@ int findXBE(void* list) {
         tmpFILE = nullptr;
       }
     }
-  }
+  } while (FindNextFile(fHandle, &fData) != 0);
   free(xbeData);
-  closeFolder(fHandle);
+  FindClose(fHandle);
 #else
   const char* mask = "*";
   for (int i = 0; i < 7; ++i) {
