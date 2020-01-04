@@ -1,8 +1,10 @@
 #include "findXBE.h"
 #include <algorithm>
+#include <cstdio>
 
 #ifdef NXDK
 #include <windows.h>
+#include "xbe.h"
 #endif
 
 #define SECTORSIZE 0x1000

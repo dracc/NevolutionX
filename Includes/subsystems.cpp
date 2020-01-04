@@ -2,9 +2,17 @@
 
 #ifdef NXDK
 #include <nxdk/mount.h>
+#include <windows.h>
+#include <pbkit/pbkit.h>
+#include <hal/input.h>
 #include <hal/video.h>
-#include <winapi/synchapi.h>
+#include <hal/xbox.h>
 #endif
+
+#include <SDL.h>
+#include <SDL_ttf.h>
+
+#include "outputLine.h"
 
 int init_systems() {
 #ifdef NXDK
