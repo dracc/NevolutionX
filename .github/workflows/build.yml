@@ -1,0 +1,23 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  ubuntu:
+    name: Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Tree
+        uses: actions/checkout@v1
+        with:
+          submodules: recursive
+      - name: Clone nxdk
+        run: |
+          git clone https://github.com/XboxDev/nxdk.git --recursive
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update -y && sudo apt-get install -y flex bison clang lld
+      - name: Build
+        run: |
+          export PATH=$PATH:/usr/lib/llvm-6.0/bin
+          make -j$(nproc) NXDK_DIR=$(pwd)/nxdk
