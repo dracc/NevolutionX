@@ -4,6 +4,7 @@
 #include <cstdio>
 
 #ifdef NXDK
+#include <windows.h>
 #include <hal/debug.h>
 #else
 #include <SDL.h>
@@ -16,6 +17,7 @@ void outputLine(const char* format, ...) {
   vsprintf(buffer, format, args);
 #ifdef NXDK
   debugPrint("%s", buffer);
+  OutputDebugStringA(buffer);
 #else
   SDL_Log("%s", buffer);
 #endif
