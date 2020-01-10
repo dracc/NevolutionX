@@ -6,7 +6,6 @@
 #include "outputLine.h"
 #include "renderer.h"
 #include "subsystems.h"
-#include "xpadinput.h"
 
 #include <type_traits>
 #include <threads.h>
