@@ -19,8 +19,8 @@ Renderer::Renderer() {
   width = xmode.width;
   windowFlags = SDL_WINDOW_SHOWN;
 #else
-  height = 640;
-  width = 480;
+  height = 480;
+  width = 640;
   windowFlags = SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE;
   renderFlags = SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED;
 #endif

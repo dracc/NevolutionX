@@ -14,6 +14,8 @@
 #ifdef NXDK
 #include <windows.h>
 #include <hal/xbox.h>
+#else
+#define Sleep(x) SDL_Delay(x)
 #endif
 
 void goToMainMenu(menuItem *mI, Renderer *r, Font &f,

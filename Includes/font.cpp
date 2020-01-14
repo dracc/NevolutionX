@@ -1,8 +1,6 @@
 #include "font.h"
 
-#ifdef NXDK
 #include "outputLine.h"
-#endif
 
 Font::Font(const char* path) {
   outputLine("Opening font %s\n", path);

@@ -19,7 +19,6 @@ add_executable(${PROJECT_NAME}
   Includes/renderer.cpp
   Includes/findXBE.cpp
   Includes/font.cpp
-  Includes/xpadinput.cpp
   )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
