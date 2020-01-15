@@ -21,3 +21,19 @@ jobs:
         run: |
           export PATH=$PATH:/usr/lib/llvm-6.0/bin
           make -j$(nproc) NXDK_DIR=$(pwd)/nxdk
+  ubuntu-cmake:
+    name: Ubuntu CMake
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Tree
+        uses: actions/checkout@v1
+        with:
+          submodules: recursive
+      - name: Install Dependencies
+        run: |
+          echo "deb http://azure.archive.ubuntu.com/ubuntu/ disco main restricted universe" | sudo tee /etc/apt/sources.list
+          sudo apt-get update -y
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -t disco libsdl2-ttf-dev libc6-dev -y
+      - name: Build
+        run: |
+          mkdir build && cd build && cmake .. && make -j$(nproc)
