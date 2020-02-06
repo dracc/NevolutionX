@@ -12,10 +12,7 @@
 #include <SDL.h>
 
 #ifdef NXDK
-#include <windows.h>
 #include <hal/xbox.h>
-#else
-#define Sleep(x) SDL_Delay(x)
 #endif
 
 void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
@@ -40,7 +37,7 @@ int main(void) {
     SDL_GameController *sgc = SDL_GameControllerOpen(0);
     if (sgc == nullptr) {
       outputLine("Joystick Error: %s", SDL_GetError());
-      Sleep(2000);
+      SDL_Delay(2000);
     }
 
     // Set a hint that we want to use our gamecontroller always

@@ -2,7 +2,6 @@
 
 #ifdef NXDK
 #include <nxdk/mount.h>
-#include <windows.h>
 #include <pbkit/pbkit.h>
 #include <hal/input.h>
 #include <hal/video.h>
@@ -63,7 +62,7 @@ void shutdown_systems(int systems) {
     SDL_Quit();
   }
 #ifdef NXDK
-  Sleep(2000);
+  SDL_Delay(2000);
   XReboot();
 #endif
 }
