@@ -169,11 +169,7 @@ int main(void) {
           f.setPassive(&mainMenu[prevItem], &r);
           f.setActive(&mainMenu[currItem], &r);
           prevItem = currItem;
-          menuListTexture = r.compileList(mainMenu);
-          r.clear();
-          r.drawBackground();
-          r.drawMenuTexture(menuListTexture);
-          r.flip();
+          r.updateMenuFrame(mainMenu);
         }
         break;
       case 1:
@@ -192,11 +188,7 @@ int main(void) {
             mainMenuSelection = 0;
             break;
           }
-          menuListTexture = r.compileList(gamesList, 0);
-          r.clear();
-          r.drawBackground();
-          r.drawMenuTexture(menuListTexture);
-          r.flip();
+          r.updateMenuFrame(gamesList, 0);
           break;
         }
         if (prevItem != currItem) {
@@ -204,11 +196,7 @@ int main(void) {
           f.setActive(&gamesList.at(currItem), &r);
           prevItem = currItem;
           listSize = gamesList.size();
-          menuListTexture = r.compileList(gamesList, currItem);
-          r.clear();
-          r.drawBackground();
-          r.drawMenuTexture(menuListTexture);
-          r.flip();
+          r.updateMenuFrame(gamesList, currItem);
         }
         break;
       case 2:
@@ -227,11 +215,7 @@ int main(void) {
             mainMenuSelection = 0;
             break;
           }
-          menuListTexture = r.compileList(appsList, 0);
-          r.clear();
-          r.drawBackground();
-          r.drawMenuTexture(menuListTexture);
-          r.flip();
+          r.updateMenuFrame(appsList, 0);
           break;
         }
         if (prevItem != currItem) {
@@ -239,11 +223,7 @@ int main(void) {
           f.setActive(&appsList.at(currItem), &r);
           prevItem = currItem;
           listSize = appsList.size();
-          menuListTexture = r.compileList(appsList, currItem);
-          r.clear();
-          r.drawBackground();
-          r.drawMenuTexture(menuListTexture);
-          r.flip();
+          r.updateMenuFrame(appsList, currItem);
         }
         break;
       case 4:
