@@ -7,6 +7,8 @@
 #include "renderer.h"
 #include "subsystems.h"
 
+#include "ftpServer.h"
+
 #include <type_traits>
 #include <threads.h>
 #include <SDL.h>
@@ -27,6 +29,7 @@ void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
 int main(void) {
   int init = init_systems();
   int mainMenuSelection = 0;
+  ftpServer *s = nullptr;
   std::vector<menuItem> mainMenu;
   std::vector<xbeMenuItem> gamesList;
   std::vector<xbeMenuItem> appsList;
@@ -58,6 +61,18 @@ int main(void) {
     thrd_t thrA;
     int thread_statusA = 1;
     thrd_create(&thrA, findXBE, &xfaA);
+
+    // Start FTP server
+    if (init == 0) {
+#ifdef NXDK
+      s = new ftpServer(21);
+#else
+      s = new ftpServer(2121);
+#endif
+      s->init();
+      thrd_t thrF;
+      thrd_create(&thrF, thread_runner, s);
+    }
 
     // Create render system
     Renderer r;
@@ -244,6 +259,7 @@ int main(void) {
       }
     }
   }
+  delete s;
   shutdown_systems(init);
   return init;
 }
