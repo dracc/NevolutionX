@@ -19,6 +19,8 @@ add_executable(${PROJECT_NAME}
   Includes/renderer.cpp
   Includes/findXBE.cpp
   Includes/font.cpp
+  Includes/ftpServer.cpp
+  Includes/ftpConnection.cpp
   )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
