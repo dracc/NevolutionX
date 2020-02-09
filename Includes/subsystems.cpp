@@ -1,5 +1,7 @@
 #include "subsystems.h"
 
+#include "outputLine.h"
+
 #ifdef NXDK
 #include <nxdk/mount.h>
 #include <pbkit/pbkit.h>
@@ -11,12 +13,15 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
-#include "outputLine.h"
+#ifdef NXDK
+#include "networking.h"
+#endif
 
 int init_systems() {
 #ifdef NXDK
   VIDEO_MODE xmode;
   void *p = NULL;
+  bool use_dhcp = true;
   while (XVideoListModes(&xmode, 0, 0, &p)) {}
   XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
 
@@ -44,25 +49,35 @@ int init_systems() {
 #endif
   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_GAMECONTROLLER) != 0) {
     outputLine("Init error: %s", SDL_GetError());
-    return 2;
+    return 3;
   }
 
   if (TTF_Init() != 0) {
     outputLine("TTF Init Error: %s", TTF_GetError());
+    return 2;
+  }
+#ifdef NXDK
+  if (setupNetwork(&use_dhcp) != 0) {
+    outputLine("Network setup failed.");
     return 1;
   }
+#endif
   return 0;
 }
 
 void shutdown_systems(int systems) {
-  if (systems == 0) {
+#ifdef NXDK
+  if (systems <= 1) {
+    closeNetwork();
+  }
+#endif
+  if (systems <= 2) {
     TTF_Quit();
   }
-  if (systems <= 1) {
+  if (systems <= 3) {
     SDL_Quit();
   }
 #ifdef NXDK
-  SDL_Delay(2000);
   XReboot();
 #endif
 }
