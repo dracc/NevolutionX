@@ -34,6 +34,8 @@ public:
   void drawBackground();
   void drawMenuTexture(SDL_Texture* tex, int numItems, int currItem);
   void drawMenuTexture(SDL_Texture* tex);
+  void updateMenuFrame(std::vector<menuItem> &l, int currItem = 0);
+  void updateMenuFrame(std::vector<xbeMenuItem> &l, int currItem = 0);
 
   SDL_Texture* surfaceToTexture(SDL_Surface* surf);
 

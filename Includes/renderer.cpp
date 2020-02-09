@@ -156,6 +156,20 @@ void Renderer::drawMenuTexture(SDL_Texture* tex, int numItems, int currItem) {
   destroyTexture(tex);
 }
 
+void Renderer::updateMenuFrame(std::vector<menuItem> &l, int) {
+  clear();
+  drawBackground();
+  drawMenuTexture(compileList(l));
+  flip();
+}
+
+void Renderer::updateMenuFrame(std::vector<xbeMenuItem> &l, int currItem) {
+  clear();
+  drawBackground();
+  drawMenuTexture(compileList(l, currItem));
+  flip();
+}
+
 SDL_Texture* Renderer::surfaceToTexture(SDL_Surface* surf) {
   return SDL_CreateTextureFromSurface(renderer, surf);
 }
