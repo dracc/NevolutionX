@@ -1,0 +1,43 @@
+{
+    "settings":
+    {
+        "ftp:":
+        {
+            "enable": true,
+            "user": "xbox",
+            "password": "xbox",
+            "port": 21
+        },
+        "sntp:":
+        {
+            "enable": true,
+            "port": 123,
+            "server": "5.9.110.236"
+        }
+    },
+    "menu":
+    [
+        {
+            "label": "Games",
+            "action": "scan",
+            "path": "F:\\Games"
+        },
+        {
+            "label": "Applications",
+            "action": "scan",
+            "path": "F:\\Games"
+        },
+        {
+            "label": "Launch DVD",
+            "action": "launch",
+            "path": "D:\\default.xbe"
+        },
+        {
+            "label": "Settings"
+        },
+        {
+            "label": "Reboot",
+            "action": "reboot"
+        }
+    ]
+}
