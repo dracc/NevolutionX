@@ -1,0 +1,3 @@
+[submodule "3rdparty/SDL_FontCache"]
+	path = 3rdparty/SDL_FontCache
+	url = https://github.com/grimfang4/SDL_FontCache.git
