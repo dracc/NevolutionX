@@ -21,11 +21,11 @@ jobs:
         run: |
           export PATH=$PATH:/usr/lib/llvm-6.0/bin
           make -j$(nproc) NXDK_DIR=$(pwd)/nxdk
-          7z a NevoltionX.zip NevolutionX.iso
+          7z a NevolutionX.zip NevolutionX.iso
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
           # Artifact name
           name: NevolutionX.zip
           # Directory containing files to upload
-          path: $(pwd)/NevolutionX.zip
+          path: NevolutionX.zip
