@@ -19,7 +19,7 @@ void outputLine(const char* format, ...) {
   debugPrint("%s", buffer);
   OutputDebugStringA(buffer);
 #else
-  SDL_Log("%s", buffer);
+  printf("%s", buffer);
 #endif
   va_end(args);
 }
