@@ -31,8 +31,8 @@ class ftpServer {
 public:
   ftpServer(int port);
   int init();
-  int run(void*);
-  void forgetMe(int fd);
+  int run();
+  void forgetConnection(int fd);
   int openConnection(std::string const& addr, std::string const& port);
 };
 

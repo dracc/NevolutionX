@@ -1,10 +1,15 @@
 #ifndef __FTPCONNECTION_H
 #define __FTPCONNECTION_H
 
+// Set buffer sizes to 1KiB for commands and 64KiB for data
+// Command buffer should selldom (never?) exceed 512B but I prefer a little headroom.
+// Data buffer is bigger in order for disk writes to be quicker - writing bigger
+// chunks is usually preferable for a myriad of reasons.
+#define FTP_CMD_BUFFER_SIZE (1024)
+#define FTP_DATA_BUFFER_SIZE (64 * 1024)
+
 #include <string>
 #include "ftpServer.h"
-
-#define FTP_BUFFER_SIZE (64 * 1024)
 
 class ftpServer;
 
@@ -13,7 +18,7 @@ class ftpConnection {
   int dataFd;
   std::string pwd;
   bool logged_in;
-  char buf[FTP_BUFFER_SIZE];
+  char* buf;
   char mode;
   std::string rnfr;
 
@@ -57,8 +62,8 @@ class ftpConnection {
   
 public:
   ftpConnection(int fd, ftpServer* s);
-  void doYourThing(void);
-  void killConnection(void);
+  ~ftpConnection();
+  bool update(void);
 };
 
 #endif
