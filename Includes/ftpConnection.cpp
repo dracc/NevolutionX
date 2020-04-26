@@ -79,7 +79,6 @@ void ftpConnection::sendStdString(int fd, std::string const& s, int flags = 0) {
 ftpConnection::ftpConnection(int fd, ftpServer* s) :
   _fd(fd), server(s) {
   buf = (char*)malloc(FTP_CMD_BUFFER_SIZE);
-  assert(buf);
   pwd = "/";
   logged_in = false;
   sendStdString(replies[0]);
@@ -92,6 +91,10 @@ ftpConnection::~ftpConnection() {
 }
 
 bool ftpConnection::update(void) {
+  // Might as well kill the connection if buffer memory allocation failed.
+  if (buf == nullptr) {
+    return false;
+  }
   // handle data from a client
   int nbytes;
   if ((nbytes = recv(_fd, buf, FTP_CMD_BUFFER_SIZE, 0)) <= 0) {
@@ -509,21 +512,27 @@ bool ftpConnection::sendFile(std::string const& fileName) {
     outputLine("File opening failed. LOL.\n");
     return false;
   }
+  unsigned char* sendBuffer = (unsigned char*)malloc(FTP_DATA_BUFFER_SIZE);
+  if (sendBuffer == nullptr) {
+    outputLine("File sending buffer memory allocation failed.\n");
+    return false;
+  }
   int bytesToRead = FTP_DATA_BUFFER_SIZE;
   unsigned long bytesRead = 0;
   if (mode == 'I') {
-    while (ReadFile(fHandle, buf, bytesToRead, &bytesRead, NULL) && (bytesRead > 0)) {
-      send(dataFd, buf, bytesRead, 0);
+    while (ReadFile(fHandle, sendBuffer, bytesToRead, &bytesRead, NULL) && (bytesRead > 0)) {
+      send(dataFd, sendBuffer, bytesRead, 0);
     }
   } else if (mode == 'A') {
     std::string abuf;
-    while (ReadFile(fHandle, buf, bytesToRead, &bytesRead, NULL) && (bytesRead > 0)) {
-      abuf = buf;
+    while (ReadFile(fHandle, sendBuffer, bytesToRead, &bytesRead, NULL) && (bytesRead > 0)) {
+      abuf = reinterpret_cast<char*>(sendBuffer);
       std::for_each(abuf.begin(), abuf.begin()+bytesRead, [](char &c){c &= 0x7F;});
       send(dataFd, abuf.c_str(), bytesRead, 0);
     }
   }
   CloseHandle(fHandle);
+  free(sendBuffer);
   return true;
 #else
   char trash[1024];
