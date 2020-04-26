@@ -15,6 +15,8 @@
 
 #ifdef NXDK
 #include <hal/xbox.h>
+#include <hal/video.h>
+#include <windows.h>
 #endif
 
 void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
@@ -257,6 +259,11 @@ int main(void) {
       default:
         break;
       }
+#ifdef NXDK
+      // Let's not hog CPU for nothing.
+      XVideoWaitForVBlank();
+      SwitchToThread();
+#endif
     }
   }
   delete s;
