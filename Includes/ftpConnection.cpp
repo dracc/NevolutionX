@@ -248,15 +248,42 @@ void ftpConnection::cmdType(std::string const& arg) {
 }
 
 void ftpConnection::cmdCwd(std::string const& arg) {
+  std::string tmpPwd = "";
   if (arg[0] == '.' && arg[1] == '.') {
-    pwd= pwd.substr(0, pwd.rfind('/', pwd.rfind('/')-1)+1);
+    tmpPwd= pwd.substr(0, pwd.rfind('/', pwd.rfind('/')-1)+1);
   } else if (arg[0] == '/') {
-    pwd = arg + "/";
+    if (arg.length() > 1) {
+      tmpPwd = arg + "/";
+    } else {
+      tmpPwd = "/";
+    }
   } else {
-    pwd = pwd + arg + "/";
+    tmpPwd = pwd + arg + "/";
   }
+#ifdef NXDK
+  if (tmpPwd.length() > 1) {
+    std::string tmpDosPwd = unixToDosPath(tmpPwd);
+    HANDLE soughtFolder;
+    if ((soughtFolder = CreateFileA(tmpDosPwd.c_str(), GENERIC_READ, 0, NULL,
+                                    OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL))
+        != INVALID_HANDLE_VALUE) {
+      pwd = tmpPwd;
+      sprintf(buf, replies[6].c_str(), pwd.c_str());
+      sendStdString(buf);
+    } else {
+      sendStdString("553 Requested action not taken.\r\n");
+    }
+    CloseHandle(soughtFolder);
+  } else {
+    pwd = "/";
+    sprintf(buf, replies[6].c_str(), pwd.c_str());
+    sendStdString(buf);
+  }
+#else
+  pwd = tmpPwd;
   sprintf(buf, replies[6].c_str(), pwd.c_str());
   sendStdString(buf);
+#endif
 }
 
 void ftpConnection::cmdDele(std::string const& arg) {
