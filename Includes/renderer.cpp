@@ -66,7 +66,7 @@ int Renderer::init(const char* bgpath) {
     return ret;
   }
   char* bgname = (char*)malloc(strlen(bgpath)+10);
-  sprintf(bgname, "%s/%d.bmp", bgpath, height);
+  sprintf(bgname, "%s\\%d.bmp", bgpath, height);
   SDL_Surface *bgsurf = SDL_LoadBMP(bgname);
   free(bgname);
   if (bgsurf == nullptr) {

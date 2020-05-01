@@ -76,10 +76,10 @@ int main(void) {
 
     // Create render system
     Renderer r;
-    r.init(".");
+    r.init("D:");
 
     // Create font because do it
-    Font f("vegur.ttf");
+    Font f("D:\\vegur.ttf");
 
     // Populate main menu
     mainMenu.push_back(menuItem("Games"));
