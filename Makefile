@@ -7,7 +7,7 @@ SRCS += $(CURDIR)/main.cpp $(INCDIR)/outputLine.cpp $(INCDIR)/xbeMenuItem.cpp \
 	$(INCDIR)/renderer.cpp $(INCDIR)/font.cpp $(INCDIR)/networking.cpp \
 	$(INCDIR)/ftpServer.cpp $(INCDIR)/ftpConnection.cpp
 
-NXDK_DIR = $(CURDIR)/../nxdk
+NXDK_DIR ?= $(CURDIR)/../nxdk
 NXDK_SDL = y
 NXDK_CXX = y
 NXDK_NET = y
