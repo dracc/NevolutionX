@@ -13,15 +13,13 @@ As the XboxDev community grows, the need for an open-source, nxdk based dashboar
 	- [ ] TLS
 - [x] Application launcher
 - [x] DVD launcher
-
-### Projected
-- [ ] World domination 
 - [ ] Themes
 
 ## Build
 
-In order to build NevolutionX you'll need to install [NXDK](https://github.com/XboxDev/nxdk) first.
-To build NevolutionX you simply clone the repository and run `cmake` followed by `make`:
+In order to build NevolutionX you'll need to install [nxdk](https://github.com/XboxDev/nxdk) first.
+To build NevolutionX you simply clone the repository and run `cmake` followed by `make`. You may need to adjust the installation location of nxdk in the `Makefile` to your needs. The default is `NXDK_DIR = $(CURDIR)/../nxdk` which expects nxdk right next to NevolutionX.
+
 ```sh
 git clone https://github.com/dracc/NevolutionX.git
 cd NevolutionX/
@@ -30,6 +28,7 @@ cd build
 cmake ..
 make
 ```
+
 The xbox executable(`default.xbe`) will be inside the newly created `bin/`:
 ```sh
 ls bin/
@@ -43,7 +42,7 @@ There is no further configuration required. The FTP-server will start automatica
 ## Credits
 
 This software is build on top of other awesome projects:
-- The new xbox development kit [NXDK](https://github.com/XboxDev/nxdk)
+- The new xbox development kit [nxdk](https://github.com/XboxDev/nxdk)
 - Visit the lovely [XboxDev](https://github.com/XboxDev/XboxDev) community
 ## License
  NevolutionX is published under the MIT License. See [LICENSE](LICENSE) for more information.
