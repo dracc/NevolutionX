@@ -65,7 +65,8 @@ const std::string replies[] = {
   "226 Data transfer finished successfully. Data connection closed.\r\n",
   "504 Command parameter not implemented.\r\n",
   "250 Requested file action ok.\r\n",
-  "553 Requested action not taken.\r\n"
+  "553 Requested action not taken.\r\n",
+  "530 Not logged in.\r\n"
 };
 
 void ftpConnection::sendStdString(std::string const& s, int flags = 0) {
@@ -131,8 +132,8 @@ bool ftpConnection::update(void) {
      *   QUIT - terminate the connection
      * X RETR - retrieve a remote file
      * X RMD  - remove a remote directory
-     *   RNFR - rename from
-     *   RNTO - rename to
+     * X RNFR - rename from
+     * X RNTO - rename to
      *   SITE - site-specific commands
      *   SIZE - return the size of a file
      * X STOR - store a file on the remote host
@@ -150,62 +151,66 @@ bool ftpConnection::update(void) {
     }
     std::string cmd = recvdata.substr(0, cmdDataSep);
 
-    if (!cmd.compare("ABOR")) {
-      // cmdAbor();
-      cmdUnimplemented(cmd);
-    } else if (!cmd.compare("CWD")) {
-      cmdCwd(arg);
-    } else if (!cmd.compare("CDUP")) {
-      cmdCdup();
-    } else if (!cmd.compare("DELE")) {
-      cmdDele(arg);
-    } else if (!cmd.compare("LIST")) {
-      cmdList(arg);
-    } else if (!cmd.compare("MDTM")) {
-      // cmdMdtm(arg);
-      cmdUnimplemented(cmd);
-    } else if (!cmd.compare("MKD")) {
-      cmdMkd(arg);
-    } else if (!cmd.compare("NLST")) {
-      cmdNlst(arg);
+    if (!cmd.compare("USER")) {
+      cmdUser(arg);
     } else if (!cmd.compare("PASS")) {
       cmdPass(arg);
-    } else if (!cmd.compare("PASV")) {
-      cmdUnimplemented(cmd);
-    } else if (!cmd.compare("PORT")) {
-      cmdPort(arg);
-    } else if (!cmd.compare("EPRT")) {
-      cmdEprt(arg);
-    } else if (!cmd.compare("PWD")) {
-      cmdPwd();
-    } else if (!cmd.compare("QUIT")) {
-      // cmdQuit();
-      cmdUnimplemented(cmd);
-    } else if (!cmd.compare("RETR")) {
-      cmdRetr(arg);
-    } else if (!cmd.compare("RMD")) {
-      cmdRmd(arg);
-    } else if (!cmd.compare("RNFR")) {
-      cmdRnfr(arg);
-    } else if (!cmd.compare("RNTO")) {
-      cmdRnto(arg);
-    } else if (!cmd.compare("SITE")) {
-      // cmdSite(arg);
-      cmdUnimplemented(cmd);
-    } else if (!cmd.compare("SIZE")) {
-      // cmdSize(arg);
-      cmdUnimplemented(cmd);
-    } else if (!cmd.compare("STOR")) {
-      cmdStor(arg);
-    } else if (!cmd.compare("SYST")) {
-      cmdSyst();
-    } else if (!cmd.compare("TYPE")) {
-      cmdType(arg);
-    } else if (!cmd.compare("USER")) {
-      cmdUser(arg);
+    } else if (logged_in) {
+      if (!cmd.compare("ABOR")) {
+        // cmdAbor();
+        cmdUnimplemented(cmd);
+      } else if (!cmd.compare("CWD")) {
+        cmdCwd(arg);
+      } else if (!cmd.compare("CDUP")) {
+        cmdCdup();
+      } else if (!cmd.compare("DELE")) {
+        cmdDele(arg);
+      } else if (!cmd.compare("LIST")) {
+        cmdList(arg);
+      } else if (!cmd.compare("MDTM")) {
+        // cmdMdtm(arg);
+        cmdUnimplemented(cmd);
+      } else if (!cmd.compare("MKD")) {
+        cmdMkd(arg);
+      } else if (!cmd.compare("NLST")) {
+        cmdNlst(arg);
+      } else if (!cmd.compare("PASV")) {
+        cmdUnimplemented(cmd);
+      } else if (!cmd.compare("PORT")) {
+        cmdPort(arg);
+      } else if (!cmd.compare("EPRT")) {
+        cmdEprt(arg);
+      } else if (!cmd.compare("PWD")) {
+        cmdPwd();
+      } else if (!cmd.compare("QUIT")) {
+        // cmdQuit();
+        cmdUnimplemented(cmd);
+      } else if (!cmd.compare("RETR")) {
+        cmdRetr(arg);
+      } else if (!cmd.compare("RMD")) {
+        cmdRmd(arg);
+      } else if (!cmd.compare("RNFR")) {
+        cmdRnfr(arg);
+      } else if (!cmd.compare("RNTO")) {
+        cmdRnto(arg);
+      } else if (!cmd.compare("SITE")) {
+        // cmdSite(arg);
+        cmdUnimplemented(cmd);
+      } else if (!cmd.compare("SIZE")) {
+        // cmdSize(arg);
+        cmdUnimplemented(cmd);
+      } else if (!cmd.compare("STOR")) {
+        cmdStor(arg);
+      } else if (!cmd.compare("SYST")) {
+        cmdSyst();
+      } else if (!cmd.compare("TYPE")) {
+        cmdType(arg);
+      } else {
+        outputLine(("Received cmd " + cmd + ", arg " + arg + "\n").c_str());
+        cmdUnimplemented(cmd);
+      }
     } else {
-      outputLine(("Received cmd " + cmd + ", arg " + arg + "\n").c_str());
-      cmdUnimplemented(cmd);
+      sendStdString(replies[15]);
     }
   }
   /* Tell the server that we're still alive and kicking! */
@@ -223,6 +228,7 @@ void ftpConnection::cmdUser(std::string const& arg) {
 void ftpConnection::cmdPass(std::string const& arg) {
   if (!arg.compare(passwd)) {
     sendStdString(replies[2]);
+    logged_in = true;
   } else {
     sendStdString("530 login authentication failed.\r\n");
   }
@@ -271,7 +277,7 @@ void ftpConnection::cmdCwd(std::string const& arg) {
       sprintf(buf, replies[6].c_str(), pwd.c_str());
       sendStdString(buf);
     } else {
-      sendStdString("553 Requested action not taken.\r\n");
+      sendStdString(replies[14]);
     }
     CloseHandle(soughtFolder);
   } else {
