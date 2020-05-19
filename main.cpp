@@ -1,13 +1,13 @@
 #include <vector>
-#include "findXBE.h"
-#include "font.h"
-#include "xbeMenuItem.h"
-#include "menuItem.h"
-#include "outputLine.h"
-#include "renderer.h"
-#include "subsystems.h"
+#include "Sources/sys/findXBE.h"
+#include "Sources/render/font.h"
+#include "Sources/menu/xbeMenuItem.h"
+#include "Sources/menu/menuItem.h"
+#include "Sources/render/outputLine.h"
+#include "Sources/render/renderer.h"
+#include "Sources/sys/subsystems.h"
 
-#include "ftpServer.h"
+#include "Sources/ftp/ftpServer.h"
 
 #include <type_traits>
 #include <threads.h>

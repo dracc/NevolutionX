@@ -1,0 +1,1 @@
+SRCS += $(SRCDIR)/render/font.cpp $(SRCDIR)/render/outputline.cpp $(SRCDIR)/render/renderer.cpp

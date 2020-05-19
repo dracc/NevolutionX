@@ -1,1 +1,1 @@
-SRCS += $(CURDIR)/ftpConnection.cpp $(CURDIR)/ftpServer.cpp
+SRCS += $(SRCDIR)/ftp/ftpConnection.cpp $(SRCDIR)/ftp/ftpServer.cpp

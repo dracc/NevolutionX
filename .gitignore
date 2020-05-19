@@ -1,8 +1,10 @@
 DejaVuSansMono.ttf
 build/
 bin/
+*.DS_Store
 *.d
 *.exe
 *.obj
 *.lib
 *.pdb
+*.xbe

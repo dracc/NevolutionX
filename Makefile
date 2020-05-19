@@ -4,7 +4,6 @@ RESOURCEDIR = $(CURDIR)/Resources
 SRCDIR = $(CURDIR)/Sources
 
 include $(SRCDIR)/Makefile
-
 SRCS += $(CURDIR)/main.cpp
 
 NXDK_DIR ?= $(CURDIR)/../nxdk
