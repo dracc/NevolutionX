@@ -1,7 +1,7 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include "xbeMenuItem.h"
+#include "../menu/xbeMenuItem.h"
 #include "renderer.h"
 #include <vector>
 

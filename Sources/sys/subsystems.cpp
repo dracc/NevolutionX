@@ -1,6 +1,6 @@
 #include "subsystems.h"
 
-#include "outputLine.h"
+#include "../render/outputLine.h"
 
 #ifdef NXDK
 #include <nxdk/mount.h>
@@ -14,7 +14,7 @@
 #include <SDL_ttf.h>
 
 #ifdef NXDK
-#include "networking.h"
+#include "../net/networking.h"
 #endif
 
 extern "C" {

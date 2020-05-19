@@ -1,0 +1,1 @@
+SRCS += $(CURDIR)/ftpConnection.cpp $(CURDIR)/ftpServer.cpp

@@ -1,11 +1,11 @@
 XBE_TITLE = NevolutionX
 INCDIR = $(CURDIR)/Includes
 RESOURCEDIR = $(CURDIR)/Resources
+SRCDIR = $(CURDIR)/Sources
 
-SRCS += $(CURDIR)/main.cpp $(INCDIR)/outputLine.cpp $(INCDIR)/xbeMenuItem.cpp \
-	$(INCDIR)/menuItem.cpp $(INCDIR)/subsystems.cpp $(INCDIR)/findXBE.cpp \
-	$(INCDIR)/renderer.cpp $(INCDIR)/font.cpp $(INCDIR)/networking.cpp \
-	$(INCDIR)/ftpServer.cpp $(INCDIR)/ftpConnection.cpp
+include $(SRCDIR)/Makefile
+
+SRCS += $(CURDIR)/main.cpp
 
 NXDK_DIR ?= $(CURDIR)/../nxdk
 NXDK_SDL = y

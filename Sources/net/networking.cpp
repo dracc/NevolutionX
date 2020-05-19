@@ -7,7 +7,7 @@
 #include <netif/etharp.h>
 #include <pktdrv.h>
 
-#include "outputLine.h"
+#include "../render/outputLine.h"
 #include "networking.h"
 
 #define PKT_TMR_INTERVAL 1 /* ms */
