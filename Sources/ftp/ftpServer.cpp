@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
-#include "../render/outputLine.h"
+#include "../debug/outputLine.h"
 #include "ftpServer.h"
 
 #ifdef NXDK

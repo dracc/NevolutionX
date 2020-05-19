@@ -1,6 +1,6 @@
 #include "renderer.h"
 
-#include "outputLine.h"
+#include "../debug/outputLine.h"
 #include <algorithm>
 #include <cmath>
 

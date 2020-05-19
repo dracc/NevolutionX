@@ -1,6 +1,6 @@
 #include "subsystems.h"
 
-#include "../render/outputLine.h"
+#include "../debug/outputLine.h"
 
 #ifdef NXDK
 #include <nxdk/mount.h>

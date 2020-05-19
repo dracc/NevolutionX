@@ -1,6 +1,6 @@
 #include "font.h"
 
-#include "outputLine.h"
+#include "../debug/outputLine.h"
 
 Font::Font(const char* path) {
   outputLine("Opening font %s\n", path);
