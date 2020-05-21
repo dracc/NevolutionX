@@ -19,25 +19,30 @@
     [
         {
             "label": "Games",
-            "action": "scan",
+            "type": "scan",
             "path": "F:\\Games"
         },
         {
             "label": "Applications",
-            "action": "scan",
+            "type": "scan",
             "path": "F:\\Games"
         },
         {
             "label": "Launch DVD",
-            "action": "launch",
+            "type": "launch",
             "path": "D:\\default.xbe"
         },
         {
-            "label": "Settings"
+            "label": "Settings",
+            "type": "settings"
         },
         {
             "label": "Reboot",
-            "action": "reboot"
+            "type": "reboot"
+        },
+        {
+            "label": "Some stupid submenu",
+            "type": "submenu"
         }
     ]
 }

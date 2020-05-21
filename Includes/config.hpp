@@ -6,7 +6,7 @@
 class Config {
 public:
   Config();
-private:
+//private:
   nlohmann::json json;
 };
 
