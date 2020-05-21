@@ -1,8 +1,16 @@
 #include "font.h"
 
 #include "outputLine.h"
+#include "3rdparty/SDL_FontCache/SDL_FontCache.h"
 
-Font::Font(const char* path) {
+#include <cassert>
+
+Font::Font(Renderer &renderer, const char* path) : renderer(renderer) {
+  fcFont = FC_CreateFont();
+  assert(fcFont);
+  bool load_success = FC_LoadFont(fcFont, renderer.getRenderer(), path, 20, FC_MakeColor(215,225,215,255), TTF_STYLE_NORMAL);
+  assert(load_success);
+  /*
   outputLine("Opening font %s\n", path);
   font = TTF_OpenFont(path, 24);
   if (font == nullptr) {
@@ -16,9 +24,12 @@ Font::Font(const char* path) {
   passive = {0xFF, 0x7F, 0xFF, 0xFF};
   outline_color = {0x40, 0x40, 0x40, 0x7F};
   TTF_SetFontOutline(outline_font, outline_size);
+  */
 }
 
 Font::~Font() {
+  FC_FreeFont(fcFont);
+  /*
   outputLine("\nFont destructor called.\n\n");
   if (font != nullptr) {
     TTF_CloseFont(font);
@@ -26,6 +37,17 @@ Font::~Font() {
   if (outline_font != nullptr) {
     TTF_CloseFont(outline_font);
   }
+  */
+}
+
+std::pair<float, float> Font::draw(const std::string &str, std::pair<float, float> coordinates) {
+  FC_Draw(fcFont, renderer.getRenderer(), std::get<0>(coordinates), std::get<1>(coordinates), "%s", str.c_str());
+  FC_Rect rect = FC_GetBounds(fcFont, std::get<0>(coordinates), std::get<1>(coordinates), FC_ALIGN_LEFT, FC_MakeScale(1.0f, 1.0f), "%s", str.c_str());
+  //rect.w += 20;
+  //rect.x -= 10;
+  //renderer.setDrawColor(0xFF, 0xFF, 0xFF, 0xFF);
+  //SDL_RenderDrawRect(renderer.getRenderer(), &rect);
+  return std::pair<float, float>(rect.w, rect.h);
 }
 
 bool Font::textureHelper(menuItem* mI, SDL_Color const& c, Renderer* r) {

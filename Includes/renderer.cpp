@@ -22,7 +22,7 @@ Renderer::Renderer() {
   height = 480;
   width = 640;
   windowFlags = SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE;
-  renderFlags = SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_ACCELERATED;
+  //renderFlags = SDL_RENDERER_PRESENTVSYNC|SDL_RENDERER_SOFTWARE;
 #endif
   overscanCompX = width * 0.075;
   overscanCompY = height * 0.075;
@@ -32,14 +32,14 @@ Renderer::Renderer() {
 }
 
 Renderer::~Renderer() {
+  if (background != nullptr) {
+    SDL_DestroyTexture(background);
+  }
   if (renderer != nullptr) {
     SDL_DestroyRenderer(renderer);
   }
   if (window != nullptr) {
     SDL_DestroyWindow(window);
-  }
-  if (background != nullptr) {
-    SDL_DestroyTexture(background);
   }
 }
 
