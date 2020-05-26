@@ -7,7 +7,7 @@ extern "C" {
 
 #include <lwip/netif.h>
 
-int setupNetwork(void* DHCP);
+int setupNetwork(int DHCP);
 
 void closeNetwork();
 

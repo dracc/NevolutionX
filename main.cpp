@@ -1,17 +1,18 @@
+#include <threads.h>
 #include <vector>
+#include <type_traits>
+#include <SDL.h>
+
 #include "Sources/sys/findXBE.h"
 #include "Sources/render/font.h"
 #include "Sources/menu/xbeMenuItem.h"
 #include "Sources/menu/menuItem.h"
+#include "Sources/menu/menu.h"
 #include "Sources/debug/outputLine.h"
 #include "Sources/render/renderer.h"
 #include "Sources/sys/subsystems.h"
 
 #include "Sources/ftp/ftpServer.h"
-
-#include <type_traits>
-#include <threads.h>
-#include <SDL.h>
 
 #ifdef NXDK
 #include <hal/xbox.h>
@@ -19,254 +20,142 @@
 #include <windows.h>
 #endif
 
-void goToMainMenu(menuItem *mI, Renderer *r, Font &f,
-                  size_t &listSize, size_t &currItem, size_t &prevItem, int &mMS) {
-  f.setPassive(mI, r);
-  listSize = 5;
-  currItem = 0;
-  prevItem = 1;
-  mMS = 0;
+
+// creates worker thread for searching through the FS
+int thread_search_for(thrd_t *thr,
+                      const char * path,
+                      std::vector<xbeMenuItem> *list,
+                      xbeFinderArg *xfa) {
+  xfa->list = list;
+  xfa->path = path;
+  thrd_create(thr, findXBE, &xfa);
+  return 1;
 }
 
+int thread_operate_network(thrd_t *thrNet) {
+  thrd_create(thrNet, init_network, NULL);
+  return 1;
+}
+
+
 int main(void) {
-  int init = init_systems();
-  int mainMenuSelection = 0;
-  ftpServer *s = nullptr;
-  std::vector<menuItem> mainMenu;
+  thrd_t thrG;
+  xbeFinderArg xfaG;
+  int thread_statusG = 0;
   std::vector<xbeMenuItem> gamesList;
+
+  thrd_t thrA;
+  xbeFinderArg xfaA;
+  int thread_statusA = 0;
   std::vector<xbeMenuItem> appsList;
-  if (init <= 1) {
-    bool running = true;
 
-    // Open our GameController
-    SDL_GameController *sgc = SDL_GameControllerOpen(0);
-    if (sgc == nullptr) {
-      outputLine("Joystick Error: %s", SDL_GetError());
-      SDL_Delay(2000);
-    }
+  thrd_t thrNet;
+  int network_status = 0;
 
-    // Set a hint that we want to use our gamecontroller always
-    SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
+  int running = 1;
 
-    // Create the worker thread for populating the games list
-    xbeFinderArg xfaG;
-    xfaG.list = &gamesList;
-    xfaG.path = "F:\\Games\\";
-    thrd_t thrG;
-    int thread_statusG = 1;
-    thrd_create(&thrG, findXBE, &xfaG);
+  if (init_drives()) {
+    // Handle error
+  }
 
-    // Create the worker thread for populating the applications list
-    xbeFinderArg xfaA;
-    xfaA.list = &appsList;
-    xfaA.path = "F:\\Apps\\";
-    thrd_t thrA;
-    int thread_statusA = 1;
-    thrd_create(&thrA, findXBE, &xfaA);
+  if (init_video()) {
+    // Handle error
+  }
 
-    // Start FTP server
-    if (init == 0) {
-#ifdef NXDK
-      s = new ftpServer(21);
-#else
-      s = new ftpServer(2121);
-#endif
-      s->init();
-      thrd_t thrF;
-      thrd_create(&thrF, thread_runner, s);
-    }
+  // Create the worker thread for populating the games list
+  thread_statusG = thread_search_for(&thrG, "F:\\Games\\", &gamesList, &xfaG);
 
-    // Create render system
-    Renderer r;
-    r.init("D:");
+  // Create the worker thread for populating the applications list
+  thread_statusA = thread_search_for(&thrA, "F:\\Apps\\", &appsList, &xfaA);
 
-    // Create font because do it
-    Font f("D:\\vegur.ttf");
+  // Brings the NIC up with static ip or dhcp
+  // if successfull, continues to run as FTP server
+  network_status = thread_operate_network(&thrNet);
 
-    // Populate main menu
-    mainMenu.push_back(menuItem("Games"));
-    mainMenu.push_back(menuItem("Applications"));
-    mainMenu.push_back(menuItem("Launch DVD"));
-    mainMenu.push_back(menuItem("Settings"));
-    mainMenu.push_back(menuItem("Reboot"));
+  if (init_input()) {
+    // Handle error
+  }
 
-    size_t ret = f.createTextures(mainMenu, &r);
-    if (ret != mainMenu.size()) {
-      outputLine("Main menu textures could not be created.\n");
-    }
+  // Create render system
+  Renderer r;
+  r.init("D:");
 
-    SDL_Texture* menuListTexture = r.compileList(mainMenu);
-    if (menuListTexture == nullptr) {
-      outputLine("Main menu list texture could not be compiled.\n");
-    }
-    r.drawBackground();
-    r.drawMenuTexture(menuListTexture);
-    r.flip();
-    size_t currItem = 0, prevItem = 0, listSize = mainMenu.size();
+  // Create font because do it
+  Font f("D:\\vegur.ttf");
 
-    SDL_Event event;
+  r.drawBackground();
+  r.flip();
 
-    while (running) {
-      while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT) {
-          if (thread_statusG == 1) {
-            thrd_join(thrG, &thread_statusG);
-          }
-          if (thread_statusA == 1) {
-            thrd_join(thrA, &thread_statusA);
-          }
-          running = false;
-          break;
-        } else if (event.type == SDL_CONTROLLERBUTTONDOWN) {
-          if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP) {
-            prevItem = currItem;
-            if (currItem == 0) {
-              currItem = listSize - 1;
-            } else {
-              --currItem;
-            }
-          } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN) {
-            prevItem = currItem;
-            currItem = (currItem + 1) % listSize;
-          } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_A) {
-            switch (mainMenuSelection) {
-            case 0:
-              mainMenuSelection = currItem + 1;
-              currItem = 0;
-              prevItem = 1;
-              break;
-            case 1:
-              if (currItem != (gamesList.size() - 1)) {
-#ifdef NXDK
-                XLaunchXBE(const_cast<char*>(gamesList[currItem].getXBEPath().c_str()));
-#endif
-              }
-              goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
-                           mainMenuSelection);
-              break;
-            case 2:
-              if (currItem != (appsList.size() - 1)) {
-#ifdef NXDK
-                XLaunchXBE(const_cast<char*>(appsList[currItem].getXBEPath().c_str()));
-#endif
-              }
-              goToMainMenu(&appsList[currItem], &r, f, listSize, currItem, prevItem,
-                           mainMenuSelection);
-              break;
-            case 3:
-#ifdef NXDK
-              XLaunchXBE(const_cast<char*>("D:\\default.xbe"));
-#endif
-              mainMenuSelection = 0;
-              break;
-//            case 4:
-//              break;
-//            case 5:
-//              break;
-            default:
-              break;
-            }
-          } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_B ||
-                     event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK) {
-            switch (mainMenuSelection) {
-            case 0:
-              break;
-            default:
-              goToMainMenu(&gamesList[currItem], &r, f, listSize, currItem, prevItem,
-                           mainMenuSelection);
-              break;
-            }
-          }
-        }
-      }
-      // FIXME: Loads of repetitions ahead - break out into functions
-      switch (mainMenuSelection) {
-      case 0:
-        if (prevItem != currItem) {
-          f.setPassive(&mainMenu[prevItem], &r);
-          f.setActive(&mainMenu[currItem], &r);
-          prevItem = currItem;
-          r.updateMenuFrame(mainMenu);
-        }
-        break;
-      case 1:
+  SDL_Event event;
+
+  thrd_join(thrA, &thread_statusA);
+  // FIXME: This check sucks.
+  if (thread_statusA != 0) {
+    outputLine("Apps list gathering failed.\n");
+    running = 0;
+  }
+  appsList.push_back(xbeMenuItem("<- back", ""));
+  if (f.createTextures(appsList, &r) != appsList.size()) {
+    outputLine("Games list textures could not be created.\n");
+    running = 0;
+  }
+  r.updateMenuFrame(appsList, 0);
+
+  thrd_join(thrG, &thread_statusG);
+  // FIXME: This check sucks.
+  if (thread_statusG != 0) {
+    outputLine("Games list gathering failed.\n");
+    running = 0;
+  }
+  gamesList.push_back(xbeMenuItem("<- back", ""));
+  if (f.createTextures(gamesList, &r) != gamesList.size()) {
+    outputLine("Games list textures could not be created.\n");
+    running = 0;
+  }
+  r.updateMenuFrame(gamesList, 0);
+
+  menu Menu = menu(&r, &f, &gamesList, &appsList);
+
+  while (running) {
+    while (SDL_PollEvent(&event)) {
+      if (event.type == SDL_QUIT) {
         if (thread_statusG == 1) {
           thrd_join(thrG, &thread_statusG);
-          // FIXME: This check sucks.
-          if (thread_statusG != 0) {
-            outputLine("Games list gathering failed.\n");
-            mainMenuSelection = 0;
-            break;
-          }
-          gamesList.push_back(xbeMenuItem("<- back",""));
-          ret = f.createTextures(gamesList, &r);
-          if (ret != gamesList.size()) {
-            outputLine("Games list textures could not be created.\n");
-            mainMenuSelection = 0;
-            break;
-          }
-          r.updateMenuFrame(gamesList, 0);
-          break;
         }
-        if (prevItem != currItem) {
-          f.setPassive(&gamesList.at(prevItem), &r);
-          f.setActive(&gamesList.at(currItem), &r);
-          prevItem = currItem;
-          listSize = gamesList.size();
-          r.updateMenuFrame(gamesList, currItem);
-        }
-        break;
-      case 2:
         if (thread_statusA == 1) {
           thrd_join(thrA, &thread_statusA);
-          // FIXME: This check sucks.
-          if (thread_statusA != 0) {
-            outputLine("Apps list gathering failed.\n");
-            mainMenuSelection = 0;
-            break;
-          }
-          appsList.push_back(xbeMenuItem("<- back",""));
-          ret = f.createTextures(appsList, &r);
-          if (ret != appsList.size()) {
-            outputLine("Games list textures could not be created.\n");
-            mainMenuSelection = 0;
-            break;
-          }
-          r.updateMenuFrame(appsList, 0);
+        }
+        running = false;
+        break;
+      } else if (event.type == SDL_CONTROLLERBUTTONDOWN) {
+        switch (event.cbutton.button) {
+        case SDL_CONTROLLER_BUTTON_DPAD_UP:
+          Menu.up();
+          break;
+        case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+          Menu.down();
+          break;
+        case SDL_CONTROLLER_BUTTON_A:
+          Menu.A();
+          break;
+        case SDL_CONTROLLER_BUTTON_B:
+        case SDL_CONTROLLER_BUTTON_BACK:
+          Menu.back();
+          break;
+        default:
           break;
         }
-        if (prevItem != currItem) {
-          f.setPassive(&appsList.at(prevItem), &r);
-          f.setActive(&appsList.at(currItem), &r);
-          prevItem = currItem;
-          listSize = appsList.size();
-          r.updateMenuFrame(appsList, currItem);
-        }
-        break;
-      case 4:
-        // Settings menu. Not sure what we want/need here.
-        // "it's a problem for the future".
-        prevItem = 0;
-        currItem = 3;
-        mainMenuSelection = 0;
-        break;
-      case 5:
-        running = false;
-        prevItem = 0;
-        currItem = 4;
-        mainMenuSelection = 0;
-        break;
-      default:
-        break;
       }
-#ifdef NXDK
-      // Let's not hog CPU for nothing.
-      XVideoWaitForVBlank();
-      SwitchToThread();
-#endif
     }
+    if (Menu.render() != 0)
+      running = 0;
+#ifdef NXDK
+    // Let's not hog CPU for nothing.
+    XVideoWaitForVBlank();
+    SwitchToThread();
+#endif
   }
-  delete s;
-  shutdown_systems(init);
-  return init;
+
+  shutdown_systems(3);
+  return 0;
 }

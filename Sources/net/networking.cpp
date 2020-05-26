@@ -33,13 +33,11 @@ static void packet_timer(void *arg)
   sys_timeout(PKT_TMR_INTERVAL, packet_timer, NULL);
 }
 
-int setupNetwork(void* DHCP) {
-  bool dhcp = *static_cast<bool*>(DHCP);
-
+int setupNetwork(int DHCP) {
   static ip4_addr_t ipaddr, netmask, gw;
   sys_sem_t init_complete;
 
-  if (dhcp) {
+  if (DHCP) {
     IP4_ADDR(&gw, 0,0,0,0);
     IP4_ADDR(&ipaddr, 0,0,0,0);
     IP4_ADDR(&netmask, 0,0,0,0);
@@ -62,14 +60,14 @@ int setupNetwork(void* DHCP) {
   netif_set_default(g_pnetif);
   netif_set_up(g_pnetif);
 
-  if (dhcp) {
+  if (DHCP) {
     dhcp6_enable_stateless(g_pnetif);
     dhcp_start(g_pnetif);
   }
 
   packet_timer(NULL);
 
-  if (dhcp) {
+  if (DHCP) {
     while (dhcp_supplied_address(g_pnetif) == 0) {
       NtYieldExecution();
     }
