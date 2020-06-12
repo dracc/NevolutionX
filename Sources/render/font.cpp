@@ -1,6 +1,5 @@
-#include "font.h"
-
-#include "../debug/outputLine.h"
+#include <NevolutionX/render/font.h>
+#include <NevolutionX/debug/outputLine.h>
 
 Font::Font(const char* path) {
   outputLine("Opening font %s\n", path);

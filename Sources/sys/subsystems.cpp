@@ -1,10 +1,10 @@
-#include "subsystems.h"
+#include <NevolutionX/sys/subsystems.h>
 
-#include "../debug/outputLine.h"
-#include "../ftp/ftpServer.h"
+#include <NevolutionX/debug/outputLine.h>
+#include <NevolutionX/ftp/ftpServer.h>
 
 #ifdef NXDK
-#include "../net/networking.h"
+#include <NevolutionX/net/networking.h>
 
 #include <nxdk/mount.h>
 #include <pbkit/pbkit.h>

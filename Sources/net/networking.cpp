@@ -7,8 +7,8 @@
 #include <netif/etharp.h>
 #include <pktdrv.h>
 
-#include "../debug/outputLine.h"
-#include "networking.h"
+#include <NevolutionX/debug/outputLine.h>
+#include <NevolutionX/net/networking.h>
 
 #define PKT_TMR_INTERVAL 1 /* ms */
 

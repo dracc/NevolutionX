@@ -1,9 +1,9 @@
 #ifndef __MENU_H
 #define __MENU_H
 #include <vector>
-#include "menuItem.h"
-#include "../render/renderer.h"
-#include "../render/font.h"
+#include <NevolutionX/menu/menuItem.h>
+#include <NevolutionX/render/renderer.h>
+#include <NevolutionX/render/font.h>
 #endif
 class menu {
   Renderer *r;

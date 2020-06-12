@@ -1,11 +1,12 @@
+#include <assert.h>
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <algorithm>
 #include <map>
-#include "../debug/outputLine.h"
-#include "ftpServer.h"
-#include <assert.h>
+#include <NevolutionX/debug/outputLine.h>
+#include <NevolutionX/ftp/ftpServer.h>
+
 
 #ifdef NXDK
 #include <lwip/opt.h>

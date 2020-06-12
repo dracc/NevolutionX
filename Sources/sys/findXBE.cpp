@@ -1,4 +1,4 @@
-#include "findXBE.h"
+#include <NevolutionX/sys/findXBE.h>
 #include <algorithm>
 #include <cstdio>
 

@@ -1,10 +1,10 @@
 /* dummy file, replace with thrimbors code */
-#include "menu.h"
-#include "xbeMenuItem.h"
-#include "menuItem.h"
-#include "../render/font.h"
-#include "../debug/outputLine.h"
-#include "../render/renderer.h"
+#include <NevolutionX/menu/menu.h>
+#include <NevolutionX/menu/xbeMenuItem.h>
+#include <NevolutionX/menu/menuItem.h>
+#include <NevolutionX/render/font.h>
+#include <NevolutionX/render/renderer.h>
+#include <NevolutionX/debug/outputLine.h>
 #include <hal/xbox.h>
 #include <SDL.h>
 

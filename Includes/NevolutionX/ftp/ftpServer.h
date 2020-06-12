@@ -3,7 +3,7 @@
 
 #include <string>
 #include <map>
-#include "ftpConnection.h"
+#include <NevolutionX/ftp/ftpConnection.h>
 #ifdef NXDK
 #include <lwip/sockets.h>
 #include <lwip/netdb.h>

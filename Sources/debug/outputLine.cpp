@@ -1,4 +1,4 @@
-#include "outputLine.h"
+#include <NevolutionX/debug/outputLine.h>
 
 #include <cstdarg>
 #include <cstdio>

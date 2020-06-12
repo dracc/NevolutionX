@@ -1,6 +1,5 @@
-#include "renderer.h"
-
-#include "../debug/outputLine.h"
+#include <NevolutionX/render/renderer.h>
+#include <NevolutionX/debug/outputLine.h>
 #include <algorithm>
 #include <cmath>
 

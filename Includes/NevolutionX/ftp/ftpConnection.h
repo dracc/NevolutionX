@@ -9,7 +9,7 @@
 #define FTP_DATA_BUFFER_SIZE (64 * 1024)
 
 #include <string>
-#include "ftpServer.h"
+#include <NevolutionX/ftp/ftpServer.h>
 
 class ftpServer;
 

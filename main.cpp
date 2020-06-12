@@ -3,16 +3,15 @@
 #include <type_traits>
 #include <SDL.h>
 
-#include "Sources/sys/findXBE.h"
-#include "Sources/render/font.h"
-#include "Sources/menu/xbeMenuItem.h"
-#include "Sources/menu/menuItem.h"
-#include "Sources/menu/menu.h"
-#include "Sources/debug/outputLine.h"
-#include "Sources/render/renderer.h"
-#include "Sources/sys/subsystems.h"
-
-#include "Sources/ftp/ftpServer.h"
+#include <NevolutionX/sys/findXBE.h>
+#include <NevolutionX/render/font.h>
+#include <NevolutionX/menu/xbeMenuItem.h>
+#include <NevolutionX/menu/menuItem.h>
+#include <NevolutionX/menu/menu.h>
+#include <NevolutionX/debug/outputLine.h>
+#include <NevolutionX/render/renderer.h>
+#include <NevolutionX/sys/subsystems.h>
+#include <NevolutionX/ftp/ftpServer.h>
 
 #ifdef NXDK
 #include <hal/xbox.h>

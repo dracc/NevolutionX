@@ -1,8 +1,8 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
-#include "../debug/outputLine.h"
-#include "ftpServer.h"
+#include <NevolutionX/debug/outputLine.h>
+#include <NevolutionX/ftp/ftpServer.h>
 
 #ifdef NXDK
 #include <lwip/opt.h>

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "../menu/xbeMenuItem.h"
+#include <NevolutionX/menu/xbeMenuItem.h>
 
 struct xbeFinderArg {
   std::vector<xbeMenuItem> *list;

@@ -1,4 +1,4 @@
-#include "xbeMenuItem.h"
+#include <NevolutionX/menu/xbeMenuItem.h>
 #include <cstring>
 
 xbeMenuItem::xbeMenuItem(std::string const& text, std::string const& p) :

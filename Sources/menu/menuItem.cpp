@@ -1,4 +1,4 @@
-#include "menuItem.h"
+#include <NevolutionX/menu/menuItem.h>
 
 menuItem::menuItem(std::string const& text) {
   label = text;
