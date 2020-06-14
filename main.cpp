@@ -1,4 +1,5 @@
 #include <threads.h>
+#include <unistd.h>
 #include <vector>
 #include <type_traits>
 #include <SDL.h>
@@ -27,7 +28,7 @@ int thread_search_for(thrd_t *thr,
                       xbeFinderArg *xfa) {
   xfa->list = list;
   xfa->path = path;
-  thrd_create(thr, findXBE, &xfa);
+  thrd_create(thr, findXBE, xfa);
   return 1;
 }
 
@@ -52,6 +53,7 @@ int main(void) {
   int network_status = 0;
 
   int running = 1;
+  SDL_Event event;
 
   if (init_drives()) {
     // Handle error
@@ -82,46 +84,46 @@ int main(void) {
   // Create font because do it
   Font f("D:\\vegur.ttf");
 
-  r.drawBackground();
-  r.flip();
-
-  SDL_Event event;
-
-  thrd_join(thrA, &thread_statusA);
+  if (thread_statusA) {
+    thrd_join(thrA, &thread_statusA);
+  }
   // FIXME: This check sucks.
   if (thread_statusA != 0) {
     outputLine("Apps list gathering failed.\n");
-    running = 0;
+  } else {
+    appsList.push_back(xbeMenuItem("<- back", ""));
+    if (f.createTextures(appsList, &r) != appsList.size()) {
+      outputLine("Games list textures could not be created.\n");
+      running = 0;
+    }
+    r.updateMenuFrame(appsList, 0);
   }
-  appsList.push_back(xbeMenuItem("<- back", ""));
-  if (f.createTextures(appsList, &r) != appsList.size()) {
-    outputLine("Games list textures could not be created.\n");
-    running = 0;
-  }
-  r.updateMenuFrame(appsList, 0);
 
-  thrd_join(thrG, &thread_statusG);
+  if (thread_statusG) {
+    thrd_join(thrG, &thread_statusG);
+  }
   // FIXME: This check sucks.
   if (thread_statusG != 0) {
     outputLine("Games list gathering failed.\n");
-    running = 0;
+  } else {
+    gamesList.push_back(xbeMenuItem("<- back", ""));
+    if (f.createTextures(gamesList, &r) != gamesList.size()) {
+      outputLine("Games list textures could not be created.\n");
+      running = 0;
+    }
+    r.updateMenuFrame(gamesList, 0);
   }
-  gamesList.push_back(xbeMenuItem("<- back", ""));
-  if (f.createTextures(gamesList, &r) != gamesList.size()) {
-    outputLine("Games list textures could not be created.\n");
-    running = 0;
-  }
-  r.updateMenuFrame(gamesList, 0);
 
   menu Menu = menu(&r, &f, &gamesList, &appsList);
+  Menu.render();
 
   while (running) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
-        if (thread_statusG == 1) {
+        if (thread_statusG) {
           thrd_join(thrG, &thread_statusG);
         }
-        if (thread_statusA == 1) {
+        if (thread_statusA) {
           thrd_join(thrA, &thread_statusA);
         }
         running = false;

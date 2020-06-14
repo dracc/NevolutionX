@@ -9,7 +9,6 @@
 #include <SDL.h>
 
 
-// lol I have no idea how to cpp
 menu::menu(Renderer *rp, Font *fp, std::vector<xbeMenuItem> *gL, std::vector<xbeMenuItem> *aL) {
   r = rp;
   f = fp;
@@ -17,9 +16,10 @@ menu::menu(Renderer *rp, Font *fp, std::vector<xbeMenuItem> *gL, std::vector<xbe
   appsList = aL;
 
   // Populate main menu
-  mainMenu.push_back(menuItem("Games"));
-
-  mainMenu.push_back(menuItem("Applications"));
+  if (gL->size() > 0)
+    mainMenu.push_back(menuItem("Games"));
+  if (aL->size() > 0)
+    mainMenu.push_back(menuItem("Applications"));
   mainMenu.push_back(menuItem("Launch DVD"));
   mainMenu.push_back(menuItem("Settings"));
   mainMenu.push_back(menuItem("Reboot"));
