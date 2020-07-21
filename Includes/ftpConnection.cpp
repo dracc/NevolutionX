@@ -155,6 +155,8 @@ bool ftpConnection::update(void) {
       cmdUser(arg);
     } else if (!cmd.compare("PASS")) {
       cmdPass(arg);
+    } else if (!cmd.compare("AUTH")) {
+      cmdUnimplemented(cmd);
     } else if (logged_in) {
       if (!cmd.compare("ABOR")) {
         // cmdAbor();
@@ -210,7 +212,7 @@ bool ftpConnection::update(void) {
         cmdUnimplemented(cmd);
       }
     } else {
-      sendStdString(replies[15]);
+      sendStdString(replies[14]);
     }
   }
   /* Tell the server that we're still alive and kicking! */
