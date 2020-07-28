@@ -1,14 +1,14 @@
 {
     "settings":
     {
-        "ftp:":
+        "ftp":
         {
             "enable": true,
             "user": "xbox",
             "password": "xbox",
             "port": 21
         },
-        "sntp:":
+        "sntp":
         {
             "enable": true,
             "port": 123,
