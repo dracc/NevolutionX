@@ -42,11 +42,14 @@ int main(void) {
     SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
 
     if (init == 0) {
-#ifdef NXDK
-      s = new ftpServer(21);
-#else
-      s = new ftpServer(2121);
-#endif
+      int port = 21;
+      auto &e = config.json["settings"]["ftp"];
+      if (e != nullptr) {
+        if (e["port"] != nullptr) {
+          port = e["port"];
+        }
+      }
+      s = new ftpServer(port);
       s->init();
       thrd_t thrF;
       thrd_create(&thrF, thread_runner, s);
@@ -57,7 +60,7 @@ int main(void) {
     r.init("D:");
 
     // Load font
-    // FIXME: Font path should be read from config
+    // FIXME: Font path should be read from theme
     Font f(r, "vegur.ttf");
 
     Menu menu(config, r);
@@ -70,6 +73,7 @@ int main(void) {
     while (running) {
       r.setDrawColor(0, 89, 0);
       r.clear();
+      r.drawBackground();
 
       menu.render(f);
       r.flip();
