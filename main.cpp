@@ -12,7 +12,7 @@
 #include "ftpServer.h"
 
 #include <type_traits>
-#include <threads.h>
+#include <thread>
 #include <SDL.h>
 
 #ifdef NXDK
@@ -27,6 +27,8 @@ int main(void) {
 
   int init = init_systems();
   ftpServer *s = nullptr;
+
+  std::thread thrF;
 
   if (init <= 1) {
     bool running = true;
@@ -51,8 +53,7 @@ int main(void) {
       }
       s = new ftpServer(port);
       s->init();
-      thrd_t thrF;
-      thrd_create(&thrF, thread_runner, s);
+      thrF = std::thread(thread_runner, s);
     }
 
     // Create render system
@@ -61,7 +62,7 @@ int main(void) {
 
     // Load font
     // FIXME: Font path should be read from theme
-    Font f(r, "vegur.ttf");
+    Font f(r, "D:\\vegur.ttf");
 
     Menu menu(config, r);
 
