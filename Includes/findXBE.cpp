@@ -9,11 +9,8 @@
 
 #define SECTORSIZE 0x1000
 
-int findXBE(void* list) {
-  xbeFinderArg *itm = static_cast<xbeFinderArg*>(list);
-  std::vector<xbeMenuItem>* gmi_list = itm->list;
-  std::string searchmask = itm->path + "*";
-  const char* path = itm->path.c_str();
+int findXBE(std::string const& path, MenuXbe *list) {
+  std::string searchmask = path + "*";
 #ifdef NXDK
   char tmp[64];
   char xbeName[XBENAMESIZE + 1];
@@ -28,7 +25,7 @@ int findXBE(void* list) {
   do {
     if (fData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
       tmp[0] = '\0';
-      sprintf(tmp, "%s%s\\default.xbe", path, fData.cFileName);
+      sprintf(tmp, "%s%s\\default.xbe", path.c_str(), fData.cFileName);
       tmpFILE = fopen(tmp, "rb");
       if (tmpFILE != nullptr) {
         size_t read_bytes = fread(xbeData, 1, SECTORSIZE, tmpFILE);
@@ -60,7 +57,7 @@ int findXBE(void* list) {
           }
           ++offset;
         }
-        gmi_list->push_back(xbeMenuItem(xbeName,tmp));
+        list->addNode(new MenuLaunch(xbeName, tmp));
         fclose(tmpFILE);
         tmpFILE = nullptr;
       }
@@ -71,9 +68,8 @@ int findXBE(void* list) {
 #else
   const char* mask = "*";
   for (int i = 0; i < 7; ++i) {
-    gmi_list->push_back(xbeMenuItem(path, mask));
+    list->addNode(new MenuLaunch(path, mask));
   }
 #endif
-  std::sort(gmi_list->begin(), gmi_list->end());
   return 0;
 }

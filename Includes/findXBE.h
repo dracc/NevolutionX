@@ -4,12 +4,13 @@
 #include <vector>
 #include <string>
 #include "xbeMenuItem.h"
+#include "menu.hpp"
 
 struct xbeFinderArg {
   std::vector<xbeMenuItem> *list;
   std::string path;
 };
 
-int findXBE(void* list);
+int findXBE(std::string const& path, MenuXbe *list);
 
 #endif
