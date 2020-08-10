@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "outputLine.h"
+#include "findXBE.h"
 #ifdef NXDK
 #include <hal/xbox.h>
 #endif
@@ -78,6 +79,7 @@ void MenuNode::down() {
 MenuXbe::MenuXbe(std::string const& label, std::string const& path) :
   MenuNode(label), path(path) {
   // Find "default.xbe"'s and add them to ChildNodes
+  findXBE(path, this);
 }
 
 MenuXbe::~MenuXbe() {
@@ -85,7 +87,6 @@ MenuXbe::~MenuXbe() {
 }
 
 void MenuXbe::execute() {
-
 }
 
 /******************************************************************************************
