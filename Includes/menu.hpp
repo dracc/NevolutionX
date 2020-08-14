@@ -9,12 +9,14 @@
 
 
 class MenuNode;
+class Menu;
 
 class MenuItem {
 public:
   MenuItem(std::string const& label);
+  MenuItem(MenuNode *parent, std::string const& label);
   virtual ~MenuItem();
-  virtual void execute() = 0;
+  virtual void execute(Menu *) = 0;
   MenuNode *getParent() const;
   std::string_view getLabel() const;
 
@@ -27,8 +29,9 @@ protected:
 class MenuNode : public MenuItem {
 public:
   MenuNode(std::string const& label);
+  MenuNode(MenuNode *parent, std::string const& label);
   ~MenuNode();
-  void execute();
+  void execute(Menu *);
   size_t getSelected();
   std::vector<MenuItem*> *getChildNodes();
   void addNode(MenuItem *node);
@@ -43,8 +46,9 @@ protected:
 class MenuXbe : public MenuNode {
 public:
   MenuXbe(std::string const& label, std::string const& path);
+  MenuXbe(MenuNode *parent, std::string const& label, std::string const& path);
   ~MenuXbe();
-  void execute();
+  void execute(Menu *menu);
 protected:
   std::string path;
 };
@@ -53,7 +57,7 @@ class MenuLaunch : public MenuItem {
 public:
   MenuLaunch(std::string const& label, std::string const& path);
   ~MenuLaunch();
-  void execute();
+  void execute(Menu *);
 protected:
   std::string path;
 };
@@ -63,10 +67,12 @@ public:
   Menu(const Config &config, Renderer &renderer);
   void render(Font &font);
   MenuNode *getCurrentMenu();
+  void setCurrentMenu(MenuNode *);
 
   void up();
   void down();
   void back();
+  void execute();
 protected:
   Renderer &renderer;
   MenuNode rootNode;
