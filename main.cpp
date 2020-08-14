@@ -88,7 +88,7 @@ int main(void) {
           } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN) {
             menu.down();
           } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_A) {
-            menu.getCurrentMenu()->execute();
+            menu.execute();
           } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_B ||
                      event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK) {
             menu.back();

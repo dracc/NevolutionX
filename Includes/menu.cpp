@@ -16,6 +16,11 @@ MenuItem::MenuItem(std::string const& label) : label(label) {
 
 }
 
+MenuItem::MenuItem(MenuNode *parent, std::string const& label) :
+  parentNode(parent), label(label) {
+
+}
+
 MenuItem::~MenuItem() {
 
 }
@@ -40,13 +45,22 @@ MenuNode::MenuNode(std::string const& label) : MenuItem(label) {
 
 }
 
+MenuNode::MenuNode(MenuNode *parent, std::string const& label) :
+  MenuItem(label) {
+  this->setParent(parent);
+}
+
 MenuNode::~MenuNode() {
 
 }
 
-void MenuNode::execute() {
-  outputLine("%d", selected);
-  this->childNodes.at(selected)->execute();
+void MenuNode::execute(Menu *menu) {
+  if (menu->getCurrentMenu() != this) {
+    menu->setCurrentMenu(this);
+  }
+  else {
+    this->childNodes.at(selected)->execute(menu);
+  }
 }
 
 size_t MenuNode::getSelected() {
@@ -76,17 +90,24 @@ void MenuNode::down() {
 /******************************************************************************************
                                    MenuXbe
 ******************************************************************************************/
-MenuXbe::MenuXbe(std::string const& label, std::string const& path) :
-  MenuNode(label), path(path) {
+MenuXbe::MenuXbe(MenuNode *parent, std::string const& label, std::string const& path) :
+  MenuNode(parent, label), path(path) {
   // Find "default.xbe"'s and add them to ChildNodes
   findXBE(path, this);
+  std::sort(begin(childNodes), end(childNodes));
 }
 
 MenuXbe::~MenuXbe() {
 
 }
 
-void MenuXbe::execute() {
+void MenuXbe::execute(Menu *menu) {
+  if (menu->getCurrentMenu() != this) {
+    menu->setCurrentMenu(this);
+  }
+  else {
+    this->childNodes.at(selected)->execute(menu);
+  }
 }
 
 /******************************************************************************************
@@ -101,8 +122,8 @@ MenuLaunch::~MenuLaunch() {
 
 }
 
-void MenuLaunch::execute() {
-  outputLine("Launching xbe %s", this->path.c_str());
+void MenuLaunch::execute(Menu *) {
+  outputLine("Launching xbe %s\n", this->path.c_str());
 #ifdef NXDK
   XLaunchXBE(const_cast<char*>(this->path.c_str()));
 #endif
@@ -116,7 +137,7 @@ Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootN
   currentMenu = &rootNode;
   for (auto &e : config.json["menu"]) {
     if (!static_cast<std::string>(e["type"]).compare("scan")) {
-      MenuNode *newNode = new MenuXbe(e["label"], e["path"]);
+      MenuNode *newNode = new MenuXbe(currentMenu, e["label"], e["path"]);
       this->rootNode.addNode(newNode);
     }
     else if (!static_cast<std::string>(e["type"]).compare("launch")) {
@@ -124,11 +145,11 @@ Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootN
       this->rootNode.addNode(newNode);
     }
     else if (!static_cast<std::string>(e["type"]).compare("reboot")) {
-      MenuNode *newNode = new MenuNode(e["label"]);
+      MenuNode *newNode = new MenuNode(currentMenu, e["label"]);
       this->rootNode.addNode(newNode);
     }
     else if (!static_cast<std::string>(e["type"]).compare("settings")) {
-      MenuNode *newNode = new MenuNode(e["label"]);
+      MenuNode *newNode = new MenuNode(currentMenu, e["label"]);
       this->rootNode.addNode(newNode);
     }
   }
@@ -164,6 +185,10 @@ MenuNode *Menu::getCurrentMenu() {
   return currentMenu;
 }
 
+void Menu::setCurrentMenu(MenuNode *menu) {
+  currentMenu = menu;
+}
+
 void Menu::up() {
   currentMenu->up();
 }
@@ -173,6 +198,10 @@ void Menu::down() {
 }
 
 void Menu::back() {
-  outputLine("Setting menu to %s", std::string(currentMenu->getParent()->getLabel()).c_str());
+  outputLine("Setting menu to %s\n", std::string(currentMenu->getParent()->getLabel()).c_str());
   currentMenu = currentMenu->getParent();
+}
+
+void Menu::execute() {
+  this->currentMenu->execute(this);
 }
