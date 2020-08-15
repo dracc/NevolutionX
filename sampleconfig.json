@@ -20,12 +20,12 @@
         {
             "label": "Games",
             "type": "scan",
-            "path": "F:\\Games"
+            "path": "F:\\Games\\"
         },
         {
             "label": "Applications",
             "type": "scan",
-            "path": "F:\\Games"
+            "path": "F:\\Apps"
         },
         {
             "label": "Launch DVD",
