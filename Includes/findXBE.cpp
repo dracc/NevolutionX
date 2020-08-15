@@ -16,7 +16,7 @@ int findXBE(std::string const& path, MenuXbe *list) {
   }
 #ifdef NXDK
   std::string searchmask = workPath + "*";
-  char tmp[64];
+  std::string tmp;
   char xbeName[XBENAMESIZE + 1];
   char *xbeData = static_cast<char*>(malloc(SECTORSIZE));
   FILE* tmpFILE = nullptr;
@@ -28,9 +28,8 @@ int findXBE(std::string const& path, MenuXbe *list) {
 
   do {
     if (fData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-      tmp[0] = '\0';
-      sprintf(tmp, "%s%s\\default.xbe", workPath.c_str(), fData.cFileName);
-      tmpFILE = fopen(tmp, "rb");
+      tmp = workPath + fData.cFileName + "\\default.xbe";
+      tmpFILE = fopen(tmp.c_str(), "rb");
       if (tmpFILE != nullptr) {
         size_t read_bytes = fread(xbeData, 1, SECTORSIZE, tmpFILE);
         XBE *xbe = (XBE*)xbeData;
