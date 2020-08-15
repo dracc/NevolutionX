@@ -10,8 +10,12 @@
 #define SECTORSIZE 0x1000
 
 int findXBE(std::string const& path, MenuXbe *list) {
-  std::string searchmask = path + "*";
+  std::string workPath = path;
+  if (workPath.back() != '\\') {
+    workPath += '\\';
+  }
 #ifdef NXDK
+  std::string searchmask = workPath + "*";
   char tmp[64];
   char xbeName[XBENAMESIZE + 1];
   char *xbeData = static_cast<char*>(malloc(SECTORSIZE));
@@ -25,7 +29,7 @@ int findXBE(std::string const& path, MenuXbe *list) {
   do {
     if (fData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
       tmp[0] = '\0';
-      sprintf(tmp, "%s%s\\default.xbe", path.c_str(), fData.cFileName);
+      sprintf(tmp, "%s%s\\default.xbe", workPath.c_str(), fData.cFileName);
       tmpFILE = fopen(tmp, "rb");
       if (tmpFILE != nullptr) {
         size_t read_bytes = fread(xbeData, 1, SECTORSIZE, tmpFILE);
@@ -68,7 +72,7 @@ int findXBE(std::string const& path, MenuXbe *list) {
 #else
   const char* mask = "*";
   for (int i = 0; i < 7; ++i) {
-    list->addNode(new MenuLaunch(path, mask));
+    list->addNode(new MenuLaunch(workPath, mask));
   }
 #endif
   return 0;
