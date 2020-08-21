@@ -21,6 +21,13 @@
 #include <windows.h>
 #endif
 
+#ifdef NXDK
+#define SEPARATOR "\\"
+#define HOME "D:" SEPARATOR
+#else
+#define SEPARATOR "/"
+#define HOME "." SEPARATOR
+#endif
 
 int main(void) {
   Config config;
@@ -58,11 +65,11 @@ int main(void) {
 
     // Create render system
     Renderer r;
-    r.init("D:");
+    r.init(HOME);
 
     // Load font
     // FIXME: Font path should be read from theme
-    Font f(r, "D:\\vegur.ttf");
+    Font f(r, HOME "vegur.ttf");
 
     Menu menu(config, r);
 
@@ -97,7 +104,6 @@ int main(void) {
       }
 #ifdef NXDK
       // Let's not hog CPU for nothing.
-      XVideoWaitForVBlank();
       SwitchToThread();
 #endif
     }
