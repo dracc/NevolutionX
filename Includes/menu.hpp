@@ -33,14 +33,14 @@ public:
   ~MenuNode();
   void execute(Menu *);
   size_t getSelected();
-  std::vector<MenuItem*> *getChildNodes();
-  void addNode(MenuItem *node);
+  std::vector<std::shared_ptr<MenuItem>> *getChildNodes();
+  void addNode(std::shared_ptr<MenuItem> node);
 
   void up();
   void down();
 protected:
   size_t selected = 0;
-  std::vector<MenuItem*> childNodes;
+  std::vector<std::shared_ptr<MenuItem>> childNodes;
 };
 
 class MenuXbe : public MenuNode {
@@ -77,6 +77,8 @@ protected:
   Renderer &renderer;
   MenuNode rootNode;
   MenuNode *currentMenu;
+  int menuHeight;
+  int startHeight;
 };
 
 #endif
