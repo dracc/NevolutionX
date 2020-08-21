@@ -60,7 +60,7 @@ int findXBE(std::string const& path, MenuXbe *list) {
           }
           ++offset;
         }
-        list->addNode(new MenuLaunch(xbeName, tmp));
+        list->addNode(std::make_shared<MenuLaunch>(xbeName, tmp));
         fclose(tmpFILE);
         tmpFILE = nullptr;
       }
@@ -71,7 +71,7 @@ int findXBE(std::string const& path, MenuXbe *list) {
 #else
   const char* mask = "*";
   for (int i = 0; i < 7; ++i) {
-    list->addNode(new MenuLaunch(workPath, mask));
+    list->addNode(std::make_shared<MenuLaunch>(workPath, mask));
   }
 #endif
   return 0;

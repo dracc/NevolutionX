@@ -59,7 +59,9 @@ void MenuNode::execute(Menu *menu) {
     menu->setCurrentMenu(this);
   }
   else {
-    this->childNodes.at(selected)->execute(menu);
+    if (childNodes.size() > selected) {
+      this->childNodes.at(selected)->execute(menu);
+    }
   }
 }
 
@@ -67,11 +69,11 @@ size_t MenuNode::getSelected() {
   return this->selected;
 }
 
-std::vector<MenuItem*> *MenuNode::getChildNodes() {
+std::vector<std::shared_ptr<MenuItem>> *MenuNode::getChildNodes() {
   return &this->childNodes;
 }
 
-void MenuNode::addNode(MenuItem *node) {
+void MenuNode::addNode(std::shared_ptr<MenuItem> node) {
   this->childNodes.push_back(node);
 }
 
@@ -94,7 +96,9 @@ MenuXbe::MenuXbe(MenuNode *parent, std::string const& label, std::string const& 
   MenuNode(parent, label), path(path) {
   // Find "default.xbe"'s and add them to ChildNodes
   findXBE(path, this);
-  std::sort(begin(childNodes), end(childNodes));
+  std::sort(begin(childNodes), end(childNodes),
+            [](std::shared_ptr<MenuItem> a,
+               std::shared_ptr<MenuItem> b){ return a->getLabel() < b->getLabel();});
 }
 
 MenuXbe::~MenuXbe() {
@@ -106,7 +110,9 @@ void MenuXbe::execute(Menu *menu) {
     menu->setCurrentMenu(this);
   }
   else {
-    this->childNodes.at(selected)->execute(menu);
+    if (childNodes.size() > selected) {
+      this->childNodes.at(selected)->execute(menu);
+    }
   }
 }
 
@@ -135,28 +141,33 @@ void MenuLaunch::execute(Menu *) {
 Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootNode("root") {
   rootNode.setParent(&rootNode);
   currentMenu = &rootNode;
+  menuHeight = renderer.getHeight() * 0.9;
+  startHeight = renderer.getHeight() * 0.1;
   for (auto &e : config.json["menu"]) {
     if (!static_cast<std::string>(e["type"]).compare("scan")) {
-      MenuNode *newNode = new MenuXbe(currentMenu, e["label"], e["path"]);
+      std::shared_ptr<MenuXbe> newNode = std::make_shared<MenuXbe>(currentMenu, e["label"], e["path"]);
       this->rootNode.addNode(newNode);
     }
     else if (!static_cast<std::string>(e["type"]).compare("launch")) {
-      MenuLaunch *newNode = new MenuLaunch(e["label"], e["path"]);
+      std::shared_ptr<MenuLaunch> newNode = std::make_shared<MenuLaunch>(e["label"], e["path"]);
       this->rootNode.addNode(newNode);
     }
     else if (!static_cast<std::string>(e["type"]).compare("reboot")) {
-      MenuNode *newNode = new MenuNode(currentMenu, e["label"]);
+      std::shared_ptr<MenuNode> newNode = std::make_shared<MenuNode>(currentMenu, e["label"]);
       this->rootNode.addNode(newNode);
     }
     else if (!static_cast<std::string>(e["type"]).compare("settings")) {
-      MenuNode *newNode = new MenuNode(currentMenu, e["label"]);
+      std::shared_ptr<MenuNode> newNode = std::make_shared<MenuNode>(currentMenu, e["label"]);
       this->rootNode.addNode(newNode);
     }
   }
 }
 
 void Menu::render(Font &font) {
-  std::pair<float, float> coordinates(100, 100);
+  if (this->currentMenu->getChildNodes()->empty()) {
+    return;
+  }
+  std::pair<float, float> coordinates(100, startHeight);
   std::string menutext;
   size_t i = 0;
   for (auto menuNode : *this->currentMenu->getChildNodes()) {
@@ -176,7 +187,9 @@ void Menu::render(Font &font) {
 
     coordinates = std::pair<float, float>(std::get<0>(coordinates),
                                           std::get<1>(coordinates) + std::get<1>(dimensions));
-
+    if (std::get<1>(coordinates) > menuHeight) {
+      break;
+    }
     ++i;
   }
 }
