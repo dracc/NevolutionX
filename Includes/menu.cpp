@@ -169,9 +169,23 @@ void Menu::render(Font &font) {
   }
   std::pair<float, float> coordinates(100, startHeight);
   std::string menutext;
-  size_t i = 0;
-  for (auto menuNode : *this->currentMenu->getChildNodes()) {
-    menutext = std::string(menuNode->getLabel());
+  size_t selected = static_cast<int>(this->currentMenu->getSelected());
+  if (this->currentMenu->getChildNodes()->size() <= this->itemsToShow) {
+    offsetForDraw = 0;
+  } else {
+    if (selected > (this->currentMenu->getChildNodes()->size() - lowerHalf)) {
+      offsetForDraw = (this->currentMenu->getChildNodes()->size() - itemsToShow);
+    } else if (selected < upperHalf) {
+      offsetForDraw = 0;
+    } else {
+      offsetForDraw = selected - upperHalf;
+    }
+  }
+  size_t i = offsetForDraw;
+  for (auto it = begin(*this->currentMenu->getChildNodes()) + offsetForDraw;
+       it != end(*this->currentMenu->getChildNodes());
+       ++it) {
+    menutext = std::string((*it)->getLabel());
     std::pair<float, float> dimensions;
     dimensions = font.draw(menutext, coordinates);
 

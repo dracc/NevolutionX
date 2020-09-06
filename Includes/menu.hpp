@@ -79,6 +79,10 @@ protected:
   MenuNode *currentMenu;
   int menuHeight;
   int startHeight;
+  size_t offsetForDraw = 0;
+  size_t itemsToShow = 16;
+  size_t lowerHalf = 9;
+  size_t upperHalf = 7;
 };
 
 #endif
