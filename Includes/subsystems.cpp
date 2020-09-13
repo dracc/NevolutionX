@@ -17,10 +17,6 @@
 #include "networking.h"
 #endif
 
-extern "C" {
-  extern uint8_t* _fb;
-}
-
 int init_systems() {
 #ifdef NXDK
   VIDEO_MODE xmode;
@@ -28,12 +24,6 @@ int init_systems() {
   bool use_dhcp = true;
   while (XVideoListModes(&xmode, 0, 0, &p)) {}
   XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
-
-  size_t fb_size = xmode.width * xmode.height * (xmode.bpp + 7) / 8;
-  _fb = (uint8_t*)MmAllocateContiguousMemoryEx(fb_size, 0, 0xFFFFFFFF, 0x1000, PAGE_READWRITE | PAGE_WRITECOMBINE);
-  memset(_fb, 0x00, fb_size);
-#define _PCRTC_START				0xFD600800
-  *(unsigned int*)(_PCRTC_START) = (unsigned int)_fb & 0x03FFFFFF;
 
   if (!nxMountDrive('C', "\\Device\\Harddisk0\\Partition2")) {
     outputLine("Mounting error: Could not mount drive C\n");
