@@ -121,7 +121,7 @@ void MenuXbe::execute(Menu *menu) {
 ******************************************************************************************/
 MenuLaunch::MenuLaunch(std::string const& label, std::string const& path) :
   MenuItem(label), path(path) {
-  // Find "default.xbe"'s and add them to ChildNodes
+
 }
 
 MenuLaunch::~MenuLaunch() {
@@ -136,6 +136,21 @@ void MenuLaunch::execute(Menu *) {
 }
 
 /******************************************************************************************
+                                   MenuExec
+******************************************************************************************/
+MenuExec::MenuExec(std::string const& label, void execute(Menu *)) :
+  MenuItem(label), action(execute) {
+
+}
+
+MenuExec::~MenuExec() {
+
+}
+
+void MenuExec::execute(Menu *menu) {
+  action(menu);
+}
+/******************************************************************************************
                                    Menu
 ******************************************************************************************/
 Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootNode("root") {
@@ -143,7 +158,7 @@ Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootN
   currentMenu = &rootNode;
   menuHeight = renderer.getHeight() * 0.9;
   startHeight = renderer.getHeight() * 0.1;
-  for (auto &e : config.json["menu"]) {
+  for (nlohmann::json const& e : config.json["menu"]) {
     if (!static_cast<std::string>(e["type"]).compare("scan")) {
       std::shared_ptr<MenuXbe> newNode = std::make_shared<MenuXbe>(currentMenu, e["label"], e["path"]);
       this->rootNode.addNode(newNode);
@@ -153,7 +168,7 @@ Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootN
       this->rootNode.addNode(newNode);
     }
     else if (!static_cast<std::string>(e["type"]).compare("reboot")) {
-      std::shared_ptr<MenuNode> newNode = std::make_shared<MenuNode>(currentMenu, e["label"]);
+      std::shared_ptr<MenuExec> newNode = std::make_shared<MenuExec>(e["label"], [](Menu *){exit(0);});
       this->rootNode.addNode(newNode);
     }
     else if (!static_cast<std::string>(e["type"]).compare("settings")) {
