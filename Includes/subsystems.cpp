@@ -4,6 +4,7 @@
 
 #ifdef NXDK
 #include <nxdk/mount.h>
+#include <nxdk/path.h>
 #include <pbkit/pbkit.h>
 #include <hal/input.h>
 #include <hal/video.h>
@@ -15,6 +16,16 @@
 
 #ifdef NXDK
 #include "networking.h"
+
+void mountHomeDir(const char Letter) {
+  char targetPath[MAX_PATH];
+  char *finalSeparator;
+  nxGetCurrentXbeNtPath(targetPath);
+
+  finalSeparator = strrchr(targetPath, '\\');
+  *(finalSeparator + 1) = '\0';
+  nxMountDrive(Letter, targetPath);
+}
 #endif
 
 int init_systems() {
@@ -46,7 +57,10 @@ int init_systems() {
   if (!nxMountDrive('Z', "\\Device\\Harddisk0\\Partition5")) {
     outputLine("Mounting error: Could not mount drive Z\n");
   }
-  if (!nxMountDrive('A', "\\Device\\CdRom0")) {
+  if (nxIsDriveMounted('D')) {
+    nxUnmountDrive('D');
+  }
+  if (!nxMountDrive('D', "\\Device\\CdRom0")) {
     outputLine("Mounting warning: Could not mount DVD drive\n");
   }
 #endif

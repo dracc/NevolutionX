@@ -14,6 +14,8 @@ NXDK_DIR ?= $(CURDIR)/../nxdk
 NXDK_SDL = y
 NXDK_CXX = y
 NXDK_NET = y
+NXDK_DISABLE_AUTOMOUNT_D = y
+
 GEN_XISO = ${XBE_TITLE}.iso
 
 CXXFLAGS += -I$(CURDIR) -I$(INCDIR) -Wall -Wextra -std=gnu++11
