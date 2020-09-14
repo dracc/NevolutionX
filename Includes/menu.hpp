@@ -62,6 +62,14 @@ protected:
   std::string path;
 };
 
+class MenuExec : public MenuItem {
+public:
+  MenuExec(std::string const& label, void execute(Menu *));
+  ~MenuExec();
+  void execute(Menu *);
+  void (*action)(Menu *);
+};
+
 class Menu {
 public:
   Menu(const Config &config, Renderer &renderer);
