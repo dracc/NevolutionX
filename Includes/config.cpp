@@ -4,7 +4,7 @@
 
 #ifdef NXDK
 #define SEPARATOR "\\"
-#define HOME "D:" SEPARATOR
+#define HOME "A:" SEPARATOR
 #else
 #define SEPARATOR "/"
 #define HOME "." SEPARATOR

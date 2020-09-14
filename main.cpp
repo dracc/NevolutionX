@@ -23,13 +23,16 @@
 
 #ifdef NXDK
 #define SEPARATOR "\\"
-#define HOME "D:" SEPARATOR
+#define HOME "A:" SEPARATOR
 #else
 #define SEPARATOR "/"
 #define HOME "." SEPARATOR
 #endif
 
 int main(void) {
+#ifdef NXDK
+  mountHomeDir('A');
+#endif
   Config config;
 
   int init = init_systems();
