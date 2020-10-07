@@ -39,9 +39,6 @@
 bool nxIsDriveMounted(char) { return true; }
 #endif
 
-const std::string username = "xbox";
-const std::string passwd = "xbox";
-
 const std::string drives = "CDEFGXYZ";
 
 const std::string types[] = {
@@ -53,8 +50,8 @@ const std::string types[] = {
 
 const std::string replies[] = {
   "220 Please enter your login name now.\r\n",
-  "331 Password required for " + username + ".\r\n",
-  "230 User " + username + " logged in, proceed.\r\n",
+  "331 Password required.\r\n",
+  "230 User logged in, proceed.\r\n",
   "257 \"%s\" is current directory\r\n",
   "502 %s not implemented.\r\n",
   "200 Type set to %s\r\n",
@@ -220,7 +217,7 @@ bool ftpConnection::update(void) {
 }
 
 void ftpConnection::cmdUser(std::string const& arg) {
-  if(!arg.compare(username)) {
+  if(!arg.compare(server->conf->getUser())) {
     sendStdString(replies[1]);
   } else {
     sendStdString("530 login authentication failed.\r\n");
@@ -228,7 +225,7 @@ void ftpConnection::cmdUser(std::string const& arg) {
 }
 
 void ftpConnection::cmdPass(std::string const& arg) {
-  if (!arg.compare(passwd)) {
+  if (!arg.compare(server->conf->getPassword())) {
     sendStdString(replies[2]);
     logged_in = true;
   } else {
