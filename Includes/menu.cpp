@@ -158,7 +158,7 @@ Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootN
   currentMenu = &rootNode;
   menuHeight = renderer.getHeight() * 0.9;
   startHeight = renderer.getHeight() * 0.1;
-  for (nlohmann::json const& e : config.json["menu"]) {
+  for (nlohmann::json const& e : config.menu) {
     if (!static_cast<std::string>(e["type"]).compare("scan")) {
       std::shared_ptr<MenuXbe> newNode = std::make_shared<MenuXbe>(currentMenu, e["label"], e["path"]);
       this->rootNode.addNode(newNode);

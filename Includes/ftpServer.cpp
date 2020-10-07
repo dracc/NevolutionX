@@ -92,8 +92,8 @@ std::string sock_strerror(int errc) {
   }
 }
 
-ftpServer::ftpServer(int port) :
-  _port(port) {
+ftpServer::ftpServer(ftpConfig const* conf) :
+  conf(conf) {
   FD_ZERO(&master);    // clear the master and temp sets
   FD_ZERO(&readFds);
 
@@ -106,7 +106,7 @@ ftpServer::ftpServer(int port) :
 
 int ftpServer::init(void) {
   int yes = 1;
-  if ((i = getaddrinfo(NULL, std::to_string(_port).c_str(), &hints, &ai)) != 0) {
+  if ((i = getaddrinfo(NULL, std::to_string(conf->getPort()).c_str(), &hints, &ai)) != 0) {
     outputLine("Error: selectserver\n");
     return 5;
   }

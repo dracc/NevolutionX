@@ -53,15 +53,8 @@ int main(void) {
     // Set a hint that we want to use our gamecontroller always
     SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
 
-    if (init == 0) {
-      int port = 21;
-      auto &e = config.json["settings"]["ftp"];
-      if (e != nullptr) {
-        if (e["port"] != nullptr) {
-          port = e["port"];
-        }
-      }
-      s = new ftpServer(port);
+    if (init == 0 && config.settings.ftp.getEnabled()) {
+      s = new ftpServer(&config.settings.ftp);
       s->init();
       thrF = std::thread(thread_runner, s);
     }

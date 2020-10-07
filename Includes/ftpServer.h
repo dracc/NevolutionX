@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include "ftpConnection.h"
+#include "config.hpp"
 #ifdef NXDK
 #include <lwip/sockets.h>
 #include <lwip/netdb.h>
@@ -21,7 +22,6 @@ class ftpServer {
   int listener;
   int newfd;
   int i;
-  int _port;
 
   struct sockaddr_storage raddr;
   socklen_t addrlen;
@@ -29,11 +29,13 @@ class ftpServer {
 
   void* getInAddr(struct sockaddr *sa);
 public:
-  ftpServer(int port);
+  ftpServer(ftpConfig const* conf);
   int init();
   int run();
   void forgetConnection(int fd);
   int openConnection(std::string const& addr, std::string const& port);
+
+  const ftpConfig *conf;
 };
 
 int thread_runner(void* server);

@@ -4,7 +4,7 @@
         "ftp":
         {
             "enable": true,
-            "user": "xbox",
+            "username": "xbox",
             "password": "xbox",
             "port": 21
         },
