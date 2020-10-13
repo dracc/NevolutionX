@@ -55,13 +55,13 @@ void ftpConfig::setEnabled(bool val) {
 }
 
 void ftpConfig::setUser(std::string const& user) {
-  if (!username.compare(user)) {
+  if (username.compare(user)) {
     username = user;
   }
 }
 
 void ftpConfig::setPassword(std::string const& pwd) {
-  if (!password.compare(pwd)) {
+  if (password.compare(pwd)) {
     password = pwd;
   }
 }
