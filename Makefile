@@ -25,9 +25,11 @@ new_all: copy_resources all
 
 include $(NXDK_DIR)/Makefile
 
-copy_resources:
-	@mkdir -p $(OUTPUT_DIR)
+copy_resources: $(OUTPUT_DIR)/config.json
 	@cp $(RESOURCEDIR)/480.bmp $(OUTPUT_DIR)/480.bmp
 	@cp $(RESOURCEDIR)/720.bmp $(OUTPUT_DIR)/720.bmp
 	@cp $(RESOURCEDIR)/vegur.ttf $(OUTPUT_DIR)/vegur.ttf
-	@cp $(CURDIR)/sampleconfig.json $(OUTPUT_DIR)/config.json
+
+$(OUTPUT_DIR)/config.json: $(CURDIR)/sampleconfig.json
+	@mkdir -p $(OUTPUT_DIR)
+	cp $(CURDIR)/sampleconfig.json $(OUTPUT_DIR)/config.json
