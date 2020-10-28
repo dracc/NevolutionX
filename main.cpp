@@ -32,6 +32,7 @@ int main(void) {
   mountHomeDir('A');
 #endif
   Config config;
+  std::map<int, SDL_GameController*> controllers;
 
   int init = init_systems();
   ftpServer *s = nullptr;
@@ -42,10 +43,14 @@ int main(void) {
     bool running = true;
 
     // Open our GameController
-    SDL_GameController *sgc = SDL_GameControllerOpen(0);
-    if (sgc == nullptr) {
-      outputLine("Joystick Error: %s", SDL_GetError());
-      SDL_Delay(2000);
+    for (int i = 0; i < SDL_NumJoysticks(); ++i) {
+      if (SDL_IsGameController(i)) {
+        controllers[i] = SDL_GameControllerOpen(i);
+        if (!controllers[i]) {
+          outputLine("Could not open gamecontroller %i: %s\n", i, SDL_GetError());
+          SDL_Delay(2000);
+        }
+      }
     }
 
     // Set a hint that we want to use our gamecontroller always
@@ -83,6 +88,11 @@ int main(void) {
         if (event.type == SDL_QUIT) {
           running = false;
           break;
+        } else if (event.type == SDL_CONTROLLERDEVICEADDED) {
+          controllers[event.cdevice.which] = SDL_GameControllerOpen(event.cdevice.which);
+        } else if (event.type == SDL_CONTROLLERDEVICEREMOVED) {
+          SDL_GameControllerClose(controllers[event.cdevice.which]);
+          controllers.erase(event.cdevice.which);
         } else if (event.type == SDL_CONTROLLERBUTTONDOWN) {
           if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP) {
             menu.up();
@@ -101,6 +111,9 @@ int main(void) {
       SwitchToThread();
 #endif
     }
+  }
+  for (auto c: controllers) {
+    SDL_GameControllerClose(c.second);
   }
   delete s;
   shutdown_systems(init);
