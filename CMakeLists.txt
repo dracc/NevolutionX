@@ -14,8 +14,6 @@ add_executable(${PROJECT_NAME}
   main.cpp
   Includes/outputLine.cpp
   Includes/subsystems.cpp
-  Includes/menuItem.cpp
-  Includes/xbeMenuItem.cpp
   Includes/renderer.cpp
   Includes/findXBE.cpp
   Includes/font.cpp
