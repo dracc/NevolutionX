@@ -3,8 +3,6 @@
 #include "menu.hpp"
 #include "findXBE.h"
 #include "font.h"
-#include "xbeMenuItem.h"
-#include "menuItem.h"
 #include "outputLine.h"
 #include "renderer.h"
 #include "subsystems.h"

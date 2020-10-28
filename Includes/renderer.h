@@ -3,8 +3,6 @@
 
 #include <vector>
 #include <SDL.h>
-#include "xbeMenuItem.h"
-#include "menuItem.h"
 
 int min(int lhs, int rhs);
 int max(int lhs, int rhs);

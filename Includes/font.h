@@ -1,13 +1,10 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include "xbeMenuItem.h"
 #include "renderer.h"
 #include <vector>
 #include <utility>
-
-#include <SDL.h>
-#include "SDL_ttf.h"
+#include <string>
 
 #include "3rdparty/SDL_FontCache/SDL_FontCache.h"
 

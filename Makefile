@@ -2,8 +2,8 @@ XBE_TITLE = NevolutionX
 INCDIR = $(CURDIR)/Includes
 RESOURCEDIR = $(CURDIR)/Resources
 
-SRCS += $(CURDIR)/main.cpp $(INCDIR)/outputLine.cpp $(INCDIR)/xbeMenuItem.cpp \
-	$(INCDIR)/menuItem.cpp $(INCDIR)/subsystems.cpp $(INCDIR)/findXBE.cpp \
+SRCS += $(CURDIR)/main.cpp $(INCDIR)/outputLine.cpp \
+	$(INCDIR)/subsystems.cpp $(INCDIR)/findXBE.cpp \
 	$(INCDIR)/renderer.cpp $(INCDIR)/font.cpp $(INCDIR)/networking.cpp \
 	$(INCDIR)/ftpServer.cpp $(INCDIR)/ftpConnection.cpp \
 	$(INCDIR)/menu.cpp \
