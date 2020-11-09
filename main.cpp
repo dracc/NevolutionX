@@ -1,6 +1,7 @@
 #include <vector>
 #include "config.hpp"
 #include "menu.hpp"
+#include "langMenu.hpp"
 #include "findXBE.h"
 #include "font.h"
 #include "outputLine.h"
@@ -9,6 +10,7 @@
 
 #include "ftpServer.h"
 
+#include <memory>
 #include <type_traits>
 #include <thread>
 #include <SDL.h>
@@ -71,11 +73,29 @@ int main(void) {
     Font f(r, HOME "vegur.ttf");
 
     Menu menu(config, r);
+    std::shared_ptr<MenuNode> lang = nullptr;
 
     r.drawBackground();
     r.flip();
 
     SDL_Event event;
+
+    ULONG ValueIndex = 0;
+    ULONG Type = 0;
+    uint32_t Value = 0;
+    char Value2[5] = {0};
+    ULONG ValueLength = 4;
+    ULONG ResultLength = 0;
+    ValueIndex = 0x1;
+    ExQueryNonVolatileSetting(ValueIndex, &Type, &Value2,
+                              ValueLength, &ResultLength);
+    ValueIndex = 0x7;
+    ExQueryNonVolatileSetting(ValueIndex, &Type, &Value,
+                              ValueLength, &ResultLength);
+    if (ValueLength == ResultLength && Value == 0) {
+      lang = std::make_shared<LangMenu>(menu.getCurrentMenu(), "Language select");
+      menu.setCurrentMenu(lang.get());
+    }
 
     while (running) {
       r.setDrawColor(0, 89, 0);
