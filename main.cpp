@@ -2,6 +2,7 @@
 #include "config.hpp"
 #include "menu.hpp"
 #include "langMenu.hpp"
+#include "timeMenu.hpp"
 #include "findXBE.h"
 #include "font.h"
 #include "outputLine.h"
@@ -74,6 +75,7 @@ int main(void) {
 
     Menu menu(config, r);
     std::shared_ptr<MenuNode> lang = nullptr;
+    std::shared_ptr<MenuNode> timeZone = nullptr;
 
     r.drawBackground();
     r.flip();
@@ -89,6 +91,10 @@ int main(void) {
     ValueIndex = 0x1;
     ExQueryNonVolatileSetting(ValueIndex, &Type, &Value2,
                               ValueLength, &ResultLength);
+    if (ValueLength == ResultLength && Value2[0] == 0) {
+      timeZone = std::make_shared<TimeMenu>(menu.getCurrentMenu(), "Timezone select");
+      menu.setCurrentMenu(timeZone.get());
+    }
     ValueIndex = 0x7;
     ExQueryNonVolatileSetting(ValueIndex, &Type, &Value,
                               ValueLength, &ResultLength);
