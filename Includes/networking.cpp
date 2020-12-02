@@ -73,13 +73,11 @@ int setupNetwork(void* DHCP) {
   if (dhcp) {
     time_t start = time(NULL);
     while (dhcp_supplied_address(g_pnetif) == 0) {
-      if((time(NULL) - start) <= 7) {
-        NtYieldExecution();
-      }
-      else {
-        outputLine("Couldn't get DHCP settings!\n");
+      if((time(NULL) - start) > 7) {
+        outputLine("Couldn't get DHCP settings!");
         break;
       }
+      NtYieldExecution();
     }
   }
   return 0;
