@@ -6,6 +6,7 @@
 #include <lwip/timeouts.h>
 #include <netif/etharp.h>
 #include <pktdrv.h>
+#include <ctime>
 
 #include "outputLine.h"
 #include "networking.h"
@@ -70,8 +71,15 @@ int setupNetwork(void* DHCP) {
   packet_timer(NULL);
 
   if (dhcp) {
+    time_t start = time(NULL);
     while (dhcp_supplied_address(g_pnetif) == 0) {
-      NtYieldExecution();
+      if((time(NULL) - start) <= 7) {
+        NtYieldExecution();
+      }
+      else {
+        outputLine("Couldn't get DHCP settings!\n");
+        break;
+      }
     }
   }
   return 0;
