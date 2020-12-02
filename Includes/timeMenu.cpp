@@ -77,8 +77,8 @@ TimeMenu::TimeMenu(MenuNode *parent, std::string const& label) :
                          0x0A050003, 0x03050002, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
   timeZones.emplace_back("Bucharest", (int32_t)0xFFFFFF88, "EEST", "EEDT",
                          0x09050001, 0x03050000, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
-  timeZones.emplace_back("Cairo", (int32_t)0xFFFFFF88, "EST", "EDT",
-                         0x09050302, 0x05010502, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
+  timeZones.emplace_back("Cairo", -120, "EST", "EDT",
+                         0x02030509, 0x02050105, (int32_t)0x00000000, -60);
   timeZones.emplace_back("Helsinki", (int32_t)0xFFFFFF88, "FLST", "FLDT",
                          0x0A050004, 0x03050003, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
   timeZones.emplace_back("Jerusalem", (int32_t)0xFFFFFF88, "JST", "JST",
@@ -178,13 +178,13 @@ void TimeMenu::execute(Menu *menu) {
       unsigned char* dstname[5];
       std::memcpy(stdname, timeZones[selected].stdname.c_str(), 4);
       std::memcpy(dstname, timeZones[selected].dstname.c_str(), 4);
-      ExSaveNonVolatileSetting(0x0, 3, const_cast<int*>(&timeZones[selected].bias), 4);
+      ExSaveNonVolatileSetting(0x0, 4, const_cast<int*>(&timeZones[selected].bias), 4);
       ExSaveNonVolatileSetting(0x1, 3, &stdname, 4);
-      ExSaveNonVolatileSetting(0x2, 3, const_cast<int*>(&timeZones[selected].stdbias), 4);
-      ExSaveNonVolatileSetting(0x3, 3, const_cast<uint32_t*>(&timeZones[selected].stdstart), 4);
+      ExSaveNonVolatileSetting(0x2, 3, const_cast<uint32_t*>(&timeZones[selected].stdstart), 4);
+      ExSaveNonVolatileSetting(0x3, 4, const_cast<int*>(&timeZones[selected].stdbias), 4);
       ExSaveNonVolatileSetting(0x4, 3, &dstname, 4);
-      ExSaveNonVolatileSetting(0x5, 3, const_cast<int*>(&timeZones[selected].stdbias), 4);
-      ExSaveNonVolatileSetting(0x6, 3, const_cast<uint32_t*>(&timeZones[selected].dststart), 4);
+      ExSaveNonVolatileSetting(0x5, 3, const_cast<uint32_t*>(&timeZones[selected].dststart), 4);
+      ExSaveNonVolatileSetting(0x6, 4, const_cast<int*>(&timeZones[selected].dstbias), 4);
       menu->setCurrentMenu(this->getParent());
     }
   }
