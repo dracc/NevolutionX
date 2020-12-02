@@ -82,6 +82,7 @@ int main(void) {
 
     SDL_Event event;
 
+#ifdef NXDK
     ULONG ValueIndex = 0;
     ULONG Type = 0;
     uint32_t Value = 0;
@@ -102,6 +103,7 @@ int main(void) {
       lang = std::make_shared<LangMenu>(menu.getCurrentMenu(), "Language select");
       menu.setCurrentMenu(lang.get());
     }
+#endif
 
     while (running) {
       r.setDrawColor(0, 89, 0);

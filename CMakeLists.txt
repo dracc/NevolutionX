@@ -39,3 +39,8 @@ endif()
 
 #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 #set (CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+
+configure_file(${CMAKE_SOURCE_DIR}/Resources/480.bmp ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/Resources/720.bmp ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/Resources/vegur.ttf ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/sampleconfig.json ${CMAKE_CURRENT_BINARY_DIR}/config.json COPYONLY)
