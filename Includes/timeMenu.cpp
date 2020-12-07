@@ -2,8 +2,10 @@
 
 #include <utility>
 #include <vector>
-#include <xboxkrnl/xboxkrnl.h>
 
+#ifdef NXDK
+#include <xboxkrnl/xboxkrnl.h>
+#endif
 
 TimeItem::TimeItem(MenuNode *parent, std::string const& label) :
   MenuItem(parent, label) {
@@ -178,6 +180,7 @@ void TimeMenu::execute(Menu *menu) {
       unsigned char* dstname[5];
       std::memcpy(stdname, timeZones[selected].stdname.c_str(), 4);
       std::memcpy(dstname, timeZones[selected].dstname.c_str(), 4);
+#ifdef NXDK
       ExSaveNonVolatileSetting(0x0, 4, const_cast<int*>(&timeZones[selected].bias), 4);
       ExSaveNonVolatileSetting(0x1, 3, &stdname, 4);
       ExSaveNonVolatileSetting(0x2, 3, const_cast<uint32_t*>(&timeZones[selected].stdstart), 4);
@@ -185,6 +188,7 @@ void TimeMenu::execute(Menu *menu) {
       ExSaveNonVolatileSetting(0x4, 3, &dstname, 4);
       ExSaveNonVolatileSetting(0x5, 3, const_cast<uint32_t*>(&timeZones[selected].dststart), 4);
       ExSaveNonVolatileSetting(0x6, 4, const_cast<int*>(&timeZones[selected].dstbias), 4);
+#endif
       menu->setCurrentMenu(this->getParent());
     }
   }

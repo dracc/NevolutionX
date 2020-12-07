@@ -21,6 +21,8 @@ add_executable(${PROJECT_NAME}
   Includes/ftpConnection.cpp
   Includes/config.cpp
   Includes/menu.cpp
+  Includes/langMenu.cpp
+  Includes/timeMenu.cpp
   3rdparty/SDL_FontCache/SDL_FontCache.c
   )
 

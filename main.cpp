@@ -82,6 +82,7 @@ int main(void) {
 
     SDL_Event event;
 
+#ifdef NXDK
     ULONG ValueIndex = 0;
     ULONG Type = 0;
     uint32_t Value = 0;
@@ -92,16 +93,21 @@ int main(void) {
     ExQueryNonVolatileSetting(ValueIndex, &Type, &Value2,
                               ValueLength, &ResultLength);
     if (ValueLength == ResultLength && Value2[0] == 0) {
+#endif
       timeZone = std::make_shared<TimeMenu>(menu.getCurrentMenu(), "Timezone select");
       menu.setCurrentMenu(timeZone.get());
+#ifdef NXDK
     }
     ValueIndex = 0x7;
     ExQueryNonVolatileSetting(ValueIndex, &Type, &Value,
                               ValueLength, &ResultLength);
     if (ValueLength == ResultLength && Value == 0) {
+#endif
       lang = std::make_shared<LangMenu>(menu.getCurrentMenu(), "Language select");
       menu.setCurrentMenu(lang.get());
+#ifdef NXDK
     }
+#endif
 
     while (running) {
       r.setDrawColor(0, 89, 0);

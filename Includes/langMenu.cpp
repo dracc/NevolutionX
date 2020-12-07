@@ -1,6 +1,8 @@
 #include "langMenu.hpp"
 
+#ifdef NXDK
 #include <xboxkrnl/xboxkrnl.h>
+#endif
 
 static
 std::vector<std::pair<std::string, uint32_t>> languages{
@@ -20,7 +22,9 @@ LangItem::LangItem(MenuNode *parent, std::string const& label, uint32_t langnum)
 }
 
 void LangItem::execute(Menu *menu) {
+#ifdef NXDK
   ExSaveNonVolatileSetting(0x7, 4, &langnum, sizeof(langnum));
+#endif
   menu->setCurrentMenu(this->parentNode->getParent());
 }
 
