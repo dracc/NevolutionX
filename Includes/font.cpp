@@ -9,7 +9,7 @@ Font::Font(Renderer &renderer, const char* path) : renderer(renderer) {
   fcFont = FC_CreateFont();
   assert(fcFont);
   bool load_success = FC_LoadFont(fcFont, renderer.getRenderer(), path,
-                                  20, FC_MakeColor(120,120,150,255), TTF_STYLE_NORMAL);
+                                  20, FC_MakeColor(250,250,250,255), TTF_STYLE_NORMAL);
   assert(load_success);
 }
 
