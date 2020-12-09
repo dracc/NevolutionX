@@ -31,11 +31,11 @@ TimeMenu::TimeMenu(MenuNode *parent, std::string const& label) :
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
   timeZones.emplace_back("Saskatchewan", (int32_t)0x00000168, "CCST", "CCST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
-  timeZones.emplace_back("MexicoCity", (int32_t)0x00000168, "MST", "MDT",
+  timeZones.emplace_back("Mexico City", (int32_t)0x00000168, "MST", "MDT",
                          0x0200050A, 0x02000104, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
   timeZones.emplace_back("Central", (int32_t)0x00000168, "CST", "CDT",
                          0x0200050A, 0x02000104, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
-  timeZones.emplace_back("CentralAmerica", (int32_t)0x00000168, "CAST", "CAST",
+  timeZones.emplace_back("Central America", (int32_t)0x00000168, "CAST", "CAST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
   timeZones.emplace_back("Indiana", (int32_t)0x0000012C, "EST", "EST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
@@ -51,13 +51,13 @@ TimeMenu::TimeMenu(MenuNode *parent, std::string const& label) :
                          0x050A0000, 0x01040200, (int32_t)0x00000000, (int32_t)0xFFC40000);
   timeZones.emplace_back("Greenland", (int32_t)0x000000B4, "GST", "GDT",
                          0x0200050A, 0x02000104, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
-  timeZones.emplace_back("BuenosAires", (int32_t)0x000000B4, "SEST", "SEST",
+  timeZones.emplace_back("Buenos Aires", (int32_t)0x000000B4, "SEST", "SEST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
   timeZones.emplace_back("Brasilia", (int32_t)0x000000B4, "ESST", "ESDT",
                          0x02000202, 0x0200030A, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
-  timeZones.emplace_back("MidAtlantic", (int32_t)0x00000078, "MAST", "MADT",
+  timeZones.emplace_back("Mid-Atlantic", (int32_t)0x00000078, "MAST", "MADT",
                          0x02000509, 0x02000503, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
-  timeZones.emplace_back("CapeVerdeIslands", (int32_t)0x0000003C, "WAT", "WAT",
+  timeZones.emplace_back("Cape Verde Islands", (int32_t)0x0000003C, "WAT", "WAT",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
   timeZones.emplace_back("Azores", (int32_t)0x0000003C, "AST", "ADT",
                          0x0300050A, 0x02000503, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
@@ -73,7 +73,7 @@ TimeMenu::TimeMenu(MenuNode *parent, std::string const& label) :
                          0x0300050A, 0x02000503, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
   timeZones.emplace_back("Sarajevo", (int32_t)0xFFFFFFC4, "SCST", "SCDT",
                          0x0300050A, 0x02000503, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
-  timeZones.emplace_back("WestCentralAfrica", (int32_t)0xFFFFFFC4, "WAST", "WAST",
+  timeZones.emplace_back("West Central Africa", (int32_t)0xFFFFFFC4, "WAST", "WAST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
   timeZones.emplace_back("Athens", (int32_t)0xFFFFFF88, "GTST", "GTDT",
                          0x0300050A, 0x02000503, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
@@ -95,7 +95,7 @@ TimeMenu::TimeMenu(MenuNode *parent, std::string const& label) :
                          0x0300050A, 0x02000503, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
   timeZones.emplace_back("Nairobi", (int32_t)0xFFFFFF4C, "EAST", "EAST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
-  timeZones.emplace_back("AbuDhabi", (int32_t)0xFFFFFF10, "AST", "AST",
+  timeZones.emplace_back("Abu Dhabi", (int32_t)0xFFFFFF10, "AST", "AST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
   timeZones.emplace_back("Baku", (int32_t)0xFFFFFF10, "CST", "CDT",
                          0x0300050A, 0x02000503, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
@@ -139,11 +139,11 @@ TimeMenu::TimeMenu(MenuNode *parent, std::string const& label) :
                          0x02000503, 0x0200050A, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
   timeZones.emplace_back("Vladivostok", (int32_t)0xFFFFFDA8, "VST", "VDT",
                          0x0300050A, 0x02000503, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
-  timeZones.emplace_back("SolomonIslands", (int32_t)0xFFFFFD6C, "CPST", "CPST",
+  timeZones.emplace_back("Solomon Islands", (int32_t)0xFFFFFD6C, "CPST", "CPST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
   timeZones.emplace_back("Auckland", (int32_t)0xFFFFFD30, "NZST", "NZDT",
                          0x02000303, 0x0200010A, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
-  timeZones.emplace_back("FijiIslands", (int32_t)0xFFFFFD30, "FST", "FST",
+  timeZones.emplace_back("Fiji Islands", (int32_t)0xFFFFFD30, "FST", "FST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
   timeZones.emplace_back("Nukualofa", (int32_t)0xFFFFFCF4, "TST", "TST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
@@ -153,7 +153,7 @@ TimeMenu::TimeMenu(MenuNode *parent, std::string const& label) :
                          0x02020409, 0x02000103, (int32_t)0x00000000, (int32_t)0xFFFFFFC4);
   timeZones.emplace_back("Kabul", (int32_t)0xFFFFFEF2, "AST", "AST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
-  timeZones.emplace_back("NewDelhi", (int32_t)0xFFFFFEB6, "IST", "IST",
+  timeZones.emplace_back("New Delhi", (int32_t)0xFFFFFEB6, "IST", "IST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
   timeZones.emplace_back("Kathmandu", (int32_t)0xFFFFFEA7, "NST", "NST",
                          0x00000000, 0x00000000, (int32_t)0x00000000, (int32_t)0x00000000);
