@@ -26,7 +26,7 @@ make
 The xbox executable(`default.xbe`) will be inside the newly created `bin/`:
 ```sh
 ls bin/
-480.bmp 720.bmp default.xbe vegur.ttf
+480.png 720.png default.xbe vegur.ttf
 ```
 
 ## Installation
