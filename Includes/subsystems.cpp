@@ -13,6 +13,7 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_image.h>
 
 #ifdef NXDK
 #include "networking.h"
@@ -69,6 +70,11 @@ int init_systems() {
     return 3;
   }
 
+  if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
+    outputLine("IMG Init Error: %s!\n", IMG_GetError());
+    return 2;
+  }
+  
   if (TTF_Init() != 0) {
     outputLine("TTF Init Error: %s", TTF_GetError());
     return 2;
@@ -89,6 +95,7 @@ void shutdown_systems(int systems) {
   }
 #endif
   if (systems <= 2) {
+    IMG_Quit();
     TTF_Quit();
   }
   if (systems <= 3) {

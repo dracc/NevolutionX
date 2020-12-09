@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include <SDL_image.h>
+
 #ifdef NXDK
 #include <hal/video.h>
 #endif
@@ -66,8 +68,8 @@ int Renderer::init(const char* bgpath) {
     return ret;
   }
   char* bgname = (char*)malloc(strlen(bgpath)+10);
-  sprintf(bgname, "%s%d.bmp", bgpath, height);
-  SDL_Surface *bgsurf = SDL_LoadBMP(bgname);
+  sprintf(bgname, "%s%d.png", bgpath, height);
+  SDL_Surface *bgsurf = IMG_Load(bgname);
   free(bgname);
   if (bgsurf == nullptr) {
     outputLine("Creating background surface failed.\n");
