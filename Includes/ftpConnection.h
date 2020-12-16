@@ -58,6 +58,7 @@ class ftpConnection {
   void cmdSyst(void);
   void cmdType(std::string const& arg);
   void cmdUser(std::string const& arg);
+  void cmdExecute(std::string const& path);
   void cmdUnimplemented(std::string const& arg);
   
 public:

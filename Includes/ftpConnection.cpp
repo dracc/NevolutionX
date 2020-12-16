@@ -24,6 +24,7 @@
 #include <pktdrv.h>
 #include <windows.h> // Used for file I/O
 #include <nxdk/mount.h>
+#include <hal/xbox.h>
 #include <xboxkrnl/xboxkrnl.h>
 #else
 #include <stdio.h>
@@ -204,6 +205,8 @@ bool ftpConnection::update(void) {
         cmdSyst();
       } else if (!cmd.compare("TYPE")) {
         cmdType(arg);
+      } else if (!cmd.compare("execute")) {
+        cmdExecute(arg);
       } else {
         outputLine(("Received cmd " + cmd + ", arg " + arg + "\n").c_str());
         cmdUnimplemented(cmd);
@@ -468,6 +471,14 @@ void ftpConnection::cmdStor(std::string const& arg) {
   }
 }
 
+void ftpConnection::cmdExecute(std::string const& path) {
+#ifdef NXDK
+  XLaunchXBE(const_cast<char*>(path.c_str()));
+#else
+  outputLine("Launching %s\n", path.c_str());
+#endif
+}
+
 void ftpConnection::cmdUnimplemented(std::string const& arg) {
   sprintf(buf, replies[4].c_str(), arg.c_str());
   sendStdString(buf);
@@ -484,7 +495,6 @@ std::string ftpConnection::unixToDosPath(std::string const& path) {
   std::replace(ret.begin(), ret.end(), '/', '\\');
   return ret;
 }
-
 
 void ftpConnection::sendFolderContents(int fd, std::string &path) {
   if (path[0] == '/' && path[1] == '/') {
