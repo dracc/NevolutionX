@@ -4,6 +4,7 @@
 
 #include "outputLine.h"
 #include "findXBE.h"
+#include "settingsMenu.hpp"
 #ifdef NXDK
 #include <hal/xbox.h>
 #endif
@@ -59,9 +60,18 @@ void MenuNode::execute(Menu *menu) {
     menu->setCurrentMenu(this);
   }
   else {
+    if (childNodes.size() == 0) {
+      return;
+    }
     if (childNodes.size() > selected) {
       this->childNodes.at(selected)->execute(menu);
     }
+  }
+}
+
+void MenuNode::setSelected(size_t id) {
+  if (id < childNodes.size()) {
+    selected = id;
   }
 }
 
@@ -78,15 +88,19 @@ void MenuNode::addNode(std::shared_ptr<MenuItem> node) {
 }
 
 void MenuNode::up() {
-  if (selected == 0) {
-    selected = childNodes.size() - 1;
-  } else {
-    --selected;
+  if (childNodes.size() != 0) {
+    if (selected == 0) {
+      selected = childNodes.size() - 1;
+    } else {
+      --selected;
+    }
   }
 }
 
 void MenuNode::down() {
-  selected = (selected + 1) % childNodes.size();
+  if (childNodes.size() != 0) {
+    selected = (selected + 1) % childNodes.size();
+  }
 }
 
 /******************************************************************************************
@@ -153,7 +167,7 @@ void MenuExec::execute(Menu *menu) {
 /******************************************************************************************
                                    Menu
 ******************************************************************************************/
-Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootNode("root") {
+Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootNode("Main menu") {
   rootNode.setParent(&rootNode);
   currentMenu = &rootNode;
   menuHeight = renderer.getHeight() * 0.9;
@@ -172,18 +186,22 @@ Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootN
       this->rootNode.addNode(newNode);
     }
     else if (!static_cast<std::string>(e["type"]).compare("settings")) {
-      std::shared_ptr<MenuNode> newNode = std::make_shared<MenuNode>(currentMenu, e["label"]);
+      std::shared_ptr<MenuNode> newNode = std::make_shared<settingsMenu>(currentMenu, e["label"]);
       this->rootNode.addNode(newNode);
     }
   }
 }
 
 void Menu::render(Font &font) {
+  std::pair<float, float> coordinates(100, startHeight);
+  std::string menutext = std::string(this->currentMenu->getLabel());
+  font.draw(menutext, std::make_pair<int,int>(300,20));
+
   if (this->currentMenu->getChildNodes()->empty()) {
+    font.draw("<Empty>", coordinates);
     return;
   }
-  std::pair<float, float> coordinates(100, startHeight);
-  std::string menutext;
+
   size_t selected = static_cast<int>(this->currentMenu->getSelected());
   if (this->currentMenu->getChildNodes()->size() <= this->itemsToShow) {
     offsetForDraw = 0;
@@ -196,6 +214,7 @@ void Menu::render(Font &font) {
       offsetForDraw = selected - upperHalf;
     }
   }
+
   size_t i = offsetForDraw;
   for (auto it = begin(*this->currentMenu->getChildNodes()) + offsetForDraw;
        it != end(*this->currentMenu->getChildNodes());

@@ -7,6 +7,7 @@ SRCS += $(CURDIR)/main.cpp $(INCDIR)/outputLine.cpp \
 	$(INCDIR)/renderer.cpp $(INCDIR)/font.cpp $(INCDIR)/networking.cpp \
 	$(INCDIR)/ftpServer.cpp $(INCDIR)/ftpConnection.cpp \
 	$(INCDIR)/menu.cpp $(INCDIR)/langMenu.cpp $(INCDIR)/timeMenu.cpp \
+	$(INCDIR)/settingsMenu.cpp \
 	$(INCDIR)/config.cpp \
 	$(CURDIR)/3rdparty/SDL_FontCache/SDL_FontCache.c
 

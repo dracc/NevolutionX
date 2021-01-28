@@ -18,7 +18,7 @@ public:
   virtual ~MenuItem();
   virtual void execute(Menu *) = 0;
   MenuNode *getParent() const;
-  std::string_view getLabel() const;
+  virtual std::string_view getLabel() const;
 
   void setParent(MenuNode* parent);
 protected:
@@ -32,6 +32,7 @@ public:
   MenuNode(MenuNode *parent, std::string const& label);
   ~MenuNode();
   void execute(Menu *);
+  void setSelected(size_t id);
   size_t getSelected();
   std::vector<std::shared_ptr<MenuItem>> *getChildNodes();
   void addNode(std::shared_ptr<MenuItem> node);

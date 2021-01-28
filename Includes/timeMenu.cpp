@@ -167,6 +167,9 @@ TimeMenu::TimeMenu(MenuNode *parent, std::string const& label) :
     std::shared_ptr<TimeItem> newNode = std::make_shared<TimeItem>(this, timeZones[i].name);
     addNode(newNode);
   }
+
+  /* Make Berlin (CET/CEST) the default selection */
+  setSelected(25);
 }
 
 void TimeMenu::execute(Menu *menu) {
