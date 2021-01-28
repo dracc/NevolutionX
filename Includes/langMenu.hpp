@@ -19,6 +19,13 @@ private:
 class LangMenu : public MenuNode {
 public:
   LangMenu(MenuNode *parent, std::string const& label);
+
+  std::string_view getLabel() const override;
+  void execute(Menu *menu) override;
+  void setLangLabel(std::string const& lang);
+private:
+  uint32_t currLang = 0;
+  std::string langLabel;
 };
 
 #endif
