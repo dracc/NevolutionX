@@ -15,10 +15,10 @@ As the XboxDev community grew, the need for an open-source, nxdk based dashboard
 
 ## Build
 In order to build NevolutionX you'll need to install [nxdk](https://github.com/XboxDev/nxdk) first.
-To build NevolutionX you simply clone the repository and run `make`. You may need to adjust the installation location of nxdk in the `Makefile` to your needs. The default is `NXDK_DIR = $(CURDIR)/../nxdk` which expects nxdk right next to NevolutionX.
+To build NevolutionX you clone the repository, check out the submodules, and run `make`. You may need to adjust the installation location of nxdk in the `Makefile` to your needs. The default is `NXDK_DIR = $(CURDIR)/../nxdk` which expects nxdk right next to NevolutionX.
 
 ```sh
-git clone https://github.com/dracc/NevolutionX.git
+git clone https://github.com/dracc/NevolutionX.git --recursive
 cd NevolutionX/
 make
 ```
