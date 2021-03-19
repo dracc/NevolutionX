@@ -9,6 +9,7 @@ SRCS += $(CURDIR)/main.cpp $(INCDIR)/outputLine.cpp \
 	$(INCDIR)/menu.cpp $(INCDIR)/langMenu.cpp $(INCDIR)/timeMenu.cpp \
 	$(INCDIR)/settingsMenu.cpp \
 	$(INCDIR)/config.cpp \
+	$(INCDIR)/wipeCache.cpp \
 	$(CURDIR)/3rdparty/SDL_FontCache/SDL_FontCache.c
 
 NXDK_DIR ?= $(CURDIR)/../nxdk
