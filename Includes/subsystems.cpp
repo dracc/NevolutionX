@@ -6,7 +6,6 @@
 #include <nxdk/mount.h>
 #include <nxdk/path.h>
 #include <pbkit/pbkit.h>
-#include <hal/input.h>
 #include <hal/video.h>
 #include <hal/xbox.h>
 #endif
@@ -65,7 +64,7 @@ int init_systems() {
     outputLine("Mounting warning: Could not mount DVD drive\n");
   }
 #endif
-  if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_GAMECONTROLLER) != 0) {
+  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     outputLine("Init error: %s", SDL_GetError());
     return 3;
   }
@@ -85,6 +84,10 @@ int init_systems() {
     return 1;
   }
 #endif
+  if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) != 0) {
+    outputLine("Init error: %s", SDL_GetError());
+    return 3;
+  }
   return 0;
 }
 
