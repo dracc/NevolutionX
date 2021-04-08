@@ -46,7 +46,7 @@ int init_systems() {
     outputLine("Mounting warning: Could not mount drive F\n");
   }
   if (!nxMountDrive('G', "\\Device\\Harddisk0\\Partition7")) {
-    outputLine("Mounting warning: Could not mount drive G\n");
+    outputLine("Mounting information: Drive G:\\ not mounted\n");
   }
   if (!nxMountDrive('X', "\\Device\\Harddisk0\\Partition3")) {
     outputLine("Mounting error: Could not mount drive X\n");
