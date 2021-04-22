@@ -1,3 +1,6 @@
 [submodule "3rdparty/SDL_FontCache"]
 	path = 3rdparty/SDL_FontCache
 	url = https://github.com/grimfang4/SDL_FontCache.git
+[submodule "3rdparty/EEasyXB"]
+	path = 3rdparty/EEasyXB
+	url = git@github.com:chase-cobb/EEasyXB.git

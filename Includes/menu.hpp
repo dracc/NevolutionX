@@ -19,11 +19,14 @@ public:
   virtual void execute(Menu *) = 0;
   MenuNode *getParent() const;
   virtual std::string_view getLabel() const;
+  std::string_view getDynamicText() const;
 
   void setParent(MenuNode* parent);
+  void setDynamicText(std::string text);
 protected:
   MenuNode *parentNode;
   const std::string label;
+  std::string dynamicText;
 };
 
 class MenuNode : public MenuItem {

@@ -1,6 +1,7 @@
 #include "menu.hpp"
 
 #include <iostream>
+#include <sstream>
 
 #include "outputLine.h"
 #include "findXBE.h"
@@ -14,7 +15,7 @@
                                    MenuItem
 ******************************************************************************************/
 MenuItem::MenuItem(std::string const& label) : label(label) {
-
+  dynamicText = "";
 }
 
 MenuItem::MenuItem(MenuNode *parent, std::string const& label) :
@@ -30,12 +31,20 @@ std::string_view MenuItem::getLabel() const {
   return this->label;
 }
 
+std::string_view MenuItem::getDynamicText() const {
+  return this->dynamicText;
+}
+
 MenuNode *MenuItem::getParent() const {
   return parentNode;
 }
 
 void MenuItem::setParent(MenuNode* parent) {
   parentNode = parent;
+}
+
+void MenuItem::setDynamicText(std::string text) {
+  dynamicText = text;
 }
 
 /******************************************************************************************
@@ -220,6 +229,12 @@ void Menu::render(Font &font) {
        it != end(*this->currentMenu->getChildNodes());
        ++it) {
     menutext = std::string((*it)->getLabel());
+    std::string dynamictext = std::string((*it)->getDynamicText());
+    if (!dynamictext.empty()) {
+      std::ostringstream oss;
+      oss << menutext << dynamictext;
+      menutext = oss.str();
+    }
     std::pair<float, float> dimensions;
     dimensions = font.draw(menutext, coordinates);
 

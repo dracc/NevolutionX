@@ -2,12 +2,17 @@ XBE_TITLE = NevolutionX
 INCDIR = $(CURDIR)/Includes
 RESOURCEDIR = $(CURDIR)/Resources
 
+#Store the path to the EEasyXB Source directory
+#This var is also used by the EEasyXB Makefile, and must
+#be declared.
+EEASYXB_SOURCE = $(CURDIR)/3rdparty/EEasyXB/Source
+
 SRCS += $(CURDIR)/main.cpp $(INCDIR)/outputLine.cpp \
 	$(INCDIR)/subsystems.cpp $(INCDIR)/findXBE.cpp \
 	$(INCDIR)/renderer.cpp $(INCDIR)/font.cpp $(INCDIR)/networking.cpp \
 	$(INCDIR)/ftpServer.cpp $(INCDIR)/ftpConnection.cpp \
 	$(INCDIR)/menu.cpp $(INCDIR)/langMenu.cpp $(INCDIR)/timeMenu.cpp \
-	$(INCDIR)/settingsMenu.cpp \
+	$(INCDIR)/settingsMenu.cpp $(INCDIR)/audioMenu.cpp\
 	$(INCDIR)/config.cpp \
 	$(INCDIR)/wipeCache.cpp \
 	$(CURDIR)/3rdparty/SDL_FontCache/SDL_FontCache.c
@@ -22,6 +27,9 @@ GEN_XISO = ${XBE_TITLE}.iso
 
 CXXFLAGS += -I$(CURDIR) -I$(INCDIR) -Wall -Wextra -std=gnu++11
 CFLAGS   += -std=gnu11
+
+#Include the Conflux Makefile to makebuild dependencies
+include $(EEASYXB_SOURCE)/Makefile
 
 new_all: copy_resources all
 
