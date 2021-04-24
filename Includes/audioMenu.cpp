@@ -9,8 +9,8 @@ std::vector<std::pair<std::string, EEasyXB::AudioMode>> audioModes{
   {"Mono", EEasyXB::AudioMode::MONO},
   {"Stereo", EEasyXB::AudioMode::STEREO},
   {"Surround", EEasyXB::AudioMode::SURROUND},
-  {"Surround AC3", EEasyXB::AudioMode::SURROUND_AC3},
-  {"Surround DTS", EEasyXB::AudioMode::SURROUND_DTS}};
+  {"AC3", EEasyXB::AudioMode::AC3},
+  {"DTS", EEasyXB::AudioMode::DTS}};
 
 AudioItem::AudioItem(MenuNode *parent, std::string const& label, EEasyXB::AudioMode flag) :
   MenuItem(parent, label) {
