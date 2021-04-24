@@ -2,8 +2,8 @@
 #define AUDIOMENU_H
 
 #include "menu.hpp"
-#include <string>
 #include "Eeprom.h"
+#include <string>
 
 class AudioItem : public MenuItem {
 public:

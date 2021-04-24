@@ -22,7 +22,7 @@ const char* ENABLED = "Enabled";
 const char* DISABLED = "Disabled";
 
 void AudioItem::execute(Menu *menu) {
-//#ifdef NXDK
+#ifdef NXDK
   updateEnabledState(true);
   
   std::vector<std::shared_ptr<MenuItem>> *menuItems = parentNode->getChildNodes();
@@ -35,7 +35,7 @@ void AudioItem::execute(Menu *menu) {
       thisAudioItem->setEnabledLabel(isEnabled);
     }
   }
-//#endif
+#endif
 }
 
 void AudioItem::updateEnabledState(bool toggleEnabledState) {
