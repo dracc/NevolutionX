@@ -17,6 +17,7 @@
 #include <SDL.h>
 
 #ifdef NXDK
+#include "eeprom.hpp"
 #include <hal/xbox.h>
 #include <hal/video.h>
 #include <windows.h>
@@ -83,25 +84,17 @@ int main(void) {
     SDL_Event event;
 
 #ifdef NXDK
-    ULONG ValueIndex = 0;
-    ULONG Type = 0;
-    uint32_t Value = 0;
-    char Value2[5] = {0};
-    ULONG ValueLength = 4;
-    ULONG ResultLength = 0;
-    ValueIndex = 0x1;
-    ExQueryNonVolatileSetting(ValueIndex, &Type, &Value2,
-                              ValueLength, &ResultLength);
-    if (ValueLength == ResultLength && Value2[0] == 0) {
+    ULONG ValueIndex = 0x1;
+    uint32_t Value = getEEPROMValue<uint32_t>(ValueIndex);
+    if (Value == 0) {
 #endif
       timeZone = std::make_shared<TimeMenu>(menu.getCurrentMenu(), "Timezone select");
       menu.setCurrentMenu(timeZone.get());
 #ifdef NXDK
     }
     ValueIndex = 0x7;
-    ExQueryNonVolatileSetting(ValueIndex, &Type, &Value,
-                              ValueLength, &ResultLength);
-    if (ValueLength == ResultLength && Value == 0) {
+    Value = getEEPROMValue<uint32_t>(ValueIndex);
+    if (Value == 0) {
 #endif
       lang = std::make_shared<LangMenu>(menu.getCurrentMenu(), "Language select");
       menu.setCurrentMenu(lang.get());
