@@ -15,7 +15,7 @@ on:
 jobs:
   ubuntu:
     name: Ubuntu
-    runs-on: ubuntu-20.04 #TODO: Change to ubuntu-latest once it's ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Clone Tree
         uses: actions/checkout@v2
@@ -29,16 +29,15 @@ jobs:
           submodules: recursive
       - name: Install Dependencies
         run: |
-          sudo apt-get update && \
-          sudo apt-get install -y flex bison clang lld
+          sudo apt-get update
+          sudo apt-get install -y flex bison clang lld llvm
       - name: Build
         env:
           NXDK_DIR: nxdk
-        run: |
-          export PATH=$PATH:/usr/lib/llvm-10/bin
-          make -j$(nproc)
+        run: make -j$(nproc)
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: NevolutionX
           path: '*.iso'
+          if-no-files-found: error
