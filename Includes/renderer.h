@@ -18,6 +18,7 @@ public:
   void flip();
 
   SDL_Renderer* getRenderer() {return renderer;}
+  int getWidth() const {return width;}
   int getHeight() const {return height;}
 
   int setDrawColor(uint8_t r = 0x40, uint8_t g = 0x40,

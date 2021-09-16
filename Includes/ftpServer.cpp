@@ -1,5 +1,3 @@
-#include <iostream>
-#include <iomanip>
 #include <algorithm>
 #include "outputLine.h"
 #include "ftpServer.h"
@@ -213,7 +211,10 @@ int ftpServer::openConnection(std::string const& addr, std::string const& port) 
   return ret;
 }
 
-int thread_runner(void* server) {
-  ftpServer* s = static_cast<ftpServer*>(server);
-  return s->run();
+void ftpServer::runAsync() {
+  serverThread = std::thread(thread_runner, this);
+}
+
+int ftpServer::thread_runner(ftpServer *server) {
+  return server->run();
 }

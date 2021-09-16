@@ -1,6 +1,8 @@
 #ifndef __FTPSERVER_H
 #define __FTPSERVER_H
 
+#include <thread>
+
 #include <string>
 #include <map>
 #include "ftpConnection.h"
@@ -27,17 +29,20 @@ class ftpServer {
   socklen_t addrlen;
   struct addrinfo hints, *ai, *p;
 
+  std::thread serverThread;
+
   void* getInAddr(struct sockaddr *sa);
+  static int thread_runner(ftpServer *server);
+
 public:
   ftpServer(ftpConfig const* conf);
   int init();
   int run();
+  void runAsync();
   void forgetConnection(int fd);
   int openConnection(std::string const& addr, std::string const& port);
 
   const ftpConfig *conf;
 };
-
-int thread_runner(void* server);
 
 #endif

@@ -32,7 +32,6 @@ int init_systems() {
 #ifdef NXDK
   VIDEO_MODE xmode;
   void *p = NULL;
-  bool use_dhcp = true;
   while (XVideoListModes(&xmode, 0, 0, &p)) {}
   XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
 
@@ -78,12 +77,7 @@ int init_systems() {
     outputLine("TTF Init Error: %s", TTF_GetError());
     return 2;
   }
-#ifdef NXDK
-  if (setupNetwork(&use_dhcp) != 0) {
-    outputLine("Network setup failed.");
-    return 1;
-  }
-#endif
+
   if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) != 0) {
     outputLine("Init error: %s", SDL_GetError());
     return 3;
