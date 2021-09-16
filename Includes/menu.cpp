@@ -9,6 +9,8 @@
 #include <hal/xbox.h>
 #endif
 
+// Character used in the config.json to separate multiple path entries.
+#define PATH_DELIMITER ','
 
 /******************************************************************************************
                                    MenuItem
@@ -106,13 +108,24 @@ void MenuNode::down() {
 /******************************************************************************************
                                    MenuXbe
 ******************************************************************************************/
-MenuXbe::MenuXbe(MenuNode *parent, std::string const& label, std::string const& path) :
-  MenuNode(parent, label), path(path) {
+MenuXbe::MenuXbe(MenuNode *parent, std::string const& label, std::string const& paths) :
+  MenuNode(parent, label) {
+  size_t path_start = 0;
+  for (size_t path_end = paths.find(PATH_DELIMITER, path_start);
+       path_end != std::string::npos;
+       path_end = paths.find(PATH_DELIMITER, path_start)) {
+    
+      std::string subpath = paths.substr(path_start, path_end - path_start);
+      findXBE(subpath, this);
+      path_start = path_end + 1;
+  }
+  std::string path = paths.substr(path_start);
+
   // Find "default.xbe"'s and add them to ChildNodes
   findXBE(path, this);
   std::sort(begin(childNodes), end(childNodes),
-            [](std::shared_ptr<MenuItem> a,
-               std::shared_ptr<MenuItem> b){ return a->getLabel() < b->getLabel();});
+            [](const std::shared_ptr<MenuItem> &a,
+               const std::shared_ptr<MenuItem> &b){ return a->getLabel() < b->getLabel();});
 }
 
 MenuXbe::~MenuXbe() {
