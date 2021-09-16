@@ -58,7 +58,7 @@ int setupNetwork(void* DHCP) {
   g_pnetif = netif_add(&nforce_netif, &ipaddr, &netmask, &gw,
                        NULL, nforceif_init, ethernet_input);
   if (!g_pnetif) {
-    return 1;
+    return ERR_NO_INTERFACE;
   }
   netif_set_default(g_pnetif);
   netif_set_up(g_pnetif);
@@ -75,7 +75,7 @@ int setupNetwork(void* DHCP) {
     while (dhcp_supplied_address(g_pnetif) == 0) {
       if((time(NULL) - start) > 7) {
         outputLine("Couldn't get DHCP settings!");
-        break;
+        return ERR_NO_DHCP_RESPONSE;
       }
       NtYieldExecution();
     }

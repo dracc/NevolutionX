@@ -7,6 +7,9 @@ extern "C" {
 
 #include <lwip/netif.h>
 
+#define ERR_NO_INTERFACE 1
+#define ERR_NO_DHCP_RESPONSE 2
+
 int setupNetwork(void* DHCP);
 
 void closeNetwork();
