@@ -90,18 +90,50 @@ void MenuNode::addNode(std::shared_ptr<MenuItem> node) {
 }
 
 void MenuNode::up() {
-  if (childNodes.size() != 0) {
-    if (selected == 0) {
-      selected = childNodes.size() - 1;
-    } else {
-      --selected;
-    }
-  }
+  moveSelection(-1);
 }
 
 void MenuNode::down() {
-  if (childNodes.size() != 0) {
-    selected = (selected + 1) % childNodes.size();
+  moveSelection(1);
+}
+
+void MenuNode::pageUp(int pageSize) {
+  moveSelection(-pageSize, false);
+}
+
+void MenuNode::pageDown(int pageSize) {
+  moveSelection(pageSize, false);
+}
+
+void MenuNode::moveSelection(int delta, bool allowWrap) {
+  if (childNodes.empty() || !delta) {
+    return;
+  }
+
+  size_t numNodes = childNodes.size();
+  if (delta > 0) {
+    if (allowWrap) {
+      selected = (selected + delta) % numNodes;
+    } else {
+      selected = std::min(selected + delta, numNodes - 1);
+    }
+    return;
+  }
+
+  size_t offset = delta * -1;
+  if (offset <= selected) {
+    selected -= offset;
+    return;
+  }
+
+  if (!allowWrap) {
+    selected = 0;
+  } else {
+    offset -= selected;
+    while (offset > numNodes) {
+      offset -= numNodes;
+    }
+    selected = numNodes - offset;
   }
 }
 
@@ -269,6 +301,14 @@ void Menu::up() {
 
 void Menu::down() {
   currentMenu->down();
+}
+
+void Menu::pageUp() {
+  currentMenu->pageUp(static_cast<int>(itemsToShow));
+}
+
+void Menu::pageDown() {
+  currentMenu->pageDown(static_cast<int>(itemsToShow));
 }
 
 void Menu::back() {

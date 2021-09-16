@@ -7,7 +7,6 @@
 #include <vector>
 #include <string>
 
-
 class MenuNode;
 class Menu;
 
@@ -39,7 +38,12 @@ public:
 
   void up();
   void down();
+  void pageUp(int pageSize);
+  void pageDown(int pageSize);
+
 protected:
+  void moveSelection(int delta, bool allowWrap = true);
+
   size_t selected = 0;
   std::vector<std::shared_ptr<MenuItem>> childNodes;
 };
@@ -77,6 +81,8 @@ public:
 
   void up();
   void down();
+  void pageUp();
+  void pageDown();
   void back();
   void execute();
 protected:
