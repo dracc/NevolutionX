@@ -46,12 +46,9 @@ protected:
 
 class MenuXbe : public MenuNode {
 public:
-  MenuXbe(std::string const& label, std::string const& path);
-  MenuXbe(MenuNode *parent, std::string const& label, std::string const& path);
+  MenuXbe(MenuNode *parent, std::string const& label, std::string const& paths);
   ~MenuXbe();
   void execute(Menu *menu);
-protected:
-  std::string path;
 };
 
 class MenuLaunch : public MenuItem {
