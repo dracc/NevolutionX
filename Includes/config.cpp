@@ -1,8 +1,12 @@
 #include "config.hpp"
 
 #include <fstream>
-#include <iostream>
 #include <iomanip>
+
+// Note: pulling this in can create a conflict with fflush as defined in
+// <fstream> leading to a compilation failure w/ clang 12.0.0 on macOS. It is
+// important that <fstream> is included before any lwip headers.
+#include <lwip/inet.h>
 
 #ifdef NXDK
 #define SEPARATOR "\\"
@@ -11,6 +15,61 @@
 #define SEPARATOR "/"
 #define HOME "." SEPARATOR
 #endif
+
+static unsigned int parseIPV4(const std::string &val) {
+  in_addr addr{0};
+
+  if (inet_aton(val.c_str(), &addr)) {
+    return addr.s_addr;
+  }
+
+  return 0;
+}
+
+static std::string ipV4String(unsigned int addr) {
+  in_addr buf{0};
+  buf.s_addr = addr;
+  std::string ret(inet_ntoa(buf));
+  return ret;
+}
+
+netConfig::netConfig() : enable(true), useDHCP(true) {
+  ip4_addr_t addr;
+  IP4_ADDR(&addr, 10,0,1,1);
+  staticGateway = addr.addr;
+
+  IP4_ADDR(&addr, 10,0,1,7);
+  staticIP = addr.addr;
+
+  IP4_ADDR(&addr, 255,255,255,0);
+  staticNetmask = addr.addr;
+}
+
+void to_json(nlohmann::json& j, netConfig const& o) {
+  j = nlohmann::json{{"enable", o.getEnabled()},
+                     {"use_dhcp", o.getUseDHCP()},
+                     {"static_ip", ipV4String(o.getStaticIP())},
+                     {"static_gateway", ipV4String(o.getStaticGateway())},
+                     {"static_netmask", ipV4String(o.getStaticNetmask())}};
+}
+
+void from_json(nlohmann::json const& j, netConfig& o) {
+  if (j.contains("enable") && j["enable"].is_boolean()) {
+    o.setEnabled(j["enable"]);
+  }
+  if (j.contains("use_dhcp") && j["use_dhcp"].is_boolean()) {
+    o.setUseDHCP(j["use_dhcp"]);
+  }
+  if (j.contains("static_ip")) {
+    o.setStaticIP(parseIPV4(j["static_ip"]));
+  }
+  if (j.contains("static_gateway")) {
+    o.setStaticGateway(parseIPV4(j["static_gateway"]));
+  }
+  if (j.contains("static_netmask")) {
+    o.setStaticNetmask(parseIPV4(j["static_netmask"]));
+  }
+}
 
 ftpConfig::ftpConfig() {
   enable = true;
@@ -72,7 +131,6 @@ void ftpConfig::setPort(int p) {
   }
 }
 
-
 mountConfig::mountConfig() {
   enableF = true;
   enableG = true;
@@ -94,7 +152,8 @@ void from_json(nlohmann::json const& j, mountConfig& o) {
 
 void to_json(nlohmann::json& j, Settings const& o) {
   j = nlohmann::json{{"ftp", nlohmann::json(o.ftp)},
-                     {"mount", nlohmann::json(o.mount)}};
+                     {"mount", nlohmann::json(o.mount)},
+                     {"network", nlohmann::json(o.net)}};
 }
 
 void from_json(nlohmann::json const& j, Settings& o) {
@@ -103,6 +162,9 @@ void from_json(nlohmann::json const& j, Settings& o) {
   }
   if (j.contains("mount")) {
     o.mount = j["mount"].get<mountConfig>();
+  }
+  if (j.contains("network")) {
+    o.net = j["network"].get<netConfig>();
   }
 }
 

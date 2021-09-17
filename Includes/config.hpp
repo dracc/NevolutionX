@@ -2,7 +2,33 @@
 #define CONFIG_HPP
 
 #include "../3rdparty/json.hpp"
+
 #include <string>
+
+class netConfig {
+  bool enable;
+  bool useDHCP;
+  unsigned int staticGateway;
+  unsigned int staticIP;
+  unsigned int staticNetmask;
+
+ public:
+  netConfig();
+
+  bool getEnabled() const { return enable; }
+  bool getUseDHCP() const { return useDHCP; }
+  unsigned int getStaticGateway() const { return staticGateway; }
+  unsigned int getStaticIP() const { return staticIP; }
+  unsigned int getStaticNetmask() const { return staticNetmask; }
+
+  void setEnabled(bool val) { enable = val; }
+  void setUseDHCP(bool val) { useDHCP = val; }
+  void setStaticGateway(unsigned int val) { staticGateway = val; }
+  void setStaticIP(unsigned int val) { staticIP = val; }
+  void setStaticNetmask(unsigned int val) { staticNetmask = val; }
+};
+void to_json(nlohmann::json& j, netConfig const& o);
+void from_json(nlohmann::json const& j, netConfig& o);
 
 class ftpConfig {
   bool enable;
@@ -44,6 +70,7 @@ void from_json(nlohmann::json const& j, mountConfig& o);
 class Settings {
 public:
   Settings() = default;
+  netConfig net;
   ftpConfig ftp;
   mountConfig mount;
 };

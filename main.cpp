@@ -47,7 +47,9 @@ int main(void) {
   }
 
   NetworkManager networkManager(config);
-  networkManager.asyncInit();
+  if (config.settings.net.getEnabled()) {
+    networkManager.asyncInit();
+  }
 
   bool running = true;
 

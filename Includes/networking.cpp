@@ -34,9 +34,7 @@ static void packet_timer(void *arg)
   sys_timeout(PKT_TMR_INTERVAL, packet_timer, NULL);
 }
 
-int setupNetwork(void* DHCP) {
-  bool dhcp = *static_cast<bool*>(DHCP);
-
+int setupNetwork(bool dhcp, staticIP static_ip_info) {
   static ip4_addr_t ipaddr, netmask, gw;
   sys_sem_t init_complete;
 
@@ -45,9 +43,9 @@ int setupNetwork(void* DHCP) {
     IP4_ADDR(&ipaddr, 0,0,0,0);
     IP4_ADDR(&netmask, 0,0,0,0);
   } else {
-    IP4_ADDR(&gw, 10,0,1,1);
-    IP4_ADDR(&ipaddr, 10,0,1,7);
-    IP4_ADDR(&netmask, 255,255,255,0);
+    gw = static_ip_info.gateway;
+    ipaddr = static_ip_info.ip;
+    netmask = static_ip_info.netmask;
   }
   /* Initialize the TCP/IP stack. Wait for completion. */
   sys_sem_new(&init_complete, 0);
