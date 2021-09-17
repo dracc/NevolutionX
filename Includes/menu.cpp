@@ -4,6 +4,7 @@
 
 #include "outputLine.h"
 #include "findXBE.h"
+#include "findThemes.h"
 #include "settingsMenu.hpp"
 #ifdef NXDK
 #include <hal/xbox.h>
@@ -176,6 +177,31 @@ void MenuXbe::execute(Menu *menu) {
 }
 
 /******************************************************************************************
+                                   MenuThemes
+******************************************************************************************/
+
+MenuThemes::MenuThemes(MenuNode *parent, std::string const& label, std::string const& path) :
+  MenuNode(parent, label), path(path) {
+  findThemes(path, this);
+
+}
+
+MenuThemes::~MenuThemes() {
+
+}
+
+void MenuThemes::execute(Menu *menu) {
+  if (menu->getCurrentMenu() != this) {
+    menu->setCurrentMenu(this);
+  }
+  else {
+    if (childNodes.size() > selected) {
+      this->childNodes.at(selected)->execute(menu);
+    }
+  }
+}
+
+/******************************************************************************************
                                    MenuLaunch
 ******************************************************************************************/
 MenuLaunch::MenuLaunch(std::string const& label, std::string const& path) :
@@ -233,6 +259,10 @@ Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootN
     else if (!static_cast<std::string>(e["type"]).compare("settings")) {
       std::shared_ptr<MenuNode> newNode = std::make_shared<settingsMenu>(currentMenu, e["label"]);
       this->rootNode.addNode(newNode);
+    }
+    else if (!static_cast<std::string>(e["type"]).compare("themes")) {
+        std::shared_ptr<MenuThemes> newNode = std::make_shared<MenuThemes>(currentMenu, e["label"], e["path"]);
+        this->rootNode.addNode(newNode);
     }
   }
 }

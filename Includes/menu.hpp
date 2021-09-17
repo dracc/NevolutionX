@@ -55,6 +55,15 @@ public:
   void execute(Menu *menu);
 };
 
+class MenuThemes : public MenuNode {
+public:
+  MenuThemes(MenuNode *parent, std::string const& label, std::string const& path);
+  ~MenuThemes();
+  void execute(Menu *menu);
+protected:
+    std::string path;
+};
+
 class MenuLaunch : public MenuItem {
 public:
   MenuLaunch(std::string const& label, std::string const& path);

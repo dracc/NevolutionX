@@ -48,6 +48,11 @@
         {
             "label": "Some stupid submenu",
             "type": "submenu"
+        },
+        {
+            "label": "Themes",
+            "type": "themes",
+            "path": "F:\\Themes"
         }
     ]
 }
