@@ -22,12 +22,14 @@ void NetworkManager::asyncInit() {
 
 void NetworkManager::thread_main(NetworkManager *manager) {
 #ifdef NXDK
-  const Config &config = manager->config;
+  const netConfig &net = manager->config.settings.net;
 
-  // TODO: Retrieve from Config.
-  bool use_dhcp = true;
+  staticIP static_ip;
+  static_ip.gateway.addr = net.getStaticGateway();
+  static_ip.ip.addr = net.getStaticIP();
+  static_ip.netmask.addr = net.getStaticNetmask();
 
-  int status = setupNetwork(&use_dhcp);
+  int status = setupNetwork(net.getUseDHCP(), static_ip);
   if (status) {
     manager->status = INIT_FAILED;
   } else {
