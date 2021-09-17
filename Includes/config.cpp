@@ -72,6 +72,40 @@ void ftpConfig::setPort(int p) {
   }
 }
 
+
+mountConfig::mountConfig() {
+  enableF = true;
+  enableG = true;
+}
+
+void to_json(nlohmann::json& j, mountConfig const& o) {
+  j = nlohmann::json{{"enable_f", o.getFEnabled()},
+                     {"enable_g", o.getGEnabled()}};
+}
+
+void from_json(nlohmann::json const& j, mountConfig& o) {
+  if (j.contains("enable_f") && j["enable_f"].is_boolean()) {
+    o.setFEnabled(j["enable_f"]);
+  }
+  if (j.contains("enable_g") && j["enable_g"].is_boolean()) {
+    o.setGEnabled(j["enable_g"]);
+  }
+}
+
+void to_json(nlohmann::json& j, Settings const& o) {
+  j = nlohmann::json{{"ftp", nlohmann::json(o.ftp)},
+                     {"mount", nlohmann::json(o.mount)}};
+}
+
+void from_json(nlohmann::json const& j, Settings& o) {
+  if (j.contains("ftp")) {
+    o.ftp = j["ftp"].get<ftpConfig>();
+  }
+  if (j.contains("mount")) {
+    o.mount = j["mount"].get<mountConfig>();
+  }
+}
+
 Config::Config() {
   std::ifstream configFile(HOME "config.json");
   nlohmann::json json;

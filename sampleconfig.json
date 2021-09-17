@@ -13,6 +13,11 @@
             "enable": true,
             "port": 123,
             "server": "5.9.110.236"
+        },
+        "mount":
+        {
+            "enable_f": true,
+            "enable_g": true
         }
     },
     "menu":

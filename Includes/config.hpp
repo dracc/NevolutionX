@@ -25,14 +25,30 @@ public:
 void to_json(nlohmann::json& j, ftpConfig const& f);
 void from_json(nlohmann::json const& j, ftpConfig& f);
 
+class mountConfig {
+  bool enableF;
+  bool enableG;
+
+ public:
+  mountConfig();
+
+  bool getFEnabled() const { return enableF; }
+  bool getGEnabled() const { return enableG; }
+
+  void setFEnabled(bool val) { enableF = val; }
+  void setGEnabled(bool val) { enableG = val; }
+};
+void to_json(nlohmann::json& j, mountConfig const& o);
+void from_json(nlohmann::json const& j, mountConfig& o);
 
 class Settings {
 public:
   Settings() = default;
   ftpConfig ftp;
+  mountConfig mount;
 };
-
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Settings, ftp)
+void to_json(nlohmann::json& j, Settings const& o);
+void from_json(nlohmann::json const& j, Settings& o);
 
 class Config {
   bool changed = false;

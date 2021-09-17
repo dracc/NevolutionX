@@ -40,7 +40,7 @@ int main(void) {
   Config config;
   std::map<int, SDL_GameController*> controllers;
 
-  int init = init_systems();
+  int init = init_systems(config);
   if (init) {
       shutdown_systems(init);
       return init;

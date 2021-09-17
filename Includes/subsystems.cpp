@@ -28,7 +28,7 @@ void mountHomeDir(const char Letter) {
 }
 #endif
 
-int init_systems() {
+int init_systems(const Config &config) {
 #ifdef NXDK
   VIDEO_MODE xmode;
   void *p = NULL;
@@ -41,10 +41,10 @@ int init_systems() {
   if (!nxMountDrive('E', "\\Device\\Harddisk0\\Partition1")) {
     outputLine("Mounting error: Could not mount drive E\n");
   }
-  if (!nxMountDrive('F', "\\Device\\Harddisk0\\Partition6")) {
+  if (config.settings.mount.getFEnabled() && !nxMountDrive('F', "\\Device\\Harddisk0\\Partition6")) {
     outputLine("Mounting warning: Could not mount drive F\n");
   }
-  if (!nxMountDrive('G', "\\Device\\Harddisk0\\Partition7")) {
+  if (config.settings.mount.getGEnabled() && !nxMountDrive('G', "\\Device\\Harddisk0\\Partition7")) {
     outputLine("Mounting information: Drive G:\\ not mounted\n");
   }
   if (!nxMountDrive('X', "\\Device\\Harddisk0\\Partition3")) {
