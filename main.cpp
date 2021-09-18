@@ -3,8 +3,8 @@
 #include "menu.hpp"
 #include "langMenu.hpp"
 #include "timeMenu.hpp"
-#include "findXBE.h"
 #include "font.h"
+#include "infoLog.h"
 #include "networkManager.h"
 #include "outputLine.h"
 #include "renderer.h"
@@ -82,6 +82,8 @@ int main(void) {
   r.drawBackground();
   r.flip();
 
+  InfoLog::capture();
+
   SDL_Event event;
 
 #ifdef NXDK
@@ -123,6 +125,8 @@ int main(void) {
 
     std::string ip_address = networkManager.IPAddressString();
     f.draw(ip_address, info_coordinates);
+
+    InfoLog::renderOverlay(r, f);
 
     r.flip();
 

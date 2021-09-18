@@ -117,6 +117,14 @@ void Renderer::drawTexture(SDL_Texture* tex, int x, int y) {
   drawTexture(tex, dst);
 }
 
+void Renderer::fillRectangle(const SDL_Rect &dst) {
+  SDL_RenderFillRect(renderer, &dst);
+}
+
+void Renderer::fillRectangle(const SDL_FRect &dst) {
+  SDL_RenderFillRectF(renderer, &dst);
+}
+
 void Renderer::blitSurface(SDL_Surface* bg, SDL_Surface* fg, int offset) {
   SDL_Rect dst = {offset, offset, fg->w, fg->h};
   SDL_SetSurfaceBlendMode(fg, SDL_BLENDMODE_BLEND);
