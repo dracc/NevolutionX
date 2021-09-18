@@ -17,6 +17,12 @@ public:
   ~Font();
 
   std::pair<float, float> draw(const std::string &str, std::pair<float, float> coordinates);
+  std::pair<float, float> drawColumn(const std::string &str, std::pair<float, float> coordinates, float maxWidth);
+
+  float getFontHeight() const;
+  float getColumnHeight(const std::string &str, float maxWidth) const;
+  float getTextHeight(const std::string &str) const;
+  float getTextWidth(const std::string &str) const;
 };
 
 #endif
