@@ -150,10 +150,32 @@ void from_json(nlohmann::json const& j, mountConfig& o) {
   }
 }
 
+void to_json(nlohmann::json& j, loggingConfig const& o) {
+  // FIXME: Use a float for colors when https://github.com/XboxDev/nxdk/issues/508 is fixed.
+  j = nlohmann::json{{"enable_overlay", o.getOverlayEnabled()},
+                     {"overlay_duration_frames", o.getOverlayDurationFrames()},
+                     {"overlay_bg_alpha_int", static_cast<int>(o.getOverlayBackgroundAlpha() * 0xFF)}};
+}
+
+void from_json(nlohmann::json const& j, loggingConfig& o) {
+  if (j.contains("enable_overlay") && j["enable_overlay"].is_boolean()) {
+    o.setOverlayEnabled(j["enable_overlay"]);
+  }
+  if (j.contains("overlay_duration_frames") && j["overlay_duration_frames"].is_number_integer()) {
+    o.setOverlayDurationFrames(j["overlay_duration_frames"]);
+  }
+  // FIXME: Use a float for colors when https://github.com/XboxDev/nxdk/issues/508 is fixed.
+  if (j.contains("overlay_bg_alpha_int") && j["overlay_bg_alpha_int"].is_number_integer()) {
+    float val = j["overlay_bg_alpha_int"];
+    o.setOverlayBackgroundAlpha(val / 255.0f);
+  }
+}
+
 void to_json(nlohmann::json& j, Settings const& o) {
   j = nlohmann::json{{"ftp", nlohmann::json(o.ftp)},
                      {"mount", nlohmann::json(o.mount)},
-                     {"network", nlohmann::json(o.net)}};
+                     {"network", nlohmann::json(o.net)},
+                     {"logging", nlohmann::json(o.logging)}};
 }
 
 void from_json(nlohmann::json const& j, Settings& o) {
@@ -165,6 +187,9 @@ void from_json(nlohmann::json const& j, Settings& o) {
   }
   if (j.contains("network")) {
     o.net = j["network"].get<netConfig>();
+  }
+  if (j.contains("logging")) {
+    o.logging = j["logging"].get<loggingConfig>();
   }
 }
 

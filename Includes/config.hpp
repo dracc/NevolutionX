@@ -67,12 +67,32 @@ class mountConfig {
 void to_json(nlohmann::json& j, mountConfig const& o);
 void from_json(nlohmann::json const& j, mountConfig& o);
 
+class loggingConfig {
+  bool enableOverlay{true};
+  int overlayDurationFrames{30};
+  float overlayBackgroundAlpha{0.75f};
+
+ public:
+  loggingConfig() = default;
+
+  bool getOverlayEnabled() const { return enableOverlay; }
+  int getOverlayDurationFrames() const { return overlayDurationFrames; }
+  float getOverlayBackgroundAlpha() const { return overlayBackgroundAlpha; }
+
+  void setOverlayEnabled(bool val) { enableOverlay = val; }
+  void setOverlayDurationFrames(int val) { overlayDurationFrames = val; }
+  void setOverlayBackgroundAlpha(float val) { overlayBackgroundAlpha = val; }
+};
+void to_json(nlohmann::json& j, loggingConfig const& o);
+void from_json(nlohmann::json const& j, loggingConfig& o);
+
 class Settings {
 public:
   Settings() = default;
   netConfig net;
   ftpConfig ftp;
   mountConfig mount;
+  loggingConfig logging;
 };
 void to_json(nlohmann::json& j, Settings const& o);
 void from_json(nlohmann::json const& j, Settings& o);

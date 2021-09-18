@@ -20,6 +20,16 @@ InfoLog *InfoLog::getInstance() {
   return singleton;
 }
 
+void InfoLog::configure(const Config &config) {
+  getInstance()->configure(config.settings.logging);
+}
+
+void InfoLog::configure(loggingConfig const& config) {
+  overlayEnabled = config.getOverlayEnabled();
+  framesPerOverlayItem = config.getOverlayDurationFrames();
+  overlayAlpha = static_cast<uint8_t >(config.getOverlayBackgroundAlpha() * 0xFF);
+}
+
 void InfoLog::outputLine(std::string const& line) {
   OutputDebugStringA(line.c_str());
 
@@ -53,6 +63,10 @@ void InfoLog::addLine(const std::string &line) {
 }
 
 void InfoLog::renderAsOverlay(Renderer &r, Font &font) {
+  if (!overlayEnabled) {
+    return;
+  }
+
   // TODO: Consider centralizing definition of the renderer safe area.
   auto displayWidth = static_cast<float>(r.getWidth()) * 0.8f;
   auto startWidth = static_cast<float>(r.getWidth()) * 0.1f;

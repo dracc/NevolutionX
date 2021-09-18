@@ -26,6 +26,12 @@
         {
             "enable_f": true,
             "enable_g": true
+        },
+        "logging":
+        {
+            "enable_overlay": true,
+            "overlay_duration_frames": 30,
+            "overlay_bg_alpha_int": 100
         }
     },
     "menu":
