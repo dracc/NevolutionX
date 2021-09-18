@@ -11,6 +11,7 @@ SRCS += $(CURDIR)/main.cpp $(INCDIR)/outputLine.cpp \
 	$(INCDIR)/settingsMenu.cpp $(INCDIR)/audioMenu.cpp $(INCDIR)/videoMenu.cpp \
 	$(INCDIR)/config.cpp \
 	$(INCDIR)/wipeCache.cpp \
+	$(INCDIR)/xbeScanner.cpp \
 	$(CURDIR)/3rdparty/SDL_FontCache/SDL_FontCache.c
 
 NXDK_DIR ?= $(CURDIR)/../nxdk
