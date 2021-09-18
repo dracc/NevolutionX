@@ -6,11 +6,13 @@
 #include <string>
 #include <utility>
 
+#include "config.hpp"
 #include "font.h"
 #include "renderer.h"
 
 class InfoLog {
 public:
+  static void configure(Config const& config);
   static void capture() { getInstance()->captured = true; }
 
   static void outputLine(const char* format, ...);
@@ -29,6 +31,7 @@ private:
   static InfoLog *getInstance();
 
   InfoLog() = default;
+  void configure(loggingConfig const& config);
   void addLine(std::string const& line);
   void renderAsOverlay(Renderer &r, Font &font);
 
@@ -37,6 +40,7 @@ private:
   // The number of frames to display an overlay log entry before hiding it.
   int framesPerOverlayItem{30};
 
+  bool overlayEnabled{true};
   uint8_t overlayRed{0};
   uint8_t overlayGreen{0};
   uint8_t overlayBlue{0};

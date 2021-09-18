@@ -82,6 +82,7 @@ int main(void) {
   r.drawBackground();
   r.flip();
 
+  InfoLog::configure(config);
   InfoLog::capture();
 
   SDL_Event event;
