@@ -3,9 +3,12 @@
 
 #include "config.hpp"
 #include "font.h"
+#include "xbeScanner.h"
 
-#include <vector>
+#include <list>
+#include <mutex>
 #include <string>
+#include <vector>
 
 class MenuNode;
 class Menu;
@@ -33,7 +36,7 @@ public:
   void execute(Menu *);
   void setSelected(size_t id);
   size_t getSelected();
-  std::vector<std::shared_ptr<MenuItem>> *getChildNodes();
+  virtual std::vector<std::shared_ptr<MenuItem>> *getChildNodes();
   void addNode(std::shared_ptr<MenuItem> node);
 
   void up();
@@ -48,11 +51,29 @@ protected:
   std::vector<std::shared_ptr<MenuItem>> childNodes;
 };
 
+// A non-interactive menu entry that simply displays a label.
+class MenuNonInteractive : public MenuNode {
+public:
+  MenuNonInteractive(MenuNode *parent, std::string const& label);
+  void execute(Menu *) override;
+};
+
 class MenuXbe : public MenuNode {
 public:
   MenuXbe(MenuNode *parent, std::string const& label, std::string const& paths);
   ~MenuXbe();
   void execute(Menu *menu);
+
+  std::vector<std::shared_ptr<MenuItem>> *getChildNodes() override;
+
+ private:
+  void updateScanningLabel();
+  void onScanCompleted(bool succeeded, std::vector<XBEScanner::XBEInfo> const& items);
+  void createChildren();
+
+  std::mutex childNodesLock;
+  std::list<std::string> remainingScanPaths;
+  std::vector<XBEScanner::XBEInfo> discoveredItems;
 };
 
 class MenuLaunch : public MenuItem {

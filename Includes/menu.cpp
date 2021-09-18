@@ -1,10 +1,8 @@
 #include "menu.hpp"
 
-#include <iostream>
-
 #include "outputLine.h"
-#include "findXBE.h"
 #include "settingsMenu.hpp"
+#include "xbeScanner.h"
 #ifdef NXDK
 #include <hal/xbox.h>
 #endif
@@ -138,26 +136,37 @@ void MenuNode::moveSelection(int delta, bool allowWrap) {
 }
 
 /******************************************************************************************
+                               MenuNonInteractive
+******************************************************************************************/
+MenuNonInteractive::MenuNonInteractive(MenuNode *parent, std::string const& label) : MenuNode(parent, label) {}
+
+void MenuNonInteractive::execute(Menu *) {
+  // Do nothing, this node cannot be entered.
+}
+
+/******************************************************************************************
                                    MenuXbe
 ******************************************************************************************/
 MenuXbe::MenuXbe(MenuNode *parent, std::string const& label, std::string const& paths) :
   MenuNode(parent, label) {
+
   size_t path_start = 0;
   for (size_t path_end = paths.find(PATH_DELIMITER, path_start);
        path_end != std::string::npos;
        path_end = paths.find(PATH_DELIMITER, path_start)) {
-    
-      std::string subpath = paths.substr(path_start, path_end - path_start);
-      findXBE(subpath, this);
-      path_start = path_end + 1;
-  }
-  std::string path = paths.substr(path_start);
 
-  // Find "default.xbe"'s and add them to ChildNodes
-  findXBE(path, this);
-  std::sort(begin(childNodes), end(childNodes),
-            [](const std::shared_ptr<MenuItem> &a,
-               const std::shared_ptr<MenuItem> &b){ return a->getLabel() < b->getLabel();});
+    remainingScanPaths.emplace_back(paths.substr(path_start, path_end - path_start));
+    path_start = path_end + 1;
+  }
+  remainingScanPaths.emplace_back(paths.substr(path_start));
+
+  if (!remainingScanPaths.empty()) {
+    updateScanningLabel();
+    XBEScanner::scanPath(remainingScanPaths.front(),
+                         [this](bool succeeded, std::vector<XBEScanner::XBEInfo> const &items) {
+                           this->onScanCompleted(succeeded, items);
+                         });
+  }
 }
 
 MenuXbe::~MenuXbe() {
@@ -174,6 +183,60 @@ void MenuXbe::execute(Menu *menu) {
     }
   }
 }
+
+std::vector<std::shared_ptr<MenuItem>> *MenuXbe::getChildNodes() {
+  std::lock_guard<std::mutex> lock(childNodesLock);
+  return MenuNode::getChildNodes();
+}
+
+void MenuXbe::updateScanningLabel() {
+  std::string scanningLabel = "Scanning \"" + remainingScanPaths.front() + "\" ...";
+  std::lock_guard<std::mutex> lock(childNodesLock);
+  childNodes.clear();
+  childNodes.push_back(std::make_shared<MenuNonInteractive>(this, scanningLabel));
+}
+
+void MenuXbe::onScanCompleted(bool succeeded, std::vector<XBEScanner::XBEInfo> const& items) {
+  std::string path = remainingScanPaths.front();
+  remainingScanPaths.pop_front();
+
+  if (!succeeded) {
+    outputLine("Failed to scan '%s' for XBEs, skipping...\n", path.c_str());
+  } else {
+    discoveredItems.insert(
+        discoveredItems.end(),
+        std::make_move_iterator(begin(items)),
+        std::make_move_iterator(end(items))
+    );
+  }
+
+  if (!remainingScanPaths.empty()) {
+    updateScanningLabel();
+    XBEScanner::scanPath(remainingScanPaths.front(),
+                         [this](bool succeeded, std::vector<XBEScanner::XBEInfo> const &items) {
+                           this->onScanCompleted(succeeded, items);
+                         });
+    return;
+  }
+
+  createChildren();
+}
+
+void MenuXbe::createChildren() {
+  std::vector<std::shared_ptr<MenuItem>> newChildren;
+
+  for (auto &info : discoveredItems) {
+    newChildren.push_back(std::make_shared<MenuLaunch>(info.name, info.path));
+  }
+
+  std::sort(begin(newChildren), end(newChildren),
+            [](const std::shared_ptr<MenuItem> &a,
+               const std::shared_ptr<MenuItem> &b){ return a->getLabel() < b->getLabel();});
+
+  std::lock_guard<std::mutex> lock(childNodesLock);
+  childNodes = newChildren;
+}
+
 
 /******************************************************************************************
                                    MenuLaunch
