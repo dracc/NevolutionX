@@ -25,3 +25,26 @@ std::pair<float, float> Font::draw(const std::string &str, std::pair<float, floa
                               FC_ALIGN_LEFT, FC_MakeScale(1.0f, 1.0f), "%s", str.c_str());
   return std::pair<float, float>(rect.w, rect.h);
 }
+
+std::pair<float, float> Font::drawColumn(const std::string &str, std::pair<float, float> coordinates, float maxWidth) {
+  FC_Rect rect = FC_DrawColumn(fcFont, renderer.getRenderer(),
+                std::get<0>(coordinates), std::get<1>(coordinates), static_cast<Uint16>(maxWidth), "%s", str.c_str());
+
+  return std::pair<float, float>{rect.w, rect.h};
+}
+
+float Font::getFontHeight() const {
+  return FC_GetLineHeight(fcFont);
+}
+
+float Font::getColumnHeight(const std::string &str, float maxWidth) const {
+  return FC_GetColumnHeight(fcFont, static_cast<Uint16>(maxWidth), "%s", str.c_str());
+}
+
+float Font::getTextHeight(const std::string &str) const {
+  return FC_GetHeight(fcFont, "%s", str.c_str());
+}
+
+float Font::getTextWidth(const std::string &str) const {
+  return FC_GetWidth(fcFont, "%s", str.c_str());
+}
