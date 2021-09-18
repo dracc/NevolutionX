@@ -62,6 +62,12 @@ int findXBE(std::string const& path, MenuXbe *list) {
           }
           ++offset;
         }
+
+        // Some homebrew content may not have a name in the certification
+        // header, so fallback to using the path as the name.
+        if (!strlen(xbeName)) {
+          strncpy(xbeName, fData.cFileName, sizeof(xbeName) - 1);
+        }
         list->addNode(std::make_shared<MenuLaunch>(xbeName, tmp));
         fclose(tmpFILE);
         tmpFILE = nullptr;
