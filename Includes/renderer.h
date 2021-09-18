@@ -28,6 +28,9 @@ public:
   void drawTexture(SDL_Texture* tex, SDL_Rect &dst);
   void drawTexture(SDL_Texture* tex, int x, int y);
 
+  void fillRectangle(const SDL_Rect &dst);
+  void fillRectangle(const SDL_FRect &dst);
+
   void blitSurface(SDL_Surface* bg, SDL_Surface* fg, int offset);
 
   void drawBackground();
