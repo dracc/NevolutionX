@@ -3,6 +3,7 @@
 
 #include "config.hpp"
 #include "font.h"
+#include "subApp.h"
 #include "xbeScanner.h"
 
 #include <list>
@@ -93,15 +94,22 @@ public:
   void (*action)(Menu *);
 };
 
-class Menu {
+class Menu : public SubApp {
 public:
   Menu(const Config &config, Renderer &renderer);
-  void render(Font &font);
+  void render(Font &font) override;
   MenuNode *getCurrentMenu();
   void setCurrentMenu(MenuNode *);
 
-  void up();
-  void down();
+  void onUpPressed() override;
+  void onDownPressed() override;
+  void onLeftPressed() override { pageUp(); }
+  void onRightPressed() override { pageDown(); }
+  void onAPressed() override { execute(); }
+  void onStartPressed() override { execute();  }
+  void onBackPressed() override { back(); }
+  void onBPressed() override { back(); }
+
   void pageUp();
   void pageDown();
   void back();

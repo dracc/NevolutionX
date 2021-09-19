@@ -359,11 +359,11 @@ void Menu::setCurrentMenu(MenuNode *menu) {
   currentMenu = menu;
 }
 
-void Menu::up() {
+void Menu::onUpPressed() {
   currentMenu->up();
 }
 
-void Menu::down() {
+void Menu::onDownPressed() {
   currentMenu->down();
 }
 
