@@ -73,7 +73,7 @@ int main(void) {
   // FIXME: Font path should be read from theme
   Font f(r, HOME "vegur.ttf");
 
-  SubAppRouter router;
+  SubAppRouter &router = *SubAppRouter::getInstance();
 
   auto menu = std::make_shared<Menu>(config, r);
   router.push(menu);
@@ -113,6 +113,7 @@ int main(void) {
   std::pair<float, float> info_coordinates(info_x, info_y);
 
   ftpServer *ftpServerInstance = nullptr;
+
   while (running) {
     if (config.settings.ftp.getEnabled() && networkManager.isNewlyInitialized()) {
       ftpServerInstance = new ftpServer(&config.settings.ftp);
