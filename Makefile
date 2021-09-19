@@ -11,6 +11,8 @@ SRCS += $(CURDIR)/main.cpp $(INCDIR)/outputLine.cpp \
 	$(INCDIR)/settingsMenu.cpp $(INCDIR)/audioMenu.cpp $(INCDIR)/videoMenu.cpp \
 	$(INCDIR)/infoLog.cpp \
 	$(INCDIR)/config.cpp \
+	$(INCDIR)/logViewer.cpp \
+	$(INCDIR)/logViewerMenu.cpp \
 	$(INCDIR)/subAppRouter.cpp \
 	$(INCDIR)/wipeCache.cpp \
 	$(INCDIR)/xbeScanner.cpp \

@@ -73,7 +73,7 @@ int main(void) {
   // FIXME: Font path should be read from theme
   Font f(r, HOME "vegur.ttf");
 
-  SubAppRouter router;
+  SubAppRouter &router = *SubAppRouter::getInstance();
 
   auto menu = std::make_shared<Menu>(config, r);
   router.push(menu);

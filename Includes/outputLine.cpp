@@ -18,9 +18,8 @@ void outputLine(const char* format, ...) {
   va_start(args, format);
   vsprintf(buffer, format, args);
 
-  if (InfoLog::isOutputCaptured()) {
-    InfoLog::outputLine(buffer);
-  } else {
+  InfoLog::outputLine(buffer);
+  if (!InfoLog::isOutputCaptured()) {
 #ifdef NXDK
     debugPrint("%s", buffer);
     OutputDebugStringA(buffer);

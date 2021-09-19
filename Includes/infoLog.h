@@ -24,6 +24,10 @@ public:
     getInstance()->renderAsOverlay(r, font);
   }
 
+  static int getLogSize();
+  static std::mutex &getLogMutex();
+  static const std::list<std::string> &getLog();
+
 private:
   // Tuple of string, frames remaining.
   typedef std::pair<std::string, int> OverlayItem;

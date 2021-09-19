@@ -101,6 +101,8 @@ public:
   MenuNode *getCurrentMenu();
   void setCurrentMenu(MenuNode *);
 
+  inline Renderer &getRenderer() { return renderer; }
+
   void onUpPressed() override;
   void onDownPressed() override;
   void onLeftPressed() override { pageUp(); }
