@@ -1,5 +1,6 @@
 #include "menu.hpp"
 
+#include "3rdparty/NaturalSort/natural_sort.hpp"
 #include "outputLine.h"
 #include "settingsMenu.hpp"
 #include "xbeScanner.h"
@@ -231,7 +232,7 @@ void MenuXbe::createChildren() {
 
   std::sort(begin(newChildren), end(newChildren),
             [](const std::shared_ptr<MenuItem> &a,
-               const std::shared_ptr<MenuItem> &b){ return a->getLabel() < b->getLabel();});
+               const std::shared_ptr<MenuItem> &b){ return SI::natural::compare(a->getLabel(), b->getLabel()); });
 
   std::lock_guard<std::mutex> lock(childNodesLock);
   childNodes = newChildren;
