@@ -90,7 +90,6 @@ void InfoLog::renderAsOverlay(Renderer &r, Font &font) {
     }
   }
 
-
   r.setDrawColor(overlayRed, overlayGreen, overlayBlue, overlayAlpha);
   for (auto const& item : reversedOutput) {
     auto itemHeight = item.second;
@@ -103,4 +102,19 @@ void InfoLog::renderAsOverlay(Renderer &r, Font &font) {
     r.fillRectangle(backgroundArea);
     font.drawColumn(item.first, std::make_pair(startWidth, bottom), displayWidth);
   }
+}
+
+int InfoLog::getLogSize() {
+  InfoLog &infoLog = *getInstance();
+
+  std::lock_guard<std::mutex> lock(infoLog.logMutex);
+  return static_cast<int>(infoLog.log.size());
+}
+
+std::mutex &InfoLog::getLogMutex() {
+  return getInstance()->logMutex;
+}
+
+const std::list<std::string> &InfoLog::getLog() {
+  return getInstance()->log;
 }
