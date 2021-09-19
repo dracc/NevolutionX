@@ -8,18 +8,16 @@
 #include "networkManager.h"
 #include "outputLine.h"
 #include "renderer.h"
+#include "subAppRouter.h"
 #include "subsystems.h"
 
 #include "ftpServer.h"
 
 #include <memory>
-#include <type_traits>
-#include <thread>
 #include <SDL.h>
 
 #ifdef NXDK
 #include "eeprom.hpp"
-#include <hal/xbox.h>
 #include <hal/video.h>
 #include <windows.h>
 #endif
@@ -75,7 +73,11 @@ int main(void) {
   // FIXME: Font path should be read from theme
   Font f(r, HOME "vegur.ttf");
 
-  Menu menu(config, r);
+  SubAppRouter router;
+
+  auto menu = std::make_shared<Menu>(config, r);
+  router.push(menu);
+
   std::shared_ptr<MenuNode> lang = nullptr;
   std::shared_ptr<MenuNode> timeZone = nullptr;
 
@@ -92,16 +94,16 @@ int main(void) {
   uint32_t Value = getEEPROMValue<uint32_t>(ValueIndex);
   if (Value == 0) {
 #endif
-    timeZone = std::make_shared<TimeMenu>(menu.getCurrentMenu(), "Timezone select");
-    menu.setCurrentMenu(timeZone.get());
+    timeZone = std::make_shared<TimeMenu>(menu->getCurrentMenu(), "Timezone select");
+    menu->setCurrentMenu(timeZone.get());
 #ifdef NXDK
   }
   ValueIndex = 0x7;
   Value = getEEPROMValue<uint32_t>(ValueIndex);
   if (Value == 0) {
 #endif
-    lang = std::make_shared<LangMenu>(menu.getCurrentMenu(), "Language select");
-    menu.setCurrentMenu(lang.get());
+    lang = std::make_shared<LangMenu>(menu->getCurrentMenu(), "Language select");
+    menu->setCurrentMenu(lang.get());
 #ifdef NXDK
   }
 #endif
@@ -122,7 +124,7 @@ int main(void) {
     r.clear();
     r.drawBackground();
 
-    menu.render(f);
+    router.render(f);
 
     std::string ip_address = networkManager.IPAddressString();
     f.draw(ip_address, info_coordinates);
@@ -141,20 +143,11 @@ int main(void) {
         SDL_GameControllerClose(controllers[event.cdevice.which]);
         controllers.erase(event.cdevice.which);
       } else if (event.type == SDL_CONTROLLERBUTTONDOWN) {
-        if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP) {
-          menu.up();
-        } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN) {
-          menu.down();
-        } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_LEFT) {
-          menu.pageUp();
-        } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
-          menu.pageDown();
-        } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_A) {
-          menu.execute();
-        } else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_B ||
-                   event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK) {
-          menu.back();
-        }
+        router.handleButtonDown(event.cbutton);
+      } else if (event.type == SDL_CONTROLLERBUTTONUP) {
+        router.handleButtonUp(event.cbutton);
+      } else if (event.type == SDL_CONTROLLERAXISMOTION) {
+        router.handleAxisMotion(event.caxis);
       }
     }
 
