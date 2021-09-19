@@ -4,6 +4,7 @@
 #include <stack>
 
 #include <SDL.h>
+#include <windows.h>
 
 #include "font.h"
 #include "subApp.h"
@@ -27,8 +28,16 @@ public:
 
 private:
   static SubAppRouter *singleton;
+  SubAppRouter();
+  void processButtonRepeatEvents();
 
   std::stack<std::shared_ptr<SubApp>> subAppStack;
+  LONGLONG ticksPerMillisecond;
+  LONGLONG lastFrameStartTicks;
+
+  // Maps {(PlayerID, Button), timestamp} to track when virtual button press events should be fired while a button is
+  // held down.
+  std::map<std::pair<int, SDL_GameControllerButton>, LONGLONG> buttonRepeatTimers;
 };
 
 #endif //NEVOLUTIONX_INCLUDES_SUBAPPROUTER_H_

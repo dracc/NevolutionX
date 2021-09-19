@@ -299,6 +299,10 @@ Menu::Menu(const Config &config, Renderer &renderer) : renderer(renderer), rootN
       this->rootNode.addNode(newNode);
     }
   }
+
+  // TODO: Take the repeat interval from the config.
+  autoRepeatIntervals[SDL_CONTROLLER_BUTTON_DPAD_UP] = 250;
+  autoRepeatIntervals[SDL_CONTROLLER_BUTTON_DPAD_DOWN] = 250;
 }
 
 void Menu::render(Font &font) {
