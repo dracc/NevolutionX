@@ -22,13 +22,13 @@ class ftpConnection {
   char mode;
   std::string rnfr;
 
-  ftpServer *server;
+  ftpServer* server;
 
   void sendStdString(std::string const& s, int flags);
   void sendStdString(int fd, std::string const& s, int flags);
   void handleCommand(void);
 
-  void sendFolderContents(int fd, std::string &path);
+  void sendFolderContents(int fd, std::string& path);
   bool sendFile(std::string const& fileName);
   bool recvFile(std::string const& fileName);
 
@@ -60,7 +60,7 @@ class ftpConnection {
   void cmdUser(std::string const& arg);
   void cmdExecute(std::string const& path);
   void cmdUnimplemented(std::string const& arg);
-  
+
 public:
   ftpConnection(int fd, ftpServer* s);
   ~ftpConnection();

@@ -11,16 +11,16 @@
 
 static bool scan(std::string const& path, std::vector<XBEScanner::XBEInfo>& ret);
 
-XBEScanner *XBEScanner::singleton = nullptr;
+XBEScanner* XBEScanner::singleton = nullptr;
 
-XBEScanner *XBEScanner::getInstance() {
+XBEScanner* XBEScanner::getInstance() {
   if (!XBEScanner::singleton) {
     XBEScanner::singleton = new XBEScanner();
   }
   return XBEScanner::singleton;
 }
 
-XBEScanner::XBEScanner(): running(true) {
+XBEScanner::XBEScanner() : running(true) {
   scannerThread = std::thread(threadMain, this);
 }
 
@@ -42,7 +42,7 @@ void XBEScanner::addJob(std::string const& path, const Callback& callback) {
   jobPending.notify_one();
 }
 
-void XBEScanner::threadMain(XBEScanner *scanner) {
+void XBEScanner::threadMain(XBEScanner* scanner) {
   while (scanner->running) {
     QueueItem task;
     {
@@ -55,7 +55,7 @@ void XBEScanner::threadMain(XBEScanner *scanner) {
       scanner->queue.pop();
     }
 
-    std::string const &path = task.first;
+    std::string const& path = task.first;
     std::vector<XBEInfo> xbes;
     bool succeeded = scan(path, xbes);
 
@@ -75,7 +75,7 @@ static bool scan(std::string const& path, std::vector<XBEScanner::XBEInfo>& ret)
   std::string searchmask = workPath + "*";
   std::string xbePath;
   char xbeName[XBE_NAME_SIZE + 1];
-  char *xbeData = static_cast<char*>(malloc(SECTORSIZE));
+  char* xbeData = static_cast<char*>(malloc(SECTORSIZE));
   FILE* tmpFILE = nullptr;
   WIN32_FIND_DATAA fData;
   HANDLE fHandle = FindFirstFileA(searchmask.c_str(), &fData);
@@ -93,26 +93,27 @@ static bool scan(std::string const& path, std::vector<XBEScanner::XBEInfo>& ret)
         if (xbe->SizeOfHeaders > read_bytes) {
           xbeData = static_cast<char*>(realloc(xbeData, xbe->SizeOfHeaders));
           xbe = (PXBE_FILE_HEADER)xbeData;
-          read_bytes += fread(&xbeData[read_bytes], 1, xbe->SizeOfHeaders - read_bytes, tmpFILE);
+          read_bytes += fread(&xbeData[read_bytes], 1, xbe->SizeOfHeaders - read_bytes,
+                              tmpFILE);
         }
-        if(xbe->Magic != XBE_TYPE_MAGIC ||
-            xbe->ImageBase != XBE_DEFAULT_BASE ||
-            xbe->ImageBase > (uint32_t)xbe->CertificateHeader ||
-            (uint32_t)xbe->CertificateHeader + 4 >= (xbe->ImageBase + xbe->SizeOfHeaders) ||
-            xbe->SizeOfHeaders > read_bytes) {
+        if (xbe->Magic != XBE_TYPE_MAGIC || xbe->ImageBase != XBE_DEFAULT_BASE
+            || xbe->ImageBase > (uint32_t)xbe->CertificateHeader
+            || (uint32_t)xbe->CertificateHeader + 4 >= (xbe->ImageBase + xbe->SizeOfHeaders)
+            || xbe->SizeOfHeaders > read_bytes) {
           continue;
         }
-        PXBE_CERTIFICATE_HEADER xbeCert = (PXBE_CERTIFICATE_HEADER)&xbeData[(uint32_t)xbe->CertificateHeader -
-                                                                    xbe->ImageBase];
+        PXBE_CERTIFICATE_HEADER xbeCert =
+            (PXBE_CERTIFICATE_HEADER)&xbeData[(uint32_t)xbe->CertificateHeader
+                                              - xbe->ImageBase];
         memset(xbeName, 0x00, sizeof(xbeName));
         int offset = 0;
-        while(offset < XBE_NAME_SIZE) {
+        while (offset < XBE_NAME_SIZE) {
           if (xbeCert->TitleName[offset] < 0x0100) {
             sprintf(&xbeName[offset], "%c", (char)xbeCert->TitleName[offset]);
           } else {
             sprintf(&xbeName[offset], "%c", '?');
           }
-          if(xbeCert->TitleName[offset] == 0x0000) {
+          if (xbeCert->TitleName[offset] == 0x0000) {
             break;
           }
           ++offset;

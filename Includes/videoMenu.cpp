@@ -1,15 +1,14 @@
 #include "videoMenu.hpp"
-#include "eeprom.hpp"
-
 #include <xboxkrnl/xboxkrnl.h>
+#include "eeprom.hpp"
 
 static const uint32_t widescreen = 0x00010000;
 static const uint32_t letterbox = 0x00100000;
 
-static const std::vector<uint32_t> ratios = {0, widescreen, letterbox};
+static const std::vector<uint32_t> ratios = { 0, widescreen, letterbox };
 
 videoRatioMenuItem::videoRatioMenuItem() :
-  switchingMenuItem("Screen Ratio: ", {"Normal", "Widescreen", "Letterbox"}) {
+    switchingMenuItem("Screen Ratio: ", { "Normal", "Widescreen", "Letterbox" }) {
 
   uint32_t Value = getEEPROMValue<uint32_t>(valueIndex);
   selected = Value & 0x00110000;
@@ -21,7 +20,7 @@ videoRatioMenuItem::videoRatioMenuItem() :
   valuedLabel = label + values.at(selected);
 }
 
-void videoRatioMenuItem::execute(Menu *) {
+void videoRatioMenuItem::execute(Menu*) {
   selected = (++selected) % values.size();
   valuedLabel = label + values.at(selected);
 
@@ -31,8 +30,7 @@ void videoRatioMenuItem::execute(Menu *) {
   ExSaveNonVolatileSetting(valueIndex, Type, &Value, sizeof(Value));
 }
 
-videoMenu::videoMenu(MenuNode *parent, std::string const& label) :
-  MenuNode(parent, label) {
+videoMenu::videoMenu(MenuNode* parent, std::string const& label) : MenuNode(parent, label) {
   addNode(std::make_shared<videoRatioMenuItem>());
   addNode(std::make_shared<togglingEEPROMMenuItem>("480p: ", 0x8, 0x00080000));
   addNode(std::make_shared<togglingEEPROMMenuItem>("720p: ", 0x8, 0x00020000));

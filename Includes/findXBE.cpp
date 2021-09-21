@@ -11,7 +11,7 @@
 #define XBE_NAME_SIZE 40
 #define SECTORSIZE 0x1000
 
-int findXBE(std::string const& path, MenuXbe *list) {
+int findXBE(std::string const& path, MenuXbe* list) {
   std::string workPath = path;
   if (workPath.back() != '\\') {
     workPath += '\\';
@@ -20,7 +20,7 @@ int findXBE(std::string const& path, MenuXbe *list) {
   std::string searchmask = workPath + "*";
   std::string tmp;
   char xbeName[XBE_NAME_SIZE + 1];
-  char *xbeData = static_cast<char*>(malloc(SECTORSIZE));
+  char* xbeData = static_cast<char*>(malloc(SECTORSIZE));
   FILE* tmpFILE = nullptr;
   WIN32_FIND_DATAA fData;
   HANDLE fHandle = FindFirstFileA(searchmask.c_str(), &fData);
@@ -38,26 +38,27 @@ int findXBE(std::string const& path, MenuXbe *list) {
         if (xbe->SizeOfHeaders > read_bytes) {
           xbeData = static_cast<char*>(realloc(xbeData, xbe->SizeOfHeaders));
           xbe = (PXBE_FILE_HEADER)xbeData;
-          read_bytes += fread(&xbeData[read_bytes], 1, xbe->SizeOfHeaders - read_bytes, tmpFILE);
+          read_bytes += fread(&xbeData[read_bytes], 1, xbe->SizeOfHeaders - read_bytes,
+                              tmpFILE);
         }
-        if(xbe->Magic != XBE_TYPE_MAGIC ||
-           xbe->ImageBase != XBE_DEFAULT_BASE ||
-           xbe->ImageBase > (uint32_t)xbe->CertificateHeader ||
-           (uint32_t)xbe->CertificateHeader + 4 >= (xbe->ImageBase + xbe->SizeOfHeaders) ||
-           xbe->SizeOfHeaders > read_bytes) {
+        if (xbe->Magic != XBE_TYPE_MAGIC || xbe->ImageBase != XBE_DEFAULT_BASE
+            || xbe->ImageBase > (uint32_t)xbe->CertificateHeader
+            || (uint32_t)xbe->CertificateHeader + 4 >= (xbe->ImageBase + xbe->SizeOfHeaders)
+            || xbe->SizeOfHeaders > read_bytes) {
           continue;
         }
-        PXBE_CERTIFICATE_HEADER xbeCert = (PXBE_CERTIFICATE_HEADER)&xbeData[(uint32_t)xbe->CertificateHeader -
-                                                                            xbe->ImageBase];
+        PXBE_CERTIFICATE_HEADER xbeCert =
+            (PXBE_CERTIFICATE_HEADER)&xbeData[(uint32_t)xbe->CertificateHeader
+                                              - xbe->ImageBase];
         memset(xbeName, 0x00, sizeof(xbeName));
         int offset = 0;
-        while(offset < XBE_NAME_SIZE) {
+        while (offset < XBE_NAME_SIZE) {
           if (xbeCert->TitleName[offset] < 0x0100) {
             sprintf(&xbeName[offset], "%c", (char)xbeCert->TitleName[offset]);
           } else {
             sprintf(&xbeName[offset], "%c", '?');
           }
-          if(xbeCert->TitleName[offset] == 0x0000) {
+          if (xbeCert->TitleName[offset] == 0x0000) {
             break;
           }
           ++offset;

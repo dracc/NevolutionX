@@ -1,16 +1,15 @@
 #ifndef NEVOLUTIONX_INCLUDES_SUBAPP_H_
 #define NEVOLUTIONX_INCLUDES_SUBAPP_H_
 
-#include <map>
 #include <SDL.h>
-
+#include <map>
 #include "font.h"
 
 class SubApp {
 public:
   virtual ~SubApp() = default;
 
-  virtual void render(Font &font) = 0;
+  virtual void render(Font& font) = 0;
 
   inline void setActivePlayerID(int val) { activePlayerID = val; }
   inline void setRepeatEvent(bool val) { isRepeatEvent = val; }
@@ -70,17 +69,19 @@ public:
 protected:
   // The contextual index of the gamepad that spawned the event being handled.
   //
-  // This value is only relevant in the scope of one of the event handlers and is undefined otherwise.
-  int activePlayerID{-1};
+  // This value is only relevant in the scope of one of the event handlers and is undefined
+  // otherwise.
+  int activePlayerID{ -1 };
 
   // Set to true if the event being handled was spawned due to a button being held down.
   //
-  // This value is only relevant in the scope of one of the event handlers and is undefined otherwise.
-  bool isRepeatEvent{false};
+  // This value is only relevant in the scope of one of the event handlers and is undefined
+  // otherwise.
+  bool isRepeatEvent{ false };
 
-  // Map of {button ID, repeat interval milliseconds} identifying buttons that will automatically generate repeated
-  // Pressed/Released messages while being held down.
+  // Map of {button ID, repeat interval milliseconds} identifying buttons that will
+  // automatically generate repeated Pressed/Released messages while being held down.
   std::map<SDL_GameControllerButton, int> autoRepeatIntervals;
 };
 
-#endif //NEVOLUTIONX_INCLUDES_SUBAPP_H_
+#endif // NEVOLUTIONX_INCLUDES_SUBAPP_H_

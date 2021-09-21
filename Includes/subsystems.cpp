@@ -1,25 +1,24 @@
 #include "subsystems.h"
-
 #include "outputLine.h"
 
 #ifdef NXDK
+#include <hal/video.h>
+#include <hal/xbox.h>
 #include <nxdk/mount.h>
 #include <nxdk/path.h>
 #include <pbkit/pbkit.h>
-#include <hal/video.h>
-#include <hal/xbox.h>
 #endif
 
 #include <SDL.h>
-#include <SDL_ttf.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 #ifdef NXDK
 #include "networking.h"
 
 void mountHomeDir(const char Letter) {
   char targetPath[MAX_PATH];
-  char *finalSeparator;
+  char* finalSeparator;
   nxGetCurrentXbeNtPath(targetPath);
 
   finalSeparator = strrchr(targetPath, '\\');
@@ -28,11 +27,12 @@ void mountHomeDir(const char Letter) {
 }
 #endif
 
-int init_systems(const Config &config) {
+int init_systems(const Config& config) {
 #ifdef NXDK
   VIDEO_MODE xmode;
-  void *p = NULL;
-  while (XVideoListModes(&xmode, 0, 0, &p)) {}
+  void* p = NULL;
+  while (XVideoListModes(&xmode, 0, 0, &p)) {
+  }
   XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
 
   if (!nxMountDrive('C', "\\Device\\Harddisk0\\Partition2")) {
@@ -41,10 +41,12 @@ int init_systems(const Config &config) {
   if (!nxMountDrive('E', "\\Device\\Harddisk0\\Partition1")) {
     outputLine("Mounting error: Could not mount drive E\n");
   }
-  if (config.settings.mount.getFEnabled() && !nxMountDrive('F', "\\Device\\Harddisk0\\Partition6")) {
+  if (config.settings.mount.getFEnabled()
+      && !nxMountDrive('F', "\\Device\\Harddisk0\\Partition6")) {
     outputLine("Mounting warning: Could not mount drive F\n");
   }
-  if (config.settings.mount.getGEnabled() && !nxMountDrive('G', "\\Device\\Harddisk0\\Partition7")) {
+  if (config.settings.mount.getGEnabled()
+      && !nxMountDrive('G', "\\Device\\Harddisk0\\Partition7")) {
     outputLine("Mounting information: Drive G:\\ not mounted\n");
   }
   if (!nxMountDrive('X', "\\Device\\Harddisk0\\Partition3")) {
@@ -72,7 +74,7 @@ int init_systems(const Config &config) {
     outputLine("IMG Init Error: %s!\n", IMG_GetError());
     return 2;
   }
-  
+
   if (TTF_Init() != 0) {
     outputLine("TTF Init Error: %s", TTF_GetError());
     return 2;

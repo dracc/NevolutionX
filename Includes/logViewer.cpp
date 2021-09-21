@@ -1,15 +1,13 @@
 #include "logViewer.h"
-
 #include <iterator>
-
 #include "infoLog.h"
 #include "subAppRouter.h"
 
 // Dummy index indicating that the log should always show the most recent
 // message at the bottom of the screen.
-#define LOG_INDEX_PINNED_BOTTOM   -1
+#define LOG_INDEX_PINNED_BOTTOM -1
 
-logViewer::logViewer(Renderer &r): renderer(r) {
+logViewer::logViewer(Renderer& r) : renderer(r) {
   auto w = static_cast<float>(renderer.getWidth());
   auto h = static_cast<float>(renderer.getHeight());
   renderArea.x = w * 0.1f;
@@ -21,14 +19,14 @@ logViewer::logViewer(Renderer &r): renderer(r) {
 }
 
 
-void logViewer::render(Font &font) {
+void logViewer::render(Font& font) {
   renderer.setDrawColor(0, 0, 0, 0x70);
   renderer.fillRectangle(renderArea);
 
   float bottom = renderArea.y + renderArea.h;
   {
     std::lock_guard<std::mutex> lock(InfoLog::getLogMutex());
-    const std::list<std::string> &log = InfoLog::getLog();
+    const std::list<std::string>& log = InfoLog::getLog();
 
     auto it = log.rbegin();
     auto itEnd = log.rend();
@@ -41,7 +39,7 @@ void logViewer::render(Font &font) {
     }
 
     for (; it != itEnd; ++it) {
-      const std::string &line = *it;
+      const std::string& line = *it;
 
       auto lineHeight = font.getColumnHeight(line, renderArea.w);
       bottom -= lineHeight;

@@ -1,21 +1,18 @@
 #include "settingsMenu.hpp"
-#include "videoMenu.hpp"
+#include <xboxkrnl/xboxkrnl.h>
 #include "audioMenu.hpp"
+#include "eeprom.hpp"
 #include "langMenu.hpp"
 #include "logViewerMenu.h"
 #include "timeMenu.hpp"
+#include "videoMenu.hpp"
 #include "wipeCache.hpp"
-#include "eeprom.hpp"
-
-#include <xboxkrnl/xboxkrnl.h>
 
 /******************************************************************************************
  *                              switchingMenuItem
  *****************************************************************************************/
-switchingMenuItem::switchingMenuItem(std::string const& label,
-                                     std::vector<std::string> s) :
-  MenuItem(label), values(s) {
-
+switchingMenuItem::switchingMenuItem(std::string const& label, std::vector<std::string> s) :
+    MenuItem(label), values(s) {
 }
 
 std::string_view switchingMenuItem::getLabel() const {
@@ -25,8 +22,11 @@ std::string_view switchingMenuItem::getLabel() const {
 /******************************************************************************************
  *                              togglingEEPROMMenuItem
  *****************************************************************************************/
-togglingEEPROMMenuItem::togglingEEPROMMenuItem(std::string const& label, uint32_t vI, uint32_t bmask) :
-  MenuItem(label), bitmask(bmask), valueIndex(vI) {
+togglingEEPROMMenuItem::togglingEEPROMMenuItem(std::string const& label,
+                                               uint32_t vI,
+                                               uint32_t bmask) :
+    MenuItem(label),
+    bitmask(bmask), valueIndex(vI) {
 
   uint32_t Value = getEEPROMValue<uint32_t>(valueIndex);
   value = (Value & bitmask) != 0;
@@ -34,7 +34,7 @@ togglingEEPROMMenuItem::togglingEEPROMMenuItem(std::string const& label, uint32_
   valuedLabel = label + (value ? "Yes" : "No");
 }
 
-void togglingEEPROMMenuItem::execute(Menu *) {
+void togglingEEPROMMenuItem::execute(Menu*) {
   value = !value;
   valuedLabel = label + (value ? "Yes" : "No");
 
@@ -51,8 +51,8 @@ std::string_view togglingEEPROMMenuItem::getLabel() const {
 /******************************************************************************************
  *                               settingsMenu
  *****************************************************************************************/
-settingsMenu::settingsMenu(MenuNode *parent, std::string const& label) :
-MenuNode(parent, label) {
+settingsMenu::settingsMenu(MenuNode* parent, std::string const& label) :
+    MenuNode(parent, label) {
   init();
 }
 
@@ -62,8 +62,6 @@ void settingsMenu::init() {
   addNode(std::make_shared<LangMenu>(this, "Language select"));
   addNode(std::make_shared<TimeMenu>(this, "Timezone select"));
   addNode(std::make_shared<logViewerMenu>(this, "Log viewer"));
-  addNode(std::make_shared<MenuExec>("Wipe cache partitions", [](Menu *){
-    wipe_cache();
-  }));;
+  addNode(std::make_shared<MenuExec>("Wipe cache partitions", [](Menu*) { wipe_cache(); }));
+  ;
 }
-

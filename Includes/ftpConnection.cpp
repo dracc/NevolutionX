@@ -1,53 +1,50 @@
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <algorithm>
-#include <map>
-#include "outputLine.h"
-#include "ftpServer.h"
 #include <assert.h>
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <string>
+#include "ftpServer.h"
+#include "outputLine.h"
 
 #ifdef NXDK
-#include <lwip/opt.h>
+#include <hal/xbox.h>
 #include <lwip/arch.h>
-#include <lwip/netdb.h>
-#include <lwip/errno.h>
-#include <lwip/sockets.h>
 #include <lwip/debug.h>
 #include <lwip/dhcp.h>
+#include <lwip/errno.h>
 #include <lwip/init.h>
+#include <lwip/netdb.h>
 #include <lwip/netif.h>
+#include <lwip/opt.h>
+#include <lwip/sockets.h>
 #include <lwip/sys.h>
 #include <lwip/tcpip.h>
 #include <lwip/timeouts.h>
 #include <netif/etharp.h>
+#include <nxdk/mount.h>
 #include <pktdrv.h>
 #include <windows.h> // Used for file I/O
-#include <nxdk/mount.h>
-#include <hal/xbox.h>
 #include <xboxkrnl/xboxkrnl.h>
 #else
-#include <stdio.h>
-#include <stdlib.h>
-#include <cstring>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <cstring>
 
-bool nxIsDriveMounted(char) { return true; }
+bool nxIsDriveMounted(char) {
+  return true;
+}
 #endif
 
 const std::string drives = "CDEFGXYZ";
 
-const std::string types[] = {
-  "ASCII",
-  "EBCDIC",
-  "IMAGE",
-  "LOCAL"
-};
+const std::string types[] = { "ASCII", "EBCDIC", "IMAGE", "LOCAL" };
 
 const std::string replies[] = {
   "220 Please enter your login name now.\r\n",
@@ -75,8 +72,7 @@ void ftpConnection::sendStdString(int fd, std::string const& s, int flags = 0) {
   send(fd, s.c_str(), s.length(), flags);
 }
 
-ftpConnection::ftpConnection(int fd, ftpServer* s) :
-  _fd(fd), server(s) {
+ftpConnection::ftpConnection(int fd, ftpServer* s) : _fd(fd), server(s) {
   buf = (char*)malloc(FTP_CMD_BUFFER_SIZE);
   pwd = "/";
   logged_in = false;
@@ -220,7 +216,7 @@ bool ftpConnection::update(void) {
 }
 
 void ftpConnection::cmdUser(std::string const& arg) {
-  if(!arg.compare(server->conf->getUser())) {
+  if (!arg.compare(server->conf->getUser())) {
     sendStdString(replies[1]);
   } else {
     sendStdString("530 login authentication failed.\r\n");
@@ -250,7 +246,7 @@ void ftpConnection::cmdType(std::string const& arg) {
     sprintf(buf, replies[5].c_str(), "ASCII");
     sendStdString(buf);
     mode = 'A';
-  }else {
+  } else {
     sendStdString(replies[11]);
   }
 }
@@ -258,7 +254,7 @@ void ftpConnection::cmdType(std::string const& arg) {
 void ftpConnection::cmdCwd(std::string const& arg) {
   std::string tmpPwd = "";
   if (arg[0] == '.' && arg[1] == '.') {
-    tmpPwd= pwd.substr(0, pwd.rfind('/', pwd.rfind('/')-1)+1);
+    tmpPwd = pwd.substr(0, pwd.rfind('/', pwd.rfind('/') - 1) + 1);
   } else if (arg[0] == '/') {
     if (arg.length() > 1) {
       tmpPwd = arg + "/";
@@ -272,8 +268,8 @@ void ftpConnection::cmdCwd(std::string const& arg) {
   if (tmpPwd.length() > 1) {
     std::string tmpDosPwd = unixToDosPath(tmpPwd);
     HANDLE soughtFolder;
-    if ((soughtFolder = CreateFileA(tmpDosPwd.c_str(), GENERIC_READ, 0, NULL,
-                                    OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL))
+    if ((soughtFolder = CreateFileA(tmpDosPwd.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING,
+                                    FILE_ATTRIBUTE_NORMAL, NULL))
         != INVALID_HANDLE_VALUE) {
       pwd = tmpPwd;
       sprintf(buf, replies[6].c_str(), pwd.c_str());
@@ -321,19 +317,19 @@ void ftpConnection::cmdSyst(void) {
 
 void ftpConnection::cmdPort(std::string const& arg) {
   int valueSep = arg.find(',', 0);
-  valueSep = arg.find(',', valueSep+1);
-  valueSep = arg.find(',', valueSep+1);
-  valueSep = arg.find(',', valueSep+1);
+  valueSep = arg.find(',', valueSep + 1);
+  valueSep = arg.find(',', valueSep + 1);
+  valueSep = arg.find(',', valueSep + 1);
   std::string address = arg.substr(0, valueSep);
   std::replace(address.begin(), address.end(), ',', '.');
 
-  int cmdDataSep = valueSep+1;
+  int cmdDataSep = valueSep + 1;
   valueSep = arg.find(',', cmdDataSep);
-  std::string p1 = arg.substr(cmdDataSep, valueSep-cmdDataSep);
-  cmdDataSep = valueSep+1;
+  std::string p1 = arg.substr(cmdDataSep, valueSep - cmdDataSep);
+  cmdDataSep = valueSep + 1;
   std::string p2 = arg.substr(cmdDataSep, std::string::npos);
 
-  std::string port = std::to_string(stoi(p1)*256 + stoi(p2));
+  std::string port = std::to_string(stoi(p1) * 256 + stoi(p2));
   outputLine((address + " " + port + " " + std::to_string(_fd) + "\n").c_str());
   dataFd = server->openConnection(address, port);
   if (dataFd != -1) {
@@ -423,18 +419,17 @@ void ftpConnection::cmdNlst(std::string const& arg) {
 }
 
 void ftpConnection::cmdEprt(std::string const& arg) {
-  int family = std::stoi(arg.substr(1,1));
+  int family = std::stoi(arg.substr(1, 1));
   if (family != 1 && family != 2) {
     sendStdString("502 Unknown address family; use (1,2)\r\n");
     return;
   }
   char delimiter = arg[0];
   int portDelimiter = arg.find(delimiter, 3);
-  std::string address = arg.substr(3, arg.find(delimiter, portDelimiter)-3);
+  std::string address = arg.substr(3, arg.find(delimiter, portDelimiter) - 3);
   ++portDelimiter;
   std::string port = arg.substr(portDelimiter,
-                                arg.find(delimiter, portDelimiter) -
-                                portDelimiter);
+                                arg.find(delimiter, portDelimiter) - portDelimiter);
   dataFd = server->openConnection(address, port);
   if (dataFd != -1) {
     sendStdString(replies[8]);
@@ -491,20 +486,20 @@ std::string ftpConnection::unixToDosPath(std::string const& path) {
   } else {
     ret = path;
   }
-  ret = ret.substr(1,1) + ":" + path.substr(2, std::string::npos);
+  ret = ret.substr(1, 1) + ":" + path.substr(2, std::string::npos);
   std::replace(ret.begin(), ret.end(), '/', '\\');
   return ret;
 }
 
-void ftpConnection::sendFolderContents(int fd, std::string &path) {
+void ftpConnection::sendFolderContents(int fd, std::string& path) {
   if (path[0] == '/' && path[1] == '/') {
     path = path.substr(1, std::string::npos);
   }
   if (!path.compare("/")) {
     for (size_t i = 0; i < drives.length(); ++i) {
       if (nxIsDriveMounted(drives[i])) {
-        sendStdString(fd, "drwxr-xr-x 1 XBOX XBOX 0 2020-03-02 10:41 " +
-                      drives.substr(i,1) + "\r\n");
+        sendStdString(fd, "drwxr-xr-x 1 XBOX XBOX 0 2020-03-02 10:41 " + drives.substr(i, 1)
+                              + "\r\n");
       }
     }
     return;
@@ -525,18 +520,17 @@ void ftpConnection::sendFolderContents(int fd, std::string &path) {
     }
     TIME_FIELDS fTime;
     RtlTimeToTimeFields((PLARGE_INTEGER)&fData.ftLastWriteTime, &fTime);
-    retstr += "rwxr-xr-x 1 XBOX XBOX " +
-      std::to_string(fData.nFileSizeLow) + " " +
-      std::to_string(fTime.Year) + "-" + std::to_string(fTime.Month) + "-" + std::to_string(fTime.Day) + " " +
-      std::to_string(fTime.Hour) + ":" + std::to_string(fTime.Minute) + " " +
-      fData.cFileName + "\r\n";
+    retstr += "rwxr-xr-x 1 XBOX XBOX " + std::to_string(fData.nFileSizeLow) + " "
+              + std::to_string(fTime.Year) + "-" + std::to_string(fTime.Month) + "-"
+              + std::to_string(fTime.Day) + " " + std::to_string(fTime.Hour) + ":"
+              + std::to_string(fTime.Minute) + " " + fData.cFileName + "\r\n";
     sendStdString(fd, retstr);
   } while (FindNextFile(fHandle, &fData) != 0);
   FindClose(fHandle);
 #else
   for (int q = 0; q < 10; ++q) {
-    std::string retstr = "drwxr-xr-x 1 XBOX XBOX " + std::to_string(q) +
-      " May 11 10:41 " + std::to_string(q) + "\r\n";
+    std::string retstr = "drwxr-xr-x 1 XBOX XBOX " + std::to_string(q) + " May 11 10:41 "
+                         + std::to_string(q) + "\r\n";
     sendStdString(fd, retstr);
   }
   std::string retstr = "-rwxr-xr-x 1 XBOX XBOX 1024 May 11 10:41 X\r\n";
@@ -547,8 +541,8 @@ void ftpConnection::sendFolderContents(int fd, std::string &path) {
 bool ftpConnection::sendFile(std::string const& fileName) {
 #ifdef NXDK
   std::string filePath = unixToDosPath(fileName);
-  HANDLE fHandle = CreateFile(filePath.c_str(), GENERIC_READ, FILE_SHARE_READ,
-                              NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+  HANDLE fHandle = CreateFile(filePath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL,
+                              OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
   outputLine(("\n" + filePath + "\n").c_str());
   if (fHandle == INVALID_HANDLE_VALUE) {
     outputLine("File opening failed. LOL.\n");
@@ -569,7 +563,7 @@ bool ftpConnection::sendFile(std::string const& fileName) {
     std::string abuf;
     while (ReadFile(fHandle, sendBuffer, bytesToRead, &bytesRead, NULL) && (bytesRead > 0)) {
       abuf = reinterpret_cast<char*>(sendBuffer);
-      std::for_each(abuf.begin(), abuf.begin()+bytesRead, [](char &c){c &= 0x7F;});
+      std::for_each(abuf.begin(), abuf.begin() + bytesRead, [](char& c) { c &= 0x7F; });
       send(dataFd, abuf.c_str(), bytesRead, 0);
     }
   }
@@ -588,8 +582,7 @@ bool ftpConnection::recvFile(std::string const& fileName) {
   bool retVal = true;
   std::string filePath = unixToDosPath(fileName);
 #ifdef NXDK
-  HANDLE fHandle = CreateFile(filePath.c_str(), GENERIC_WRITE,
-                              0, NULL, CREATE_ALWAYS,
+  HANDLE fHandle = CreateFile(filePath.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
                               FILE_ATTRIBUTE_NORMAL, NULL);
   if (fHandle == INVALID_HANDLE_VALUE) {
     outputLine("File creation failed. LOL. \n");

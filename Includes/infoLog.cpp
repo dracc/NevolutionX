@@ -1,18 +1,17 @@
 #include "infoLog.h"
-
 #include <cstdarg>
 #include <cstdio>
 
 #ifdef NXDK
-#include <windows.h>
 #include <hal/debug.h>
+#include <windows.h>
 #else
 #include <SDL.h>
 #endif
 
-InfoLog *InfoLog::singleton = nullptr;
+InfoLog* InfoLog::singleton = nullptr;
 
-InfoLog *InfoLog::getInstance() {
+InfoLog* InfoLog::getInstance() {
   if (!singleton) {
     singleton = new InfoLog();
   }
@@ -20,14 +19,14 @@ InfoLog *InfoLog::getInstance() {
   return singleton;
 }
 
-void InfoLog::configure(const Config &config) {
+void InfoLog::configure(const Config& config) {
   getInstance()->configure(config.settings.logging);
 }
 
 void InfoLog::configure(loggingConfig const& config) {
   overlayEnabled = config.getOverlayEnabled();
   framesPerOverlayItem = config.getOverlayDurationFrames();
-  overlayAlpha = static_cast<uint8_t >(config.getOverlayBackgroundAlpha() * 0xFF);
+  overlayAlpha = static_cast<uint8_t>(config.getOverlayBackgroundAlpha() * 0xFF);
 }
 
 void InfoLog::outputLine(std::string const& line) {
@@ -55,14 +54,14 @@ void InfoLog::outputLine(const char* format, ...) {
   va_end(args);
 }
 
-void InfoLog::addLine(const std::string &line) {
+void InfoLog::addLine(const std::string& line) {
   std::lock_guard<std::mutex> lock(logMutex);
   log.push_back(line);
 
   overlayLog.emplace_back(line, framesPerOverlayItem);
 }
 
-void InfoLog::renderAsOverlay(Renderer &r, Font &font) {
+void InfoLog::renderAsOverlay(Renderer& r, Font& font) {
   if (!overlayEnabled) {
     return;
   }
@@ -76,10 +75,10 @@ void InfoLog::renderAsOverlay(Renderer &r, Font &font) {
   float bottom = displayHeight + startHeight;
 
   std::list<std::pair<std::string, float>> reversedOutput;
-  for (auto it = begin(overlayLog), itEnd = end(overlayLog); it != itEnd; ) {
-    auto &item = *it;
+  for (auto it = begin(overlayLog), itEnd = end(overlayLog); it != itEnd;) {
+    auto& item = *it;
 
-    const std::string &line = item.first;
+    const std::string& line = item.first;
     auto lineHeight = font.getColumnHeight(line, displayWidth);
     reversedOutput.push_front(std::make_pair(line, lineHeight));
 
@@ -91,30 +90,30 @@ void InfoLog::renderAsOverlay(Renderer &r, Font &font) {
   }
 
   r.setDrawColor(overlayRed, overlayGreen, overlayBlue, overlayAlpha);
-  for (auto const& item : reversedOutput) {
+  for (auto const& item: reversedOutput) {
     auto itemHeight = item.second;
     bottom -= itemHeight;
     if (bottom < startHeight) {
       break;
     }
 
-    SDL_FRect backgroundArea{startWidth, bottom, displayWidth, itemHeight};
+    SDL_FRect backgroundArea{ startWidth, bottom, displayWidth, itemHeight };
     r.fillRectangle(backgroundArea);
     font.drawColumn(item.first, std::make_pair(startWidth, bottom), displayWidth);
   }
 }
 
 int InfoLog::getLogSize() {
-  InfoLog &infoLog = *getInstance();
+  InfoLog& infoLog = *getInstance();
 
   std::lock_guard<std::mutex> lock(infoLog.logMutex);
   return static_cast<int>(infoLog.log.size());
 }
 
-std::mutex &InfoLog::getLogMutex() {
+std::mutex& InfoLog::getLogMutex() {
   return getInstance()->logMutex;
 }
 
-const std::list<std::string> &InfoLog::getLog() {
+const std::list<std::string>& InfoLog::getLog() {
   return getInstance()->log;
 }
