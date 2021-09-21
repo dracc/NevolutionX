@@ -1,11 +1,9 @@
 #ifndef NEVOLUTIONX_INCLUDES_SUBAPPROUTER_H_
 #define NEVOLUTIONX_INCLUDES_SUBAPPROUTER_H_
 
-#include <stack>
-
 #include <SDL.h>
 #include <windows.h>
-
+#include <stack>
 #include "font.h"
 #include "subApp.h"
 
@@ -15,19 +13,19 @@
 // input events to the topmost SubApp.
 class SubAppRouter {
 public:
-  static SubAppRouter *getInstance();
+  static SubAppRouter* getInstance();
 
   void push(const std::shared_ptr<SubApp>&);
   void pop();
 
-  void render(Font &font);
+  void render(Font& font);
 
-  void handleAxisMotion(const SDL_ControllerAxisEvent &event);
-  void handleButtonDown(const SDL_ControllerButtonEvent &event);
-  void handleButtonUp(const SDL_ControllerButtonEvent &event);
+  void handleAxisMotion(const SDL_ControllerAxisEvent& event);
+  void handleButtonDown(const SDL_ControllerButtonEvent& event);
+  void handleButtonUp(const SDL_ControllerButtonEvent& event);
 
 private:
-  static SubAppRouter *singleton;
+  static SubAppRouter* singleton;
   SubAppRouter();
   void processButtonRepeatEvents();
 
@@ -35,9 +33,9 @@ private:
   LONGLONG ticksPerMillisecond;
   LONGLONG lastFrameStartTicks;
 
-  // Maps {(PlayerID, Button), timestamp} to track when virtual button press events should be fired while a button is
-  // held down.
+  // Maps {(PlayerID, Button), timestamp} to track when virtual button press events should
+  // be fired while a button is held down.
   std::map<std::pair<int, SDL_GameControllerButton>, LONGLONG> buttonRepeatTimers;
 };
 
-#endif //NEVOLUTIONX_INCLUDES_SUBAPPROUTER_H_
+#endif // NEVOLUTIONX_INCLUDES_SUBAPPROUTER_H_

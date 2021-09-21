@@ -1,15 +1,14 @@
 #ifndef __FTPSERVER_H
 #define __FTPSERVER_H
 
-#include <thread>
-
-#include <string>
 #include <map>
-#include "ftpConnection.h"
+#include <string>
+#include <thread>
 #include "config.hpp"
+#include "ftpConnection.h"
 #ifdef NXDK
-#include <lwip/sockets.h>
 #include <lwip/netdb.h>
+#include <lwip/sockets.h>
 #else
 #include <netdb.h>
 #endif
@@ -31,8 +30,8 @@ class ftpServer {
 
   std::thread serverThread;
 
-  void* getInAddr(struct sockaddr *sa);
-  static int thread_runner(ftpServer *server);
+  void* getInAddr(struct sockaddr* sa);
+  static int thread_runner(ftpServer* server);
 
 public:
   ftpServer(ftpConfig const* conf);
@@ -42,7 +41,7 @@ public:
   void forgetConnection(int fd);
   int openConnection(std::string const& addr, std::string const& port);
 
-  const ftpConfig *conf;
+  const ftpConfig* conf;
 };
 
 #endif

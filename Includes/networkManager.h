@@ -1,13 +1,13 @@
 #ifndef NEVOLUTIONX_NETWORKMANAGER_H
 #define NEVOLUTIONX_NETWORKMANAGER_H
 
-#include "config.hpp"
-
 #include <thread>
+#include "config.hpp"
 
 class NetworkManager {
 public:
-  typedef enum {
+  typedef enum
+  {
     INIT_NONE,
     INIT_SUCCEEDED,
     INIT_FAILED,
@@ -33,7 +33,7 @@ public:
   }
 
 private:
-  static void thread_main(NetworkManager *manager);
+  static void thread_main(NetworkManager* manager);
 
   Config config;
 
@@ -42,4 +42,4 @@ private:
 };
 
 
-#endif //NEVOLUTIONX_NETWORKMANAGER_H
+#endif // NEVOLUTIONX_NETWORKMANAGER_H

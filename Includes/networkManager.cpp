@@ -1,5 +1,4 @@
 #include "networkManager.h"
-
 #include <utility>
 
 #ifdef NXDK
@@ -7,12 +6,13 @@
 #include "networking.h"
 
 extern "C" {
-extern struct netif *g_pnetif;
+extern struct netif* g_pnetif;
 }
 
 #endif
 
-NetworkManager::NetworkManager(Config config) : config(std::move(config)), status(INIT_NONE) {
+NetworkManager::NetworkManager(Config config) :
+    config(std::move(config)), status(INIT_NONE) {
 }
 
 void NetworkManager::asyncInit() {
@@ -20,9 +20,9 @@ void NetworkManager::asyncInit() {
   init_thread = std::thread(thread_main, this);
 }
 
-void NetworkManager::thread_main(NetworkManager *manager) {
+void NetworkManager::thread_main(NetworkManager* manager) {
 #ifdef NXDK
-  const netConfig &net = manager->config.settings.net;
+  const netConfig& net = manager->config.settings.net;
 
   staticIP static_ip;
   static_ip.gateway.addr = net.getStaticGateway();

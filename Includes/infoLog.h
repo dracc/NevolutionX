@@ -5,7 +5,6 @@
 #include <mutex>
 #include <string>
 #include <utility>
-
 #include "config.hpp"
 #include "font.h"
 #include "renderer.h"
@@ -20,40 +19,40 @@ public:
 
   static bool isOutputCaptured() { return getInstance()->captured; }
 
-  static void renderOverlay(Renderer &r, Font &font) {
+  static void renderOverlay(Renderer& r, Font& font) {
     getInstance()->renderAsOverlay(r, font);
   }
 
   static int getLogSize();
-  static std::mutex &getLogMutex();
-  static const std::list<std::string> &getLog();
+  static std::mutex& getLogMutex();
+  static const std::list<std::string>& getLog();
 
 private:
   // Tuple of string, frames remaining.
   typedef std::pair<std::string, int> OverlayItem;
 
-  static InfoLog *getInstance();
+  static InfoLog* getInstance();
 
   InfoLog() = default;
   void configure(loggingConfig const& config);
   void addLine(std::string const& line);
-  void renderAsOverlay(Renderer &r, Font &font);
+  void renderAsOverlay(Renderer& r, Font& font);
 
-  static InfoLog *singleton;
+  static InfoLog* singleton;
 
   // The number of frames to display an overlay log entry before hiding it.
-  int framesPerOverlayItem{30};
+  int framesPerOverlayItem{ 30 };
 
-  bool overlayEnabled{true};
-  uint8_t overlayRed{0};
-  uint8_t overlayGreen{0};
-  uint8_t overlayBlue{0};
-  uint8_t overlayAlpha{140};
-  
-  std::atomic<bool> captured{false};
+  bool overlayEnabled{ true };
+  uint8_t overlayRed{ 0 };
+  uint8_t overlayGreen{ 0 };
+  uint8_t overlayBlue{ 0 };
+  uint8_t overlayAlpha{ 140 };
+
+  std::atomic<bool> captured{ false };
   std::mutex logMutex;
   std::list<std::string> log;
   std::list<OverlayItem> overlayLog;
 };
 
-#endif //NEVOLUTIONX_INCLUDES_INFOLOG_H_
+#endif // NEVOLUTIONX_INCLUDES_INFOLOG_H_

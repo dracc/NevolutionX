@@ -6,7 +6,7 @@
 #ifdef NXDK
 void mountHomeDir(const char Letter);
 #endif
-int init_systems(const Config &config);
+int init_systems(const Config& config);
 void shutdown_systems(int systems);
 
 #endif

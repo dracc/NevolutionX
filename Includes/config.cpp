@@ -1,5 +1,4 @@
 #include "config.hpp"
-
 #include <fstream>
 #include <iomanip>
 
@@ -16,8 +15,8 @@
 #define HOME "." SEPARATOR
 #endif
 
-static unsigned int parseIPV4(const std::string &val) {
-  in_addr addr{0};
+static unsigned int parseIPV4(const std::string& val) {
+  in_addr addr{ 0 };
 
   if (inet_aton(val.c_str(), &addr)) {
     return addr.s_addr;
@@ -27,7 +26,7 @@ static unsigned int parseIPV4(const std::string &val) {
 }
 
 static std::string ipV4String(unsigned int addr) {
-  in_addr buf{0};
+  in_addr buf{ 0 };
   buf.s_addr = addr;
   std::string ret(inet_ntoa(buf));
   return ret;
@@ -35,22 +34,22 @@ static std::string ipV4String(unsigned int addr) {
 
 netConfig::netConfig() : enable(true), useDHCP(true) {
   ip4_addr_t addr;
-  IP4_ADDR(&addr, 10,0,1,1);
+  IP4_ADDR(&addr, 10, 0, 1, 1);
   staticGateway = addr.addr;
 
-  IP4_ADDR(&addr, 10,0,1,7);
+  IP4_ADDR(&addr, 10, 0, 1, 7);
   staticIP = addr.addr;
 
-  IP4_ADDR(&addr, 255,255,255,0);
+  IP4_ADDR(&addr, 255, 255, 255, 0);
   staticNetmask = addr.addr;
 }
 
 void to_json(nlohmann::json& j, netConfig const& o) {
-  j = nlohmann::json{{"enable", o.getEnabled()},
-                     {"use_dhcp", o.getUseDHCP()},
-                     {"static_ip", ipV4String(o.getStaticIP())},
-                     {"static_gateway", ipV4String(o.getStaticGateway())},
-                     {"static_netmask", ipV4String(o.getStaticNetmask())}};
+  j = nlohmann::json{ { "enable", o.getEnabled() },
+                      { "use_dhcp", o.getUseDHCP() },
+                      { "static_ip", ipV4String(o.getStaticIP()) },
+                      { "static_gateway", ipV4String(o.getStaticGateway()) },
+                      { "static_netmask", ipV4String(o.getStaticNetmask()) } };
 }
 
 void from_json(nlohmann::json const& j, netConfig& o) {
@@ -79,9 +78,10 @@ ftpConfig::ftpConfig() {
 }
 
 void to_json(nlohmann::json& j, ftpConfig const& f) {
-  j = nlohmann::json{{"enable", f.getEnabled()},
-                     {"username", f.getUser()}, {"password", f.getPassword()},
-                     {"port", f.getPort()}};
+  j = nlohmann::json{ { "enable", f.getEnabled() },
+                      { "username", f.getUser() },
+                      { "password", f.getPassword() },
+                      { "port", f.getPort() } };
 }
 
 void from_json(nlohmann::json const& j, ftpConfig& f) {
@@ -137,8 +137,7 @@ mountConfig::mountConfig() {
 }
 
 void to_json(nlohmann::json& j, mountConfig const& o) {
-  j = nlohmann::json{{"enable_f", o.getFEnabled()},
-                     {"enable_g", o.getGEnabled()}};
+  j = nlohmann::json{ { "enable_f", o.getFEnabled() }, { "enable_g", o.getGEnabled() } };
 }
 
 void from_json(nlohmann::json const& j, mountConfig& o) {
@@ -152,16 +151,18 @@ void from_json(nlohmann::json const& j, mountConfig& o) {
 
 void to_json(nlohmann::json& j, loggingConfig const& o) {
   // FIXME: Use a float for colors when https://github.com/XboxDev/nxdk/issues/508 is fixed.
-  j = nlohmann::json{{"enable_overlay", o.getOverlayEnabled()},
-                     {"overlay_duration_frames", o.getOverlayDurationFrames()},
-                     {"overlay_bg_alpha_int", static_cast<int>(o.getOverlayBackgroundAlpha() * 0xFF)}};
+  j = nlohmann::json{ { "enable_overlay", o.getOverlayEnabled() },
+                      { "overlay_duration_frames", o.getOverlayDurationFrames() },
+                      { "overlay_bg_alpha_int",
+                        static_cast<int>(o.getOverlayBackgroundAlpha() * 0xFF) } };
 }
 
 void from_json(nlohmann::json const& j, loggingConfig& o) {
   if (j.contains("enable_overlay") && j["enable_overlay"].is_boolean()) {
     o.setOverlayEnabled(j["enable_overlay"]);
   }
-  if (j.contains("overlay_duration_frames") && j["overlay_duration_frames"].is_number_integer()) {
+  if (j.contains("overlay_duration_frames")
+      && j["overlay_duration_frames"].is_number_integer()) {
     o.setOverlayDurationFrames(j["overlay_duration_frames"]);
   }
   // FIXME: Use a float for colors when https://github.com/XboxDev/nxdk/issues/508 is fixed.
@@ -172,10 +173,10 @@ void from_json(nlohmann::json const& j, loggingConfig& o) {
 }
 
 void to_json(nlohmann::json& j, Settings const& o) {
-  j = nlohmann::json{{"ftp", nlohmann::json(o.ftp)},
-                     {"mount", nlohmann::json(o.mount)},
-                     {"network", nlohmann::json(o.net)},
-                     {"logging", nlohmann::json(o.logging)}};
+  j = nlohmann::json{ { "ftp", nlohmann::json(o.ftp) },
+                      { "mount", nlohmann::json(o.mount) },
+                      { "network", nlohmann::json(o.net) },
+                      { "logging", nlohmann::json(o.logging) } };
 }
 
 void from_json(nlohmann::json const& j, Settings& o) {

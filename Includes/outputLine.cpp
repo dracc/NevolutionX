@@ -1,11 +1,10 @@
 #include "outputLine.h"
-
 #include <cstdarg>
 #include <cstdio>
 
 #ifdef NXDK
-#include <windows.h>
 #include <hal/debug.h>
+#include <windows.h>
 #else
 #include <SDL.h>
 #endif

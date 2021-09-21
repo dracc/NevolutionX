@@ -1,9 +1,8 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-#include "../3rdparty/json.hpp"
-
 #include <string>
+#include "../3rdparty/json.hpp"
 
 class netConfig {
   bool enable;
@@ -12,7 +11,7 @@ class netConfig {
   unsigned int staticIP;
   unsigned int staticNetmask;
 
- public:
+public:
   netConfig();
 
   bool getEnabled() const { return enable; }
@@ -35,6 +34,7 @@ class ftpConfig {
   std::string username;
   std::string password;
   int port;
+
 public:
   ftpConfig();
 
@@ -55,7 +55,7 @@ class mountConfig {
   bool enableF;
   bool enableG;
 
- public:
+public:
   mountConfig();
 
   bool getFEnabled() const { return enableF; }
@@ -68,11 +68,11 @@ void to_json(nlohmann::json& j, mountConfig const& o);
 void from_json(nlohmann::json const& j, mountConfig& o);
 
 class loggingConfig {
-  bool enableOverlay{true};
-  int overlayDurationFrames{30};
-  float overlayBackgroundAlpha{0.75f};
+  bool enableOverlay{ true };
+  int overlayDurationFrames{ 30 };
+  float overlayBackgroundAlpha{ 0.75f };
 
- public:
+public:
   loggingConfig() = default;
 
   bool getOverlayEnabled() const { return enableOverlay; }
@@ -99,6 +99,7 @@ void from_json(nlohmann::json const& j, Settings& o);
 
 class Config {
   bool changed = false;
+
 public:
   Config();
 

@@ -5,9 +5,9 @@
 
 class logViewerMenu : public MenuItem {
 public:
-  logViewerMenu(MenuNode *parent, std::string const& label);
+  logViewerMenu(MenuNode* parent, std::string const& label);
 
-  void execute(Menu *) override;
+  void execute(Menu*) override;
 };
 
-#endif //NEVOLUTIONX_INCLUDES_LOGVIEWERMENU_H_
+#endif // NEVOLUTIONX_INCLUDES_LOGVIEWERMENU_H_

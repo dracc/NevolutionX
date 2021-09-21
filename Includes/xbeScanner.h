@@ -34,12 +34,12 @@ private:
   XBEScanner();
   ~XBEScanner();
 
-  static void threadMain(XBEScanner *scanner);
-  static XBEScanner *getInstance();
+  static void threadMain(XBEScanner* scanner);
+  static XBEScanner* getInstance();
 
   void addJob(std::string const& path, const Callback& callback);
 
-  static XBEScanner *singleton;
+  static XBEScanner* singleton;
 
   std::atomic<bool> running;
   std::thread scannerThread;
@@ -49,4 +49,4 @@ private:
 };
 
 
-#endif //NEVOLUTIONX_INCLUDES_XBESCANNER_H_
+#endif // NEVOLUTIONX_INCLUDES_XBESCANNER_H_

@@ -1,25 +1,23 @@
+#include <SDL.h>
+#include <memory>
 #include <vector>
 #include "config.hpp"
-#include "menu.hpp"
-#include "langMenu.hpp"
-#include "timeMenu.hpp"
 #include "font.h"
+#include "ftpServer.h"
 #include "infoLog.h"
+#include "langMenu.hpp"
+#include "menu.hpp"
 #include "networkManager.h"
 #include "outputLine.h"
 #include "renderer.h"
 #include "subAppRouter.h"
 #include "subsystems.h"
-
-#include "ftpServer.h"
-
-#include <memory>
-#include <SDL.h>
+#include "timeMenu.hpp"
 
 #ifdef NXDK
-#include "eeprom.hpp"
 #include <hal/video.h>
 #include <windows.h>
+#include "eeprom.hpp"
 #endif
 
 #ifdef NXDK
@@ -40,8 +38,8 @@ int main(void) {
 
   int init = init_systems(config);
   if (init) {
-      shutdown_systems(init);
-      return init;
+    shutdown_systems(init);
+    return init;
   }
 
   NetworkManager networkManager(config);
@@ -73,7 +71,7 @@ int main(void) {
   // FIXME: Font path should be read from theme
   Font f(r, HOME "vegur.ttf");
 
-  SubAppRouter &router = *SubAppRouter::getInstance();
+  SubAppRouter& router = *SubAppRouter::getInstance();
 
   auto menu = std::make_shared<Menu>(config, r);
   router.push(menu);
@@ -112,7 +110,7 @@ int main(void) {
   int info_y = static_cast<int>(r.getHeight() * 0.85);
   std::pair<float, float> info_coordinates(info_x, info_y);
 
-  ftpServer *ftpServerInstance = nullptr;
+  ftpServer* ftpServerInstance = nullptr;
 
   while (running) {
     if (config.settings.ftp.getEnabled() && networkManager.isNewlyInitialized()) {
