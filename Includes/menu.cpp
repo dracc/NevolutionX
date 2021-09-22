@@ -182,6 +182,39 @@ std::vector<std::shared_ptr<MenuItem>>* MenuXbe::getChildNodes() {
   return MenuNode::getChildNodes();
 }
 
+void MenuXbe::superscroll(bool moveToPrevious) {
+  std::lock_guard<std::mutex> lock(childNodesLock);
+
+  if (childNodes.empty() || superscrollIndex.empty()) {
+    return;
+  }
+
+  const auto& currentItemLabel = childNodes[selected]->getLabel();
+  int firstChar = tolower(currentItemLabel[0]);
+
+  auto it = superscrollIndex.find(firstChar);
+  if (it == superscrollIndex.end()) {
+    InfoLog::outputLine("Failed to find %d (%c) in superscroll index", firstChar,
+                        static_cast<char>(firstChar));
+    return;
+  }
+
+  if (moveToPrevious) {
+    if (it == superscrollIndex.begin()) {
+      return;
+    }
+
+    --it;
+  } else {
+    ++it;
+    if (it == superscrollIndex.end()) {
+      return;
+    }
+  }
+
+  selected = it->second;
+}
+
 void MenuXbe::updateScanningLabel() {
   std::string scanningLabel = "Scanning \"" + remainingScanPaths.front() + "\" ...";
   std::lock_guard<std::mutex> lock(childNodesLock);
@@ -226,8 +259,28 @@ void MenuXbe::createChildren() {
               return SI::natural::compare(a->getLabel(), b->getLabel());
             });
 
+  std::map<int, size_t> index;
+  int lastProcessed = -1;
+  for (size_t i = 0; i < newChildren.size(); ++i) {
+    const auto& childLabel = newChildren[i]->getLabel();
+
+    if (childLabel.empty()) {
+      InfoLog::outputLine("Child with empty label while building superscroll index.");
+      continue;
+    }
+
+    int firstChar = tolower(childLabel[0]);
+    if (firstChar == lastProcessed) {
+      continue;
+    }
+
+    index[firstChar] = i;
+    lastProcessed = firstChar;
+  }
+
   std::lock_guard<std::mutex> lock(childNodesLock);
   childNodes = newChildren;
+  superscrollIndex = index;
 }
 
 
@@ -366,6 +419,14 @@ void Menu::pageUp() {
 
 void Menu::pageDown() {
   currentMenu->pageDown(static_cast<int>(itemsToShow));
+}
+
+void Menu::superscrollUp() {
+  currentMenu->superscrollUp();
+}
+
+void Menu::superscrollDown() {
+  currentMenu->superscrollDown();
 }
 
 void Menu::back() {

@@ -45,6 +45,9 @@ public:
   void pageUp(int pageSize);
   void pageDown(int pageSize);
 
+  virtual void superscrollUp() {}
+  virtual void superscrollDown() {}
+
 protected:
   void moveSelection(int delta, bool allowWrap = true);
 
@@ -67,7 +70,11 @@ public:
 
   std::vector<std::shared_ptr<MenuItem>>* getChildNodes() override;
 
+  void superscrollUp() override { superscroll(true); }
+  void superscrollDown() override { superscroll(false); }
+
 private:
+  void superscroll(bool moveToPrevious);
   void updateScanningLabel();
   void onScanCompleted(bool succeeded, std::vector<XBEScanner::XBEInfo> const& items);
   void createChildren();
@@ -75,6 +82,10 @@ private:
   std::mutex childNodesLock;
   std::list<std::string> remainingScanPaths;
   std::vector<XBEScanner::XBEInfo> discoveredItems;
+
+  // Map of first letter to index of the first child in childNodes whose label starts with
+  // that letter.
+  std::map<int, size_t> superscrollIndex;
 };
 
 class MenuLaunch : public MenuItem {
@@ -118,8 +129,14 @@ public:
   void onLeftStickDigitalLeftPressed() override { onLeftPressed(); }
   void onLeftStickDigitalRightPressed() override { onRightPressed(); }
 
+  void onRightStickDigitalUpPressed() override { superscrollUp(); }
+  void onRightStickDigitalDownPressed() override { superscrollDown(); }
+
   void pageUp();
   void pageDown();
+  void superscrollUp();
+  void superscrollDown();
+
   void back();
   void execute();
 
