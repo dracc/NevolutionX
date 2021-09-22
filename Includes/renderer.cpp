@@ -2,7 +2,7 @@
 #include <SDL_image.h>
 #include <algorithm>
 #include <cmath>
-#include "outputLine.h"
+#include "infoLog.h"
 
 #ifdef NXDK
 #include <hal/video.h>
@@ -69,13 +69,13 @@ int Renderer::init(const char* bgpath) {
   SDL_Surface* bgsurf = IMG_Load(bgname);
   free(bgname);
   if (bgsurf == nullptr) {
-    outputLine("Creating background surface failed.\n");
+    InfoLog::outputLine("Creating background surface failed.\n");
     return 3;
   }
   background = SDL_CreateTextureFromSurface(renderer, bgsurf);
   SDL_FreeSurface(bgsurf);
   if (background == nullptr) {
-    outputLine("Creating background texture failed.\n");
+    InfoLog::outputLine("Creating background texture failed.\n");
     return 4;
   }
   return ret;

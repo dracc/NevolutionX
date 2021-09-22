@@ -12,7 +12,6 @@ include_directories(${CMAKE_SOURCE_DIR} ${SDL2_INCLUDE_DIRS} ${THREAD_INCLUDE_DI
 
 add_executable(${PROJECT_NAME}
   main.cpp
-  Includes/outputLine.cpp
   Includes/subsystems.cpp
   Includes/renderer.cpp
   Includes/font.cpp

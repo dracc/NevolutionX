@@ -1,5 +1,5 @@
 #include "subsystems.h"
-#include "outputLine.h"
+#include "infoLog.h"
 
 #ifdef NXDK
 #include <hal/video.h>
@@ -36,52 +36,52 @@ int init_systems(const Config& config) {
   XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
 
   if (!nxMountDrive('C', "\\Device\\Harddisk0\\Partition2")) {
-    outputLine("Mounting error: Could not mount drive C\n");
+    InfoLog::outputLine("Mounting error: Could not mount drive C\n");
   }
   if (!nxMountDrive('E', "\\Device\\Harddisk0\\Partition1")) {
-    outputLine("Mounting error: Could not mount drive E\n");
+    InfoLog::outputLine("Mounting error: Could not mount drive E\n");
   }
   if (config.settings.mount.getFEnabled()
       && !nxMountDrive('F', "\\Device\\Harddisk0\\Partition6")) {
-    outputLine("Mounting warning: Could not mount drive F\n");
+    InfoLog::outputLine("Mounting warning: Could not mount drive F\n");
   }
   if (config.settings.mount.getGEnabled()
       && !nxMountDrive('G', "\\Device\\Harddisk0\\Partition7")) {
-    outputLine("Mounting information: Drive G:\\ not mounted\n");
+    InfoLog::outputLine("Mounting information: Drive G:\\ not mounted\n");
   }
   if (!nxMountDrive('X', "\\Device\\Harddisk0\\Partition3")) {
-    outputLine("Mounting error: Could not mount drive X\n");
+    InfoLog::outputLine("Mounting error: Could not mount drive X\n");
   }
   if (!nxMountDrive('Y', "\\Device\\Harddisk0\\Partition4")) {
-    outputLine("Mounting error: Could not mount drive Y\n");
+    InfoLog::outputLine("Mounting error: Could not mount drive Y\n");
   }
   if (!nxMountDrive('Z', "\\Device\\Harddisk0\\Partition5")) {
-    outputLine("Mounting error: Could not mount drive Z\n");
+    InfoLog::outputLine("Mounting error: Could not mount drive Z\n");
   }
   if (nxIsDriveMounted('D')) {
     nxUnmountDrive('D');
   }
   if (!nxMountDrive('D', "\\Device\\CdRom0")) {
-    outputLine("Mounting warning: Could not mount DVD drive\n");
+    InfoLog::outputLine("Mounting warning: Could not mount DVD drive\n");
   }
 #endif
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-    outputLine("Init error: %s", SDL_GetError());
+    InfoLog::outputLine("Init error: %s", SDL_GetError());
     return 3;
   }
 
   if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
-    outputLine("IMG Init Error: %s!\n", IMG_GetError());
+    InfoLog::outputLine("IMG Init Error: %s!\n", IMG_GetError());
     return 2;
   }
 
   if (TTF_Init() != 0) {
-    outputLine("TTF Init Error: %s", TTF_GetError());
+    InfoLog::outputLine("TTF Init Error: %s", TTF_GetError());
     return 2;
   }
 
   if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) != 0) {
-    outputLine("Init error: %s", SDL_GetError());
+    InfoLog::outputLine("Init error: %s", SDL_GetError());
     return 3;
   }
   return 0;

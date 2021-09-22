@@ -1,6 +1,6 @@
 #include "menu.hpp"
 #include "3rdparty/NaturalSort/natural_sort.hpp"
-#include "outputLine.h"
+#include "infoLog.h"
 #include "settingsMenu.hpp"
 #include "xbeScanner.h"
 #ifdef NXDK
@@ -195,7 +195,7 @@ void MenuXbe::onScanCompleted(bool succeeded,
   remainingScanPaths.pop_front();
 
   if (!succeeded) {
-    outputLine("Failed to scan '%s' for XBEs, skipping...\n", path.c_str());
+    InfoLog::outputLine("Failed to scan '%s' for XBEs, skipping...\n", path.c_str());
   } else {
     discoveredItems.insert(discoveredItems.end(), std::make_move_iterator(begin(items)),
                            std::make_move_iterator(end(items)));
@@ -242,7 +242,7 @@ MenuLaunch::~MenuLaunch() {
 }
 
 void MenuLaunch::execute(Menu*) {
-  outputLine("Launching xbe %s\n", this->path.c_str());
+  InfoLog::outputLine("Launching xbe %s\n", this->path.c_str());
 #ifdef NXDK
   XLaunchXBE(const_cast<char*>(this->path.c_str()));
 #endif
@@ -369,8 +369,8 @@ void Menu::pageDown() {
 }
 
 void Menu::back() {
-  outputLine("Setting menu to %s\n",
-             std::string(currentMenu->getParent()->getLabel()).c_str());
+  InfoLog::outputLine("Setting menu to %s\n",
+                      std::string(currentMenu->getParent()->getLabel()).c_str());
   currentMenu = currentMenu->getParent();
 }
 
