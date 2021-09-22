@@ -88,8 +88,9 @@ fi
 exec 1>&2
 
 
-changed_filenames="$(git diff --cached --name-only)"
-changed_c_filenames="$(echo "${changed_filenames}" | grep -E '.*\.(c|cpp|h|hpp)$')"
+added_and_modified_filenames="$(git diff --cached --name-only --diff-filter=d)"
+changed_c_filenames="$(echo "${added_and_modified_filenames}" | \
+                            grep -E '.*\.(c|cpp|h|hpp)$')"
 
 
 # Allow blank line at EOF.
