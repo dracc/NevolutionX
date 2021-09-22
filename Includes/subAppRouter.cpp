@@ -2,6 +2,8 @@
 #include <list>
 #include "outputLine.h"
 
+#define ANALOG_MAX_VALUE 32767.0f
+
 static void routeButtonDown(SubApp& app, int playerID, SDL_GameControllerButton button);
 static void routeButtonUp(SubApp& app, int playerID, SDL_GameControllerButton button);
 
@@ -78,8 +80,117 @@ void SubAppRouter::handleAxisMotion(const SDL_ControllerAxisEvent& event) {
   assert(!subAppStack.empty());
   std::shared_ptr<SubApp> ref = subAppStack.top();
   SubApp& app = *ref;
-  app.setActivePlayerID(getPlayerIndex(event.which));
-  // TODO: Translate axis events.
+  int playerID = getPlayerIndex(event.which);
+  app.setActivePlayerID(playerID);
+
+  int value = event.value;
+  if (event.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT
+      || event.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT) {
+    if (value < static_cast<int>(triggerDeadzone * ANALOG_MAX_VALUE)) {
+      value = 0;
+    }
+  } else {
+    if (abs(value) < static_cast<int>(analogStickDeadzone * ANALOG_MAX_VALUE)) {
+      value = 0;
+    } else if (value < static_cast<int>(-ANALOG_MAX_VALUE)) {
+      value = -ANALOG_MAX_VALUE;
+    }
+  }
+
+  auto lastStateKey = std::make_pair(playerID,
+                                     static_cast<SDL_GameControllerAxis>(event.axis));
+  auto lastStateIterator = lastAxisState.find(lastStateKey);
+
+  if (lastStateIterator == lastAxisState.end()) {
+    // Insert a dummy value that will be treated as a change in state if this is not a
+    // deadzone event.
+    lastStateIterator = lastAxisState.insert(std::make_pair(lastStateKey, 0)).first;
+  }
+
+  // Ignore duplicated events.
+  if (lastStateIterator->second == value) {
+    return;
+  }
+
+  switch (event.axis) {
+  case SDL_CONTROLLER_AXIS_LEFTX:
+    app.onLeftStickXChanged(value);
+
+    if (lastStateIterator->second > 0) {
+      app.onLeftStickDigitalRightReleased();
+    } else if (lastStateIterator->second < 0) {
+      app.onLeftStickDigitalLeftReleased();
+    }
+
+    if (value > 0) {
+      app.onLeftStickDigitalRightPressed();
+    } else if (value < 0) {
+      app.onLeftStickDigitalLeftPressed();
+    }
+
+    break;
+
+  case SDL_CONTROLLER_AXIS_LEFTY:
+    app.onLeftStickYChanged(value);
+
+    if (lastStateIterator->second > 0) {
+      app.onLeftStickDigitalDownReleased();
+    } else if (lastStateIterator->second < 0) {
+      app.onLeftStickDigitalUpReleased();
+    }
+
+    if (value > 0) {
+      app.onLeftStickDigitalDownPressed();
+    } else if (value < 0) {
+      app.onLeftStickDigitalUpPressed();
+    }
+
+    break;
+
+  case SDL_CONTROLLER_AXIS_RIGHTX:
+    app.onRightStickXChanged(value);
+
+    if (lastStateIterator->second > 0) {
+      app.onRightStickDigitalRightReleased();
+    } else if (lastStateIterator->second < 0) {
+      app.onRightStickDigitalLeftReleased();
+    }
+
+    if (value > 0) {
+      app.onRightStickDigitalRightPressed();
+    } else if (value < 0) {
+      app.onRightStickDigitalLeftPressed();
+    }
+
+    break;
+
+  case SDL_CONTROLLER_AXIS_RIGHTY:
+    app.onRightStickYChanged(value);
+
+    if (lastStateIterator->second > 0) {
+      app.onRightStickDigitalDownReleased();
+    } else if (lastStateIterator->second < 0) {
+      app.onRightStickDigitalUpReleased();
+    }
+
+    if (value > 0) {
+      app.onRightStickDigitalDownPressed();
+    } else if (value < 0) {
+      app.onRightStickDigitalUpPressed();
+    }
+
+    break;
+
+  case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+    app.onLeftTriggerChanged(value);
+    break;
+
+  case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
+    app.onRightTriggerChanged(value);
+    break;
+  }
+
+  lastAxisState[lastStateKey] = value;
 }
 
 void SubAppRouter::handleButtonDown(const SDL_ControllerButtonEvent& event) {
