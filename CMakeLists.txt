@@ -15,7 +15,6 @@ add_executable(${PROJECT_NAME}
   Includes/outputLine.cpp
   Includes/subsystems.cpp
   Includes/renderer.cpp
-  Includes/findXBE.cpp
   Includes/font.cpp
   Includes/ftpServer.cpp
   Includes/ftpConnection.cpp
