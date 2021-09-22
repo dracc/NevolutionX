@@ -1,3 +1,9 @@
+// clang-format off
+// The lwip headers pull in fflush in a way that conflicts with STL use in the InfoLog class
+// and must be included last to prevent compilation errors.
+#include "infoLog.h"
+// clang-format on
+
 #include "networking.h"
 #include <lwip/dhcp.h>
 #include <lwip/dhcp6.h>
@@ -8,7 +14,7 @@
 #include <netif/etharp.h>
 #include <pktdrv.h>
 #include <ctime>
-#include "outputLine.h"
+
 
 #define PKT_TMR_INTERVAL 1 /* ms */
 
@@ -69,7 +75,7 @@ int setupNetwork(bool dhcp, staticIP static_ip_info) {
     time_t start = time(NULL);
     while (dhcp_supplied_address(g_pnetif) == 0) {
       if ((time(NULL) - start) > 7) {
-        outputLine("Couldn't get DHCP settings!");
+        InfoLog::outputLine("Couldn't get DHCP settings!");
         return ERR_NO_DHCP_RESPONSE;
       }
       NtYieldExecution();

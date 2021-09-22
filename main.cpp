@@ -8,7 +8,6 @@
 #include "langMenu.hpp"
 #include "menu.hpp"
 #include "networkManager.h"
-#include "outputLine.h"
 #include "renderer.h"
 #include "subAppRouter.h"
 #include "subsystems.h"
@@ -36,6 +35,8 @@ int main(void) {
   Config config;
   std::map<int, SDL_GameController*> controllers;
 
+  InfoLog::configure(config);
+
   int init = init_systems(config);
   if (init) {
     shutdown_systems(init);
@@ -54,7 +55,7 @@ int main(void) {
     if (SDL_IsGameController(i)) {
       controllers[i] = SDL_GameControllerOpen(i);
       if (!controllers[i]) {
-        outputLine("Could not open gamecontroller %i: %s\n", i, SDL_GetError());
+        InfoLog::outputLine("Could not open gamecontroller %i: %s\n", i, SDL_GetError());
         SDL_Delay(2000);
       }
     }
@@ -82,7 +83,6 @@ int main(void) {
   r.drawBackground();
   r.flip();
 
-  InfoLog::configure(config);
   InfoLog::capture();
 
   SDL_Event event;

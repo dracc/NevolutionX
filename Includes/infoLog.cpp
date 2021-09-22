@@ -30,11 +30,10 @@ void InfoLog::configure(loggingConfig const& config) {
 }
 
 void InfoLog::outputLine(std::string const& line) {
+  InfoLog::getInstance()->addLine(line);
   OutputDebugStringA(line.c_str());
 
-  if (isOutputCaptured()) {
-    InfoLog::getInstance()->addLine(line);
-  } else {
+  if (!isOutputCaptured()) {
 #ifdef NXDK
     debugPrint("%s", line.c_str());
 #else

@@ -5,7 +5,9 @@
 // Note: pulling this in can create a conflict with fflush as defined in
 // <fstream> leading to a compilation failure w/ clang 12.0.0 on macOS. It is
 // important that <fstream> is included before any lwip headers.
+// clang-format off
 #include <lwip/inet.h>
+// clang-format on
 
 #ifdef NXDK
 #define SEPARATOR "\\"

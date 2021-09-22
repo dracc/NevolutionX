@@ -2,7 +2,7 @@ XBE_TITLE = NevolutionX
 INCDIR = $(CURDIR)/Includes
 RESOURCEDIR = $(CURDIR)/Resources
 
-SRCS += $(CURDIR)/main.cpp $(INCDIR)/outputLine.cpp \
+SRCS += $(CURDIR)/main.cpp \
 	$(INCDIR)/subsystems.cpp \
 	$(INCDIR)/renderer.cpp $(INCDIR)/font.cpp $(INCDIR)/networking.cpp \
 	$(INCDIR)/networkManager.cpp \

@@ -1,7 +1,7 @@
 #include "font.h"
 #include <cassert>
 #include "3rdparty/SDL_FontCache/SDL_FontCache.h"
-#include "outputLine.h"
+#include "infoLog.h"
 
 Font::Font(Renderer& renderer, const char* path) : renderer(renderer) {
   fcFont = FC_CreateFont();
