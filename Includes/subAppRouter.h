@@ -33,9 +33,21 @@ private:
   LONGLONG ticksPerMillisecond;
   LONGLONG lastFrameStartTicks;
 
+  // Percentage of full deflection that an analog stick must be moved before being
+  // considered an intentional input.
+  float analogStickDeadzone{ 0.38f };
+
+  // Percentage of full deflection that a trigger must be moved before being considered an
+  // intentional input.
+  float triggerDeadzone{ 0.05f };
+
   // Maps {(PlayerID, Button), timestamp} to track when virtual button press events should
   // be fired while a button is held down.
   std::map<std::pair<int, SDL_GameControllerButton>, LONGLONG> buttonRepeatTimers;
+
+  // Maps {(PlayerID, Button), value} to track the value of analog axes in order to emit
+  // virtual digital button events.
+  std::map<std::pair<int, SDL_GameControllerAxis>, int> lastAxisState;
 };
 
 #endif // NEVOLUTIONX_INCLUDES_SUBAPPROUTER_H_

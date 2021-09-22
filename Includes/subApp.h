@@ -58,6 +58,33 @@ public:
   virtual void onBlackPressed() {}
   virtual void onBlackReleased() {}
 
+  // Virtual events emitted when the left analog stick is deflected past the deadzone.
+  virtual void onLeftStickDigitalUpPressed() {}
+  virtual void onLeftStickDigitalUpReleased() {}
+  virtual void onLeftStickDigitalDownPressed() {}
+  virtual void onLeftStickDigitalDownReleased() {}
+  virtual void onLeftStickDigitalLeftPressed() {}
+  virtual void onLeftStickDigitalLeftReleased() {}
+  virtual void onLeftStickDigitalRightPressed() {}
+  virtual void onLeftStickDigitalRightReleased() {}
+
+  // Virtual events emitted when the right analog stick is deflected past the deadzone.
+  virtual void onRightStickDigitalUpPressed() {}
+  virtual void onRightStickDigitalUpReleased() {}
+  virtual void onRightStickDigitalDownPressed() {}
+  virtual void onRightStickDigitalDownReleased() {}
+  virtual void onRightStickDigitalLeftPressed() {}
+  virtual void onRightStickDigitalLeftReleased() {}
+  virtual void onRightStickDigitalRightPressed() {}
+  virtual void onRightStickDigitalRightReleased() {}
+
+  virtual void onLeftStickXChanged(int newValue) { (void)newValue; }
+  virtual void onLeftStickYChanged(int newValue) { (void)newValue; }
+  virtual void onRightStickXChanged(int newValue) { (void)newValue; }
+  virtual void onRightStickYChanged(int newValue) { (void)newValue; }
+  virtual void onLeftTriggerChanged(int newValue) { (void)newValue; }
+  virtual void onRightTriggerChanged(int newValue) { (void)newValue; }
+
   int getAutoRepeatInterval(SDL_GameControllerButton button) const {
     auto it = autoRepeatIntervals.find(button);
     if (it == autoRepeatIntervals.end()) {

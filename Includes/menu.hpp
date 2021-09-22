@@ -113,6 +113,11 @@ public:
   void onBackPressed() override { back(); }
   void onBPressed() override { back(); }
 
+  void onLeftStickDigitalUpPressed() override { onUpPressed(); }
+  void onLeftStickDigitalDownPressed() override { onDownPressed(); }
+  void onLeftStickDigitalLeftPressed() override { onLeftPressed(); }
+  void onLeftStickDigitalRightPressed() override { onRightPressed(); }
+
   void pageUp();
   void pageDown();
   void back();
