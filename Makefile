@@ -2,18 +2,26 @@ XBE_TITLE = NevolutionX
 INCDIR = $(CURDIR)/Includes
 RESOURCEDIR = $(CURDIR)/Resources
 
-SRCS += $(CURDIR)/main.cpp \
-	$(INCDIR)/subsystems.cpp \
-	$(INCDIR)/renderer.cpp $(INCDIR)/font.cpp $(INCDIR)/networking.cpp \
-	$(INCDIR)/networkManager.cpp \
-	$(INCDIR)/ftpServer.cpp $(INCDIR)/ftpConnection.cpp \
-	$(INCDIR)/menu.cpp $(INCDIR)/langMenu.cpp $(INCDIR)/timeMenu.cpp \
-	$(INCDIR)/settingsMenu.cpp $(INCDIR)/audioMenu.cpp $(INCDIR)/videoMenu.cpp \
-	$(INCDIR)/infoLog.cpp \
+SRCS += \
+	$(CURDIR)/main.cpp \
+	$(INCDIR)/audioMenu.cpp \
 	$(INCDIR)/config.cpp \
+	$(INCDIR)/font.cpp \
+	$(INCDIR)/ftpConnection.cpp \
+	$(INCDIR)/ftpServer.cpp \
+	$(INCDIR)/infoLog.cpp \
+	$(INCDIR)/langMenu.cpp \
 	$(INCDIR)/logViewer.cpp \
 	$(INCDIR)/logViewerMenu.cpp \
+	$(INCDIR)/menu.cpp \
+	$(INCDIR)/networkManager.cpp \
+	$(INCDIR)/networking.cpp \
+	$(INCDIR)/renderer.cpp \
+	$(INCDIR)/settingsMenu.cpp \
 	$(INCDIR)/subAppRouter.cpp \
+	$(INCDIR)/subsystems.cpp \
+	$(INCDIR)/timeMenu.cpp \
+	$(INCDIR)/videoMenu.cpp \
 	$(INCDIR)/wipeCache.cpp \
 	$(INCDIR)/xbeScanner.cpp \
 	$(CURDIR)/3rdparty/SDL_FontCache/SDL_FontCache.c
