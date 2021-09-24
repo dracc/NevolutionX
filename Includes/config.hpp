@@ -2,7 +2,12 @@
 #define CONFIG_HPP
 
 #include <string>
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreturn-type"
 #include "../3rdparty/json.hpp"
+#pragma clang diagnostic pop
+
 
 class netConfig {
   bool enable;

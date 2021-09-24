@@ -85,7 +85,7 @@ ftpConnection::~ftpConnection() {
   server = nullptr;
 }
 
-bool ftpConnection::update(void) {
+bool ftpConnection::update() {
   // Might as well kill the connection if buffer memory allocation failed.
   if (buf == nullptr) {
     return false;
@@ -232,7 +232,7 @@ void ftpConnection::cmdPass(std::string const& arg) {
   }
 }
 
-void ftpConnection::cmdPwd(void) {
+void ftpConnection::cmdPwd() {
   sprintf(buf, replies[3].c_str(), pwd.c_str());
   sendStdString(buf);
 }
@@ -307,11 +307,11 @@ void ftpConnection::cmdDele(std::string const& arg) {
 #endif
 }
 
-void ftpConnection::cmdCdup(void) {
+void ftpConnection::cmdCdup() {
   cmdCwd("..");
 }
 
-void ftpConnection::cmdSyst(void) {
+void ftpConnection::cmdSyst() {
   sendStdString(replies[7]);
 }
 
@@ -403,7 +403,7 @@ void ftpConnection::cmdRnto(std::string const& arg) {
 #endif
 }
 
-void ftpConnection::cmdList(std::string const& arg) {
+void ftpConnection::cmdList(std::string const&) {
   if (dataFd != -1) {
     sendStdString(replies[9]);
     sendFolderContents(dataFd, pwd);
@@ -412,7 +412,7 @@ void ftpConnection::cmdList(std::string const& arg) {
   }
 }
 
-void ftpConnection::cmdNlst(std::string const& arg) {
+void ftpConnection::cmdNlst(std::string const&) {
   sendStdString(replies[9]);
   sendFolderContents(_fd, pwd);
   sendStdString(replies[10]);

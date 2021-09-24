@@ -15,7 +15,7 @@ class Menu;
 
 class MenuItem {
 public:
-  MenuItem(std::string const& label);
+  explicit MenuItem(std::string const& label);
   MenuItem(MenuNode* parent, std::string const& label);
   virtual ~MenuItem();
   virtual void execute(Menu*) = 0;
@@ -31,10 +31,10 @@ protected:
 
 class MenuNode : public MenuItem {
 public:
-  MenuNode(std::string const& label);
+  explicit MenuNode(std::string const& label);
   MenuNode(MenuNode* parent, std::string const& label);
-  ~MenuNode();
-  void execute(Menu*);
+  ~MenuNode() override;
+  void execute(Menu*) override;
   void setSelected(size_t id);
   size_t getSelected();
   virtual std::vector<std::shared_ptr<MenuItem>>* getChildNodes();
@@ -65,8 +65,8 @@ public:
 class MenuXbe : public MenuNode {
 public:
   MenuXbe(MenuNode* parent, std::string const& label, std::string const& paths);
-  ~MenuXbe();
-  void execute(Menu* menu);
+  ~MenuXbe() override;
+  void execute(Menu* menu) override;
 
   std::vector<std::shared_ptr<MenuItem>>* getChildNodes() override;
 
@@ -91,8 +91,8 @@ private:
 class MenuLaunch : public MenuItem {
 public:
   MenuLaunch(std::string const& label, std::string const& path);
-  ~MenuLaunch();
-  void execute(Menu*);
+  ~MenuLaunch() override;
+  void execute(Menu*) override;
 
 protected:
   std::string path;
@@ -101,8 +101,8 @@ protected:
 class MenuExec : public MenuItem {
 public:
   MenuExec(std::string const& label, void execute(Menu*));
-  ~MenuExec();
-  void execute(Menu*);
+  ~MenuExec() override;
+  void execute(Menu*) override;
   void (*action)(Menu*);
 };
 

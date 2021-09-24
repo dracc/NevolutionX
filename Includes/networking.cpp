@@ -23,7 +23,7 @@ struct netif nforce_netif, *g_pnetif;
 err_t nforceif_init(struct netif* netif);
 }
 
-void http_server_netconn_init(void);
+void http_server_netconn_init();
 static void packet_timer(void* arg);
 
 static void tcpip_init_done(void* arg) {

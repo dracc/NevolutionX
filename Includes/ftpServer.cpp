@@ -100,7 +100,7 @@ ftpServer::ftpServer(ftpConfig const* conf) : conf(conf) {
   hints.ai_flags = AI_PASSIVE;
 }
 
-int ftpServer::init(void) {
+int ftpServer::init() {
   int yes = 1;
   if ((i = getaddrinfo(NULL, std::to_string(conf->getPort()).c_str(), &hints, &ai)) != 0) {
     InfoLog::outputLine("Error: selectserver\n");

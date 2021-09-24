@@ -9,7 +9,7 @@
 TimeItem::TimeItem(MenuNode* parent, std::string const& label) : MenuItem(parent, label) {
 }
 
-void TimeItem::execute(Menu* menu) {
+void TimeItem::execute(Menu*) {
 }
 
 TimeMenu::TimeMenu(MenuNode* parent, std::string const& label) : MenuNode(parent, label) {
