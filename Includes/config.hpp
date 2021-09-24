@@ -86,6 +86,22 @@ public:
 void to_json(nlohmann::json& j, loggingConfig const& o);
 void from_json(nlohmann::json const& j, loggingConfig& o);
 
+class homescreenConfig {
+  bool showFPS{ false };
+  bool showIP{ true };
+
+public:
+  homescreenConfig() = default;
+
+  bool getShowFPS() const { return showFPS; }
+  bool getShowIP() const { return showIP; }
+
+  void setShowFPS(bool val) { showFPS = val; }
+  void setShowIP(bool val) { showIP = val; }
+};
+void to_json(nlohmann::json& j, homescreenConfig const& o);
+void from_json(nlohmann::json const& j, homescreenConfig& o);
+
 class Settings {
 public:
   Settings() = default;
@@ -93,6 +109,7 @@ public:
   ftpConfig ftp;
   mountConfig mount;
   loggingConfig logging;
+  homescreenConfig homescreen;
 };
 void to_json(nlohmann::json& j, Settings const& o);
 void from_json(nlohmann::json const& j, Settings& o);
