@@ -1,5 +1,5 @@
 #include "xbeScanner.h"
-
+#include <chrono>
 #ifdef NXDK
 #include <windows.h>
 #include <winnt.h>
@@ -10,8 +10,6 @@
 
 #define XBE_TYPE_MAGIC (0x48454258)
 #define SECTORSIZE 0x1000
-
-static bool scan(std::string const& path, std::vector<XBEScanner::XBEInfo>& ret);
 
 XBEScanner* XBEScanner::singleton = nullptr;
 
@@ -67,7 +65,11 @@ void XBEScanner::threadMain(XBEScanner* scanner) {
 
     std::string const& path = task.first;
     std::vector<XBEInfo> xbes;
+    auto scanStart = std::chrono::steady_clock::now();
     bool succeeded = scan(path, xbes);
+    auto scanDuration = millisSince(scanStart);
+    InfoLog::outputLine("Scanning %s %s in %lld ms (%d found)\n", path.c_str(),
+                        succeeded ? "succeeded" : "failed", scanDuration, xbes.size());
 
     task.second(succeeded, xbes);
   }
