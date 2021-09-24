@@ -158,9 +158,8 @@ MenuXbe::MenuXbe(MenuNode* parent, std::string const& label, std::string const& 
     updateScanningLabel();
     XBEScanner::scanPath(
         remainingScanPaths.front(),
-        [this](bool succeeded, std::vector<XBEScanner::XBEInfo> const& items) {
-          this->onScanCompleted(succeeded, items);
-        });
+        [this](bool succeeded, std::list<XBEScanner::XBEInfo> const& items,
+               long long duration) { this->onScanCompleted(succeeded, items, duration); });
   }
 }
 
@@ -223,7 +222,9 @@ void MenuXbe::updateScanningLabel() {
 }
 
 void MenuXbe::onScanCompleted(bool succeeded,
-                              std::vector<XBEScanner::XBEInfo> const& items) {
+                              std::list<XBEScanner::XBEInfo> const& items,
+                              long long duration) {
+  (void)duration;
   std::string path = remainingScanPaths.front();
   remainingScanPaths.pop_front();
 
@@ -238,9 +239,8 @@ void MenuXbe::onScanCompleted(bool succeeded,
     updateScanningLabel();
     XBEScanner::scanPath(
         remainingScanPaths.front(),
-        [this](bool succeeded, std::vector<XBEScanner::XBEInfo> const& items) {
-          this->onScanCompleted(succeeded, items);
-        });
+        [this](bool succeeded, std::list<XBEScanner::XBEInfo> const& items,
+               long long duration) { this->onScanCompleted(succeeded, items, duration); });
     return;
   }
 

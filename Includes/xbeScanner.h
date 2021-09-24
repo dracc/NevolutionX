@@ -1,12 +1,20 @@
 #ifndef NEVOLUTIONX_INCLUDES_XBESCANNER_H_
 #define NEVOLUTIONX_INCLUDES_XBESCANNER_H_
 
+#include <windows.h>
 #include <functional>
+#include <list>
 #include <mutex>
 #include <queue>
 #include <thread>
 #include <utility>
 #include <vector>
+
+// TODO(#110): Reenable threading once hardware accelerated rendering is in place.
+// The current software-backed SDL approach causes the scanner thread to be starved, leading
+// to extremely long load times.
+
+// #define SCANNER_THREADED
 
 // Singleton providing functionality to asynchronously scan a directory for
 // direct subdirectories containing XBE files.
@@ -18,8 +26,8 @@ public:
     std::string path;
   };
 
-  // (bool succeeded, std::vector<XBEInfo> const& xbes)
-  typedef std::function<void(bool, std::vector<XBEInfo> const&)> Callback;
+  // (bool succeeded, std::list<XBEInfo> const& xbes, long long scanDuration)
+  typedef std::function<void(bool, std::list<XBEInfo> const&, long long)> Callback;
 
   // Enqueues a task to scan `path` for XBE files.
   //
@@ -29,23 +37,54 @@ public:
   static void scanPath(std::string const& path, Callback&& callback);
 
 private:
-  typedef std::pair<std::string, Callback> QueueItem;
+  class QueueItem {
+  public:
+    QueueItem(std::string p, Callback c);
+    ~QueueItem();
 
+    void scan();
+
+    std::chrono::steady_clock::time_point scanStart;
+    long long scanDuration{ 0 };
+
+    const static int XBE_NAME_SIZE = 40;
+
+    std::string path;
+    Callback callback;
+    std::list<XBEInfo> results;
+
+    bool openDir();
+    void processFile(const std::string& xbePath);
+
+    HANDLE dirHandle{ INVALID_HANDLE_VALUE };
+    WIN32_FIND_DATAA findData{};
+
+    char xbeName[XBE_NAME_SIZE + 1]{ 0 };
+    std::vector<char> xbeData;
+  };
+
+#ifdef SCANNER_THREADED
   XBEScanner();
   ~XBEScanner();
 
   static void threadMain(XBEScanner* scanner);
+#endif
+
   static XBEScanner* getInstance();
 
+#if SCANNER_THREADED
   void addJob(std::string const& path, const Callback& callback);
+#endif
 
   static XBEScanner* singleton;
 
+#ifdef SCANNER_THREADED
   std::atomic<bool> running;
   std::thread scannerThread;
   std::condition_variable jobPending;
   std::mutex queueMutex;
   std::queue<QueueItem> queue;
+#endif
 };
 
 
