@@ -64,7 +64,6 @@ void SubAppRouter::render(Font& font) {
     if (!QueryPerformanceCounter(&counter)) {
       counter.QuadPart = 0;
     }
-    LONGLONG ticksElapsed = counter.QuadPart - lastFrameStartTicks;
     lastFrameStartTicks = counter.QuadPart;
   }
 

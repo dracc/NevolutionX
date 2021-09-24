@@ -26,7 +26,7 @@ class ftpConnection {
 
   void sendStdString(std::string const& s, int flags);
   void sendStdString(int fd, std::string const& s, int flags);
-  void handleCommand(void);
+  //  void handleCommand();
 
   void sendFolderContents(int fd, std::string& path);
   bool sendFile(std::string const& fileName);
@@ -34,28 +34,28 @@ class ftpConnection {
 
   std::string unixToDosPath(std::string const& path);
 
-  void cmdAbor(void);
+  //  void cmdAbor();
   void cmdCwd(std::string const& arg);
-  void cmdCdup(void);
+  void cmdCdup();
   void cmdDele(std::string const& arg);
   void cmdList(std::string const& arg);
-  void cmdMdtm(std::string const& arg);
+  //  void cmdMdtm(std::string const& arg);
   void cmdMkd(std::string const& arg);
   void cmdNlst(std::string const& arg);
   void cmdPass(std::string const& arg);
-  void cmdPasv(std::string const& arg);
+  //  void cmdPasv(std::string const& arg);
   void cmdPort(std::string const& arg);
   void cmdEprt(std::string const& arg);
-  void cmdPwd(void);
-  void cmdQuit(void);
+  void cmdPwd();
+  //  void cmdQuit();
   void cmdRetr(std::string const& arg);
   void cmdRmd(std::string const& arg);
   void cmdRnfr(std::string const& arg);
   void cmdRnto(std::string const& arg);
-  void cmdSite(std::string const& arg);
-  void cmdSize(std::string const& arg);
+  //  void cmdSite(std::string const& arg);
+  //  void cmdSize(std::string const& arg);
   void cmdStor(std::string const& arg);
-  void cmdSyst(void);
+  void cmdSyst();
   void cmdType(std::string const& arg);
   void cmdUser(std::string const& arg);
   void cmdExecute(std::string const& path);
@@ -64,7 +64,7 @@ class ftpConnection {
 public:
   ftpConnection(int fd, ftpServer* s);
   ~ftpConnection();
-  bool update(void);
+  bool update();
 };
 
 #endif
