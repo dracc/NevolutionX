@@ -59,15 +59,12 @@ int Renderer::init() {
   return 0;
 }
 
-int Renderer::init(const char* bgpath) {
+int Renderer::init(std::string const& backgroundImagePath) {
   int ret = init();
   if (ret != 0) {
     return ret;
   }
-  char* bgname = (char*)malloc(strlen(bgpath) + 10);
-  sprintf(bgname, "%s%d.png", bgpath, height);
-  SDL_Surface* bgsurf = IMG_Load(bgname);
-  free(bgname);
+  SDL_Surface* bgsurf = IMG_Load(backgroundImagePath.c_str());
   if (bgsurf == nullptr) {
     InfoLog::outputLine(InfoLog::ERROR, "Creating background surface failed.\n");
     return 3;
