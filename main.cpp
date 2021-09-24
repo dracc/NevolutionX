@@ -1,6 +1,6 @@
 #include <SDL.h>
+#include <algorithm>
 #include <memory>
-#include <vector>
 #include "config.hpp"
 #include "font.h"
 #include "ftpServer.h"
@@ -12,6 +12,7 @@
 #include "subAppRouter.h"
 #include "subsystems.h"
 #include "timeMenu.hpp"
+#include "timing.h"
 
 #ifdef NXDK
 #include <hal/video.h>
@@ -27,6 +28,8 @@
 #define HOME "." SEPARATOR
 #endif
 
+#define TARGET_FPS 15
+#define TARGET_MILLIS_PER_FRAME static_cast<long long>(1000.0f / TARGET_FPS)
 
 int main(void) {
 #ifdef NXDK
@@ -113,6 +116,8 @@ int main(void) {
   ftpServer* ftpServerInstance = nullptr;
 
   while (running) {
+    auto frameStart = std::chrono::steady_clock::now();
+
     if (config.settings.ftp.getEnabled() && networkManager.isNewlyInitialized()) {
       ftpServerInstance = new ftpServer(&config.settings.ftp);
       ftpServerInstance->init();
@@ -149,6 +154,10 @@ int main(void) {
         router.handleAxisMotion(event.caxis);
       }
     }
+
+    auto elapsedTime = millisSince(frameStart);
+    int targetTime = std::max(static_cast<int>(TARGET_MILLIS_PER_FRAME - elapsedTime), 1);
+    XBEScanner::tick(targetTime);
 
 #ifdef NXDK
     // Let's not hog CPU for nothing.

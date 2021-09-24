@@ -76,7 +76,9 @@ public:
 private:
   void superscroll(bool moveToPrevious);
   void updateScanningLabel();
-  void onScanCompleted(bool succeeded, std::vector<XBEScanner::XBEInfo> const& items);
+  void onScanCompleted(bool succeeded,
+                       std::list<XBEScanner::XBEInfo> const& items,
+                       long long duration);
   void createChildren();
 
   std::mutex childNodesLock;

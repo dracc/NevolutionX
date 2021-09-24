@@ -158,9 +158,8 @@ MenuXbe::MenuXbe(MenuNode* parent, std::string const& label, std::string const& 
     updateScanningLabel();
     XBEScanner::scanPath(
         remainingScanPaths.front(),
-        [this](bool succeeded, std::vector<XBEScanner::XBEInfo> const& items) {
-          this->onScanCompleted(succeeded, items);
-        });
+        [this](bool succeeded, std::list<XBEScanner::XBEInfo> const& items,
+               long long duration) { this->onScanCompleted(succeeded, items, duration); });
   }
 }
 
@@ -223,7 +222,8 @@ void MenuXbe::updateScanningLabel() {
 }
 
 void MenuXbe::onScanCompleted(bool succeeded,
-                              std::vector<XBEScanner::XBEInfo> const& items) {
+                              std::list<XBEScanner::XBEInfo> const& items,
+                              long long duration) {
   std::string path = remainingScanPaths.front();
   remainingScanPaths.pop_front();
 
@@ -233,14 +233,13 @@ void MenuXbe::onScanCompleted(bool succeeded,
     discoveredItems.insert(discoveredItems.end(), std::make_move_iterator(begin(items)),
                            std::make_move_iterator(end(items)));
   }
+  InfoLog::outputLine("Completed scanning '%s' for XBEs in %lld ms", path.c_str(), duration);
 
   if (!remainingScanPaths.empty()) {
     updateScanningLabel();
-    XBEScanner::scanPath(
-        remainingScanPaths.front(),
-        [this](bool succeeded, std::vector<XBEScanner::XBEInfo> const& items) {
-          this->onScanCompleted(succeeded, items);
-        });
+    XBEScanner::scanPath(remainingScanPaths.front(),
+                         [this](bool s, std::list<XBEScanner::XBEInfo> const& i,
+                                long long d) { this->onScanCompleted(s, i, d); });
     return;
   }
 
