@@ -174,11 +174,25 @@ void from_json(nlohmann::json const& j, loggingConfig& o) {
   }
 }
 
+void to_json(nlohmann::json& j, homescreenConfig const& o) {
+  j = nlohmann::json{ { "show_fps", o.getShowFPS() }, { "show_ip", o.getShowIP() } };
+}
+
+void from_json(nlohmann::json const& j, homescreenConfig& o) {
+  if (j.contains("show_fps") && j["show_fps"].is_boolean()) {
+    o.setShowFPS(j["show_fps"]);
+  }
+  if (j.contains("show_ip") && j["show_ip"].is_boolean()) {
+    o.setShowIP(j["show_ip"]);
+  }
+}
+
 void to_json(nlohmann::json& j, Settings const& o) {
   j = nlohmann::json{ { "ftp", nlohmann::json(o.ftp) },
                       { "mount", nlohmann::json(o.mount) },
                       { "network", nlohmann::json(o.net) },
-                      { "logging", nlohmann::json(o.logging) } };
+                      { "logging", nlohmann::json(o.logging) },
+                      { "homescreenConfig", nlohmann::json(o.homescreen) } };
 }
 
 void from_json(nlohmann::json const& j, Settings& o) {
@@ -193,6 +207,9 @@ void from_json(nlohmann::json const& j, Settings& o) {
   }
   if (j.contains("logging")) {
     o.logging = j["logging"].get<loggingConfig>();
+  }
+  if (j.contains("homescreen")) {
+    o.homescreen = j["homescreen"].get<homescreenConfig>();
   }
 }
 

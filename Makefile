@@ -21,6 +21,7 @@ SRCS += \
 	$(INCDIR)/subAppRouter.cpp \
 	$(INCDIR)/subsystems.cpp \
 	$(INCDIR)/timeMenu.cpp \
+	$(INCDIR)/timing.cpp \
 	$(INCDIR)/videoMenu.cpp \
 	$(INCDIR)/wipeCache.cpp \
 	$(INCDIR)/xbeScanner.cpp \

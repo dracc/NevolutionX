@@ -12,6 +12,7 @@
 #include "subAppRouter.h"
 #include "subsystems.h"
 #include "timeMenu.hpp"
+#include "timing.h"
 
 #ifdef NXDK
 #include <hal/video.h>
@@ -108,11 +109,12 @@ int main(void) {
 
   int info_x = static_cast<int>(r.getWidth() * 0.70);
   int info_y = static_cast<int>(r.getHeight() * 0.85);
-  std::pair<float, float> info_coordinates(info_x, info_y);
 
   ftpServer* ftpServerInstance = nullptr;
 
+  auto lastFrameStart = std::chrono::steady_clock::now();
   while (running) {
+    auto frameStart = std::chrono::steady_clock::now();
     if (config.settings.ftp.getEnabled() && networkManager.isNewlyInitialized()) {
       ftpServerInstance = new ftpServer(&config.settings.ftp);
       ftpServerInstance->init();
@@ -125,8 +127,21 @@ int main(void) {
 
     router.render(f);
 
-    std::string ip_address = networkManager.IPAddressString();
-    f.draw(ip_address, info_coordinates);
+    std::pair<float, float> info_coordinates(info_x, info_y);
+    if (config.settings.homescreen.getShowIP()) {
+      std::string ip_address = networkManager.IPAddressString();
+      auto draw_rect = f.draw(ip_address, info_coordinates);
+      info_coordinates.second += draw_rect.second;
+    }
+    if (config.settings.homescreen.getShowFPS()) {
+      int lastFrameDuration = static_cast<int>(millisBetween(lastFrameStart, frameStart));
+      if (lastFrameDuration > 0) {
+        int fps = 1000 / lastFrameDuration;
+        char fpsBuffer[64] = { 0 };
+        snprintf(fpsBuffer, 63, "FPS: %d (%dms)", fps, lastFrameDuration);
+        f.draw(fpsBuffer, info_coordinates);
+      }
+    }
 
     InfoLog::renderOverlay(r, f);
 
@@ -154,6 +169,7 @@ int main(void) {
     // Let's not hog CPU for nothing.
     SwitchToThread();
 #endif
+    lastFrameStart = frameStart;
   }
 
   for (auto c: controllers) {

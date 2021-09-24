@@ -32,6 +32,11 @@
             "enable_overlay": true,
             "overlay_duration_frames": 30,
             "overlay_bg_alpha_int": 100
+        },
+        "homescreen":
+        {
+            "show_fps": false,
+            "show_ip": true
         }
     },
     "menu":
