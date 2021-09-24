@@ -37,6 +37,11 @@ GEN_XISO = ${XBE_TITLE}.iso
 CXXFLAGS += -I$(CURDIR) -I$(INCDIR) -Wall -Wextra -std=gnu++11
 CFLAGS   += -std=gnu11
 
+ifneq ($(DEBUG),y)
+CFLAGS += -O2
+CXXFLAGS += -O2
+endif
+
 new_all: copy_resources all
 
 include $(NXDK_DIR)/Makefile
