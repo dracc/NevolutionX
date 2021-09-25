@@ -3,7 +3,14 @@
 #ifdef NXDK
 #include <hal/video.h>
 #include <hal/xbox.h>
+#include <xboxkrnl/xboxkrnl.h>
 #endif
+
+void XBELauncher::shutdown() {
+#ifdef NXDK
+  HalInitiateShutdown();
+#endif
+}
 
 void XBELauncher::exitToDashboard() {
   showLaunchImage();
