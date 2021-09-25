@@ -158,8 +158,9 @@ MenuXbe::MenuXbe(MenuNode* parent, std::string const& label, std::string const& 
     updateScanningLabel();
     XBEScanner::scanPath(
         remainingScanPaths.front(),
-        [this](bool succeeded, std::list<XBEScanner::XBEInfo> const& items,
-               long long duration) { this->onScanCompleted(succeeded, items, duration); });
+        [this](bool succeeded, std::list<XBEInfo> const& items, long long duration) {
+          this->onScanCompleted(succeeded, items, duration);
+        });
   }
 }
 
@@ -222,7 +223,7 @@ void MenuXbe::updateScanningLabel() {
 }
 
 void MenuXbe::onScanCompleted(bool succeeded,
-                              std::list<XBEScanner::XBEInfo> const& items,
+                              std::list<XBEInfo> const& items,
                               long long duration) {
   (void)duration;
   std::string path = remainingScanPaths.front();
@@ -239,8 +240,9 @@ void MenuXbe::onScanCompleted(bool succeeded,
     updateScanningLabel();
     XBEScanner::scanPath(
         remainingScanPaths.front(),
-        [this](bool succeeded, std::list<XBEScanner::XBEInfo> const& items,
-               long long duration) { this->onScanCompleted(succeeded, items, duration); });
+        [this](bool succeeded, std::list<XBEInfo> const& items, long long duration) {
+          this->onScanCompleted(succeeded, items, duration);
+        });
     return;
   }
 
@@ -251,7 +253,9 @@ void MenuXbe::createChildren() {
   std::vector<std::shared_ptr<MenuItem>> newChildren;
 
   for (auto& info: discoveredItems) {
-    newChildren.push_back(std::make_shared<MenuLaunch>(info.name, info.path));
+    XPR0Image saveIcon;
+    info.loadCompressedSaveGameIcon(saveIcon);
+    newChildren.push_back(std::make_shared<MenuLaunch>(info.title, info.path, saveIcon));
   }
 
   std::sort(begin(newChildren), end(newChildren),
@@ -287,8 +291,12 @@ void MenuXbe::createChildren() {
 /******************************************************************************************
                                    MenuLaunch
 ******************************************************************************************/
-MenuLaunch::MenuLaunch(std::string const& label, std::string const& path) :
-    MenuItem(label), path(path) {
+MenuLaunch::MenuLaunch(std::string const& label, std::string path) :
+    MenuItem(label), path(std::move(path)), image() {
+}
+
+MenuLaunch::MenuLaunch(std::string const& label, std::string path, XPR0Image image) :
+    MenuItem(label), path(std::move(path)), image(std::move(image)) {
 }
 
 MenuLaunch::~MenuLaunch() {
@@ -349,9 +357,9 @@ Menu::Menu(const Config& config, Renderer& renderer) :
 }
 
 void Menu::render(Font& font) {
-  std::pair<float, float> coordinates(100, startHeight);
+  std::pair<float, float> coordinates(130, startHeight);
   std::string menutext = std::string(this->currentMenu->getLabel());
-  font.draw(menutext, std::make_pair<int, int>(300, 20));
+  font.draw(menutext, std::make_pair<int, int>(330, 20));
 
   if (this->currentMenu->getChildNodes()->empty()) {
     font.draw("<Empty>", coordinates);
@@ -386,6 +394,25 @@ void Menu::render(Font& font) {
       rect.y = std::get<1>(coordinates);
       renderer.setDrawColor(0xFF, 0xFF, 0xFF, 0xFF);
       SDL_RenderDrawRect(renderer.getRenderer(), &rect);
+
+      // TODO: Cache uncompressed icons w/ a limit on total size.
+      // Decide if we should only show the active one or all, position, etc...
+      XPR0Image const* icon = (*it)->getIcon();
+      if (icon) {
+        SDL_Texture* texture = SDL_CreateTexture(
+            renderer.getRenderer(), SDL_PIXELFORMAT_BGRA8888, SDL_TEXTUREACCESS_STREAMING,
+            icon->width, icon->height);
+        uint8_t* textureData = nullptr;
+        int texturePitch = 0;
+        SDL_LockTexture(texture, nullptr, reinterpret_cast<void**>(&textureData),
+                        &texturePitch);
+        icon->decompress(textureData);
+        SDL_UnlockTexture(texture);
+
+        renderer.drawTexture(texture, 0, 10);
+
+        SDL_DestroyTexture(texture);
+      }
     }
 
     coordinates = std::pair<float, float>(

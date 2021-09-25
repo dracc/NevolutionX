@@ -8,6 +8,7 @@
 #include "config.hpp"
 #include "font.h"
 #include "subApp.h"
+#include "xbeInfo.h"
 #include "xbeScanner.h"
 
 class MenuNode;
@@ -19,8 +20,10 @@ public:
   MenuItem(MenuNode* parent, std::string const& label);
   virtual ~MenuItem();
   virtual void execute(Menu*) = 0;
+
   MenuNode* getParent() const;
   virtual std::string_view getLabel() const;
+  virtual XPR0Image const* getIcon() const { return nullptr; }
 
   void setParent(MenuNode* parent);
 
@@ -76,14 +79,12 @@ public:
 private:
   void superscroll(bool moveToPrevious);
   void updateScanningLabel();
-  void onScanCompleted(bool succeeded,
-                       std::list<XBEScanner::XBEInfo> const& items,
-                       long long duration);
+  void onScanCompleted(bool succeeded, std::list<XBEInfo> const& items, long long duration);
   void createChildren();
 
   std::mutex childNodesLock;
   std::list<std::string> remainingScanPaths;
-  std::vector<XBEScanner::XBEInfo> discoveredItems;
+  std::vector<XBEInfo> discoveredItems;
 
   // Map of first letter to index of the first child in childNodes whose label starts with
   // that letter.
@@ -92,12 +93,16 @@ private:
 
 class MenuLaunch : public MenuItem {
 public:
-  MenuLaunch(std::string const& label, std::string const& path);
+  MenuLaunch(std::string const& label, std::string path);
+  MenuLaunch(std::string const& label, std::string path, XPR0Image image);
   ~MenuLaunch() override;
   void execute(Menu*) override;
 
+  XPR0Image const* getIcon() const override { return &image; }
+
 protected:
   std::string path;
+  XPR0Image image;
 };
 
 class MenuExec : public MenuItem {
