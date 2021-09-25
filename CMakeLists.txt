@@ -35,13 +35,16 @@ add_executable(${PROJECT_NAME}
   Includes/sntpClient.cpp
   Includes/subAppRouter.cpp
   Includes/subsystems.cpp
-  Includes/timing.cpp
   Includes/timeMenu.cpp
+  Includes/timing.cpp
   Includes/videoMenu.cpp
   Includes/wipeCache.cpp
+  Includes/xbeInfo.cpp
   Includes/xbeLauncher.cpp
   Includes/xbeScanner.cpp
+  Includes/xpr0Image.cpp
   3rdparty/SDL_FontCache/SDL_FontCache.c
+  3rdparty/s3tc-dxt-decompression/s3tc.cpp
   )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)

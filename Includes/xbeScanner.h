@@ -9,6 +9,7 @@
 #include <thread>
 #include <utility>
 #include <vector>
+#include "xbeInfo.h"
 
 #ifdef NXDK
 #include <windows.h>
@@ -24,12 +25,6 @@
 // direct subdirectories containing XBE files.
 class XBEScanner {
 public:
-  struct XBEInfo {
-    XBEInfo(std::string n, std::string p) : name(std::move(n)), path(std::move(p)) {}
-    std::string name;
-    std::string path;
-  };
-
   // (bool succeeded, std::list<XBEInfo> const& xbes, long long scanDuration)
   typedef std::function<void(bool, std::list<XBEInfo> const&, long long)> Callback;
 

@@ -11,6 +11,13 @@
 #define XBE_TYPE_MAGIC (0x48454258)
 #define SECTORSIZE 0x1000
 
+#ifdef NXDK
+static std::pair<DWORD, DWORD> getSaveImageFileOffset(FILE* file,
+                                                      DWORD imageBase,
+                                                      PXBE_SECTION_HEADER firstSectionHeader,
+                                                      DWORD numberOfSections);
+#endif
+
 XBEScanner* XBEScanner::singleton = nullptr;
 
 XBEScanner* XBEScanner::getInstance() {
@@ -165,8 +172,47 @@ void XBEScanner::QueueItem::processFile(const std::string& xbePath) {
   if (!strlen(xbeName)) {
     strncpy(xbeName, findData.cFileName, sizeof(xbeName) - 1);
   }
+
+  auto firstSectionHeader = reinterpret_cast<PXBE_SECTION_HEADER>(
+      xbeData.data() + (DWORD)xbe->PointerToSectionTable - xbe->ImageBase);
+  std::pair<int, int> saveImageInfo = getSaveImageFileOffset(
+      xbeFile, xbe->ImageBase, firstSectionHeader, xbe->NumberOfSections);
+
   fclose(xbeFile);
 
-  results.emplace_back(xbeName, xbePath);
+  results.emplace_back(xbeName, xbePath, saveImageInfo.first, saveImageInfo.second);
 #endif // #ifdef NXDK
 }
+
+#ifdef NXDK
+// Retrieves the FileAddress and FileSize members of the "$$XTIMAGE" section, which points
+// to an XPR0 compressed icon for save games.
+//
+// NOTE: This will seek within the given file, if it is important to maintain the current
+//       read position it should be saved before calling this function.
+static std::pair<DWORD, DWORD> getSaveImageFileOffset(FILE* file,
+                                                      DWORD imageBase,
+                                                      PXBE_SECTION_HEADER firstSectionHeader,
+                                                      DWORD numberOfSections) {
+  static const char SAVE_IMAGE_SECTION_NAME[] = "$$XTIMAGE";
+  static const int SECTION_NAME_SIZE = sizeof(SAVE_IMAGE_SECTION_NAME);
+
+  char nameBuffer[SECTION_NAME_SIZE] = { 0 };
+  for (DWORD i = 0; i < numberOfSections; ++i) {
+    PXBE_SECTION_HEADER header = firstSectionHeader + i;
+    long nameOffset = reinterpret_cast<long>(header->SectionName) - imageBase;
+    fseek(file, nameOffset, SEEK_SET);
+    size_t read_bytes = fread(nameBuffer, 1, SECTION_NAME_SIZE, file);
+    if (read_bytes != SECTION_NAME_SIZE) {
+      return std::make_pair(-1, -1);
+    }
+
+    if (nameBuffer[SECTION_NAME_SIZE - 1] == 0
+        && !strcmp(nameBuffer, SAVE_IMAGE_SECTION_NAME)) {
+      return std::make_pair(header->FileAddress, header->FileSize);
+    }
+  }
+
+  return std::make_pair(-1, -1);
+}
+#endif // #ifdef NXDK
