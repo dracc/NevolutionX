@@ -65,6 +65,10 @@
             "type": "reboot"
         },
         {
+            "label": "Power off",
+            "type": "shutdown"
+        },
+        {
             "label": "Some stupid submenu",
             "type": "submenu"
         }

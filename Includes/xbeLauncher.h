@@ -6,7 +6,13 @@
 // Launches an XBE (or the dashboard).
 class XBELauncher {
 public:
+  // Powers down the XBOX. Should not return.
+  static void shutdown();
+
+  // Returns to the dashboard. Should not return.
   static void exitToDashboard();
+
+  // Launches the XBE at the given path. Should not return.
   static void launch(std::string const& xbePath);
 
 private:
