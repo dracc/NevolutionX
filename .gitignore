@@ -8,5 +8,6 @@ bin/
 *.pdb
 *.iso
 
+.DS_Store
 .gdbinit
 .idea/
