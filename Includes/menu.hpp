@@ -20,8 +20,10 @@ public:
   MenuItem(MenuNode* parent, std::string const& label);
   virtual ~MenuItem();
   virtual void execute(Menu*) = 0;
+
   MenuNode* getParent() const;
   virtual std::string_view getLabel() const;
+  virtual XPR0Image const* getIcon() const { return nullptr; }
 
   void setParent(MenuNode* parent);
 
@@ -95,6 +97,8 @@ public:
   MenuLaunch(std::string const& label, std::string path, XPR0Image image);
   ~MenuLaunch() override;
   void execute(Menu*) override;
+
+  XPR0Image const* getIcon() const override { return &image; }
 
 protected:
   std::string path;
