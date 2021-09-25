@@ -4,3 +4,6 @@
 [submodule "3rdparty/NaturalSort"]
 	path = 3rdparty/NaturalSort
 	url = https://github.com/scopeInfinity/NaturalSort.git
+[submodule "3rdparty/s3tc-dxt-decompression"]
+	path = 3rdparty/s3tc-dxt-decompression
+	url = https://github.com/Benjamin-Dobell/s3tc-dxt-decompression.git

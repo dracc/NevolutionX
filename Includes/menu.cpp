@@ -158,8 +158,9 @@ MenuXbe::MenuXbe(MenuNode* parent, std::string const& label, std::string const& 
     updateScanningLabel();
     XBEScanner::scanPath(
         remainingScanPaths.front(),
-        [this](bool succeeded, std::list<XBEScanner::XBEInfo> const& items,
-               long long duration) { this->onScanCompleted(succeeded, items, duration); });
+        [this](bool succeeded, std::list<XBEInfo> const& items, long long duration) {
+          this->onScanCompleted(succeeded, items, duration);
+        });
   }
 }
 
@@ -222,7 +223,7 @@ void MenuXbe::updateScanningLabel() {
 }
 
 void MenuXbe::onScanCompleted(bool succeeded,
-                              std::list<XBEScanner::XBEInfo> const& items,
+                              std::list<XBEInfo> const& items,
                               long long duration) {
   (void)duration;
   std::string path = remainingScanPaths.front();
@@ -239,8 +240,9 @@ void MenuXbe::onScanCompleted(bool succeeded,
     updateScanningLabel();
     XBEScanner::scanPath(
         remainingScanPaths.front(),
-        [this](bool succeeded, std::list<XBEScanner::XBEInfo> const& items,
-               long long duration) { this->onScanCompleted(succeeded, items, duration); });
+        [this](bool succeeded, std::list<XBEInfo> const& items, long long duration) {
+          this->onScanCompleted(succeeded, items, duration);
+        });
     return;
   }
 
@@ -251,7 +253,9 @@ void MenuXbe::createChildren() {
   std::vector<std::shared_ptr<MenuItem>> newChildren;
 
   for (auto& info: discoveredItems) {
-    newChildren.push_back(std::make_shared<MenuLaunch>(info.name, info.path));
+    XPR0Image saveIcon;
+    info.loadCompressedSaveGameIcon(saveIcon);
+    newChildren.push_back(std::make_shared<MenuLaunch>(info.title, info.path, saveIcon));
   }
 
   std::sort(begin(newChildren), end(newChildren),
@@ -287,8 +291,12 @@ void MenuXbe::createChildren() {
 /******************************************************************************************
                                    MenuLaunch
 ******************************************************************************************/
-MenuLaunch::MenuLaunch(std::string const& label, std::string const& path) :
-    MenuItem(label), path(path) {
+MenuLaunch::MenuLaunch(std::string const& label, std::string path) :
+    MenuItem(label), path(std::move(path)), image() {
+}
+
+MenuLaunch::MenuLaunch(std::string const& label, std::string path, XPR0Image image) :
+    MenuItem(label), path(std::move(path)), image(std::move(image)) {
 }
 
 MenuLaunch::~MenuLaunch() {
