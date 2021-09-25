@@ -34,6 +34,9 @@ int init_systems(const Config& config) {
   while (XVideoListModes(&xmode, 0, 0, &p)) {
   }
   XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
+  xmode = XVideoGetMode();
+  InfoLog::outputLine("Video set to %dx%d %dbpp @%dHz\n", xmode.width, xmode.height,
+                      xmode.bpp, xmode.refresh);
 
   if (!nxMountDrive('C', "\\Device\\Harddisk0\\Partition2")) {
     InfoLog::outputLine("Mounting error: Could not mount drive C\n");
