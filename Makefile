@@ -24,6 +24,7 @@ SRCS += \
 	$(INCDIR)/timing.cpp \
 	$(INCDIR)/videoMenu.cpp \
 	$(INCDIR)/wipeCache.cpp \
+	$(INCDIR)/xbeLauncher.cpp \
 	$(INCDIR)/xbeScanner.cpp \
 	$(CURDIR)/3rdparty/SDL_FontCache/SDL_FontCache.c
 
