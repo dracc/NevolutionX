@@ -13,9 +13,10 @@
 class MenuNode;
 class Menu;
 
-class MenuItem {
-public:
-  explicit MenuItem(std::string const& label);
+class MenuItem
+{
+ public:
+  explicit MenuItem(std::string const &label);
   MenuItem(MenuNode* parent, std::string const& label);
   virtual ~MenuItem();
   virtual void execute(Menu*) = 0;

@@ -2,13 +2,13 @@
 #include <hal/video.h>
 #include <hal/xbox.h>
 
-void XBELauncher::exitToDashboard() {
-  showLaunchImage();
+void XBELauncher::exitToDashboard() { showLaunchImage();
   // TODO: Switch to XLaunchXBE(nullptr) if XboxDev/nxdk#501 is merged.
   exit(0);
 }
 
-void XBELauncher::launch(std::string const& xbePath) {
+void XBELauncher::launch(std::string const &xbePath)
+{
   showLaunchImage();
   XLaunchXBE(const_cast<char*>(xbePath.c_str()));
 }

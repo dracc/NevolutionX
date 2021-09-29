@@ -45,14 +45,15 @@ int main(void) {
   }
 
   NetworkManager networkManager(config);
-  if (config.settings.net.getEnabled()) {
-    networkManager.asyncInit();
-  }
+    if (config.settings.net.getEnabled()) {
+      networkManager.asyncInit();
+    }
 
   bool running = true;
 
   // Open our GameController
-  for (int i = 0; i < SDL_NumJoysticks(); ++i) {
+  for (int i = 0; i < SDL_NumJoysticks(); ++i)
+  {
     if (SDL_IsGameController(i)) {
       controllers[i] = SDL_GameControllerOpen(i);
       if (!controllers[i]) {
