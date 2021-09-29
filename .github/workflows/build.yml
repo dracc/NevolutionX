@@ -30,7 +30,10 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y flex bison clang lld llvm
+          sudo apt-get install -y flex bison clang lld llvm clang-format
+      - name: Check for new format errors
+        run: |
+          find . | grep -E '.*\.(c|cpp|h|hpp)$' | grep -Ev '(3rdparty|nxdk)/' | xargs clang-format --dry-run -Werror
       - name: Build
         env:
           NXDK_DIR: nxdk
