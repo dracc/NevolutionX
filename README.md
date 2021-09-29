@@ -13,7 +13,8 @@ As the XboxDev community grew, the need for an open-source, nxdk based dashboard
 - [x] DVD launcher
 - [ ] Themes
 
-## Build
+## Building with nxdk
+### Build
 In order to build NevolutionX you'll need to install [nxdk](https://github.com/XboxDev/nxdk) first.
 To build NevolutionX you clone the repository, check out the submodules, and run `make`. You may need to adjust the installation location of nxdk in the `Makefile` to your needs. The default is `NXDK_DIR = $(CURDIR)/../nxdk` which expects nxdk right next to NevolutionX.
 
@@ -29,9 +30,14 @@ ls bin/
 480.png 720.png default.xbe vegur.ttf
 ```
 
-## Installation
+### Installation
 Simply copy `default.xbe` and all the assets onto your xbox.
 There is no further configuration required. The FTP-server will start automatically with NevolutionX, you'll only need to provide a link and a DHCP-server. The default user credentials are `xbox`/`xbox`.
+
+## Building with CMake (Linux target)
+TODO: Document what parts of the Linux target are not supported.
+TODO: Document installation for the Linux target, if applicable.
+`cmake -S . -B build && cmake --build build --verbose`
 
 ## Credits
 This software is built on top of other awesome projects:

@@ -1,6 +1,7 @@
 #ifndef NEVOLUTIONX_INCLUDES_INFOLOG_H_
 #define NEVOLUTIONX_INCLUDES_INFOLOG_H_
 
+#include <atomic>
 #include <list>
 #include <mutex>
 #include <string>

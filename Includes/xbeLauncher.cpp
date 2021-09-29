@@ -1,6 +1,9 @@
 #include "xbeLauncher.h"
+
+#ifdef NXDK
 #include <hal/video.h>
 #include <hal/xbox.h>
+#endif
 
 void XBELauncher::exitToDashboard() {
   showLaunchImage();
@@ -9,11 +12,14 @@ void XBELauncher::exitToDashboard() {
 }
 
 void XBELauncher::launch(std::string const& xbePath) {
+#ifdef NXDK
   showLaunchImage();
   XLaunchXBE(const_cast<char*>(xbePath.c_str()));
+#endif
 }
 
 void XBELauncher::showLaunchImage() {
+#ifdef NXDK
   VIDEO_MODE mode = XVideoGetMode();
 
   // TODO(XboxDev/nxdk#507): Display launch image instead when framebuffer can be persisted.
@@ -21,4 +27,5 @@ void XBELauncher::showLaunchImage() {
   memset(fb, 0, mode.width * mode.height * (mode.bpp >> 3));
   XVideoFlushFB();
   XVideoSetVideoEnable(FALSE);
+#endif
 }

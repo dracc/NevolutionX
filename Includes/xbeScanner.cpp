@@ -1,6 +1,10 @@
 #include "xbeScanner.h"
+
+#ifdef NXDK
 #include <windows.h>
 #include <winnt.h>
+#endif
+
 #include "infoLog.h"
 #include "timing.h"
 
@@ -76,12 +80,15 @@ XBEScanner::QueueItem::QueueItem(std::string p, XBEScanner::Callback c) :
 }
 
 XBEScanner::QueueItem::~QueueItem() {
+#ifdef NXDK
   if (dirHandle != INVALID_HANDLE_VALUE) {
     CloseHandle(dirHandle);
   }
+#endif
 }
 
 void XBEScanner::QueueItem::scan() {
+#ifdef NXDK
   if (dirHandle == INVALID_HANDLE_VALUE) {
     InfoLog::outputLine("Starting scan of %s", path.c_str());
     results.clear();
@@ -103,15 +110,21 @@ void XBEScanner::QueueItem::scan() {
   CloseHandle(dirHandle);
   dirHandle = INVALID_HANDLE_VALUE;
   callback(true, results, millisSince(scanStart));
+#endif
 }
 
 bool XBEScanner::QueueItem::openDir() {
+#ifdef NXDK
   std::string searchmask = path + "*";
   dirHandle = FindFirstFile(searchmask.c_str(), &findData);
   return (dirHandle != INVALID_HANDLE_VALUE);
+#else
+  return false;
+#endif
 }
 
 void XBEScanner::QueueItem::processFile(const std::string& xbePath) {
+#ifdef NXDK
   FILE* xbeFile = fopen(xbePath.c_str(), "rb");
   if (!xbeFile) {
     return;
@@ -153,4 +166,5 @@ void XBEScanner::QueueItem::processFile(const std::string& xbePath) {
   fclose(xbeFile);
 
   results.emplace_back(xbeName, xbePath);
+#endif // #ifdef NXDK
 }

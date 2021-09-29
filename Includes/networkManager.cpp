@@ -42,6 +42,7 @@ void NetworkManager::thread_main(NetworkManager* manager) {
 }
 
 std::string NetworkManager::IPAddressString() const {
+#ifdef NXDK
   NetworkStatus current_status = status;
   if (current_status != INIT_SUCCEEDED && current_status != RUNNING) {
     return std::string();
@@ -52,4 +53,7 @@ std::string NetworkManager::IPAddressString() const {
   }
 
   return ip4addr_ntoa(netif_ip4_addr(g_pnetif));
+#else
+  return "<NOT SUPPORTED>";
+#endif
 }

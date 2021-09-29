@@ -1,4 +1,5 @@
 #include "menu.hpp"
+#include <memory>
 #include "3rdparty/NaturalSort/natural_sort.hpp"
 #include "infoLog.h"
 #include "settingsMenu.hpp"

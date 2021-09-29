@@ -1,4 +1,5 @@
 #include "langMenu.hpp"
+#include <memory>
 
 #ifdef NXDK
 #include <xboxkrnl/xboxkrnl.h>

@@ -2,6 +2,7 @@
 #define MENU_HPP
 
 #include <list>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <vector>
