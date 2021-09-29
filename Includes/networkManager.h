@@ -1,6 +1,7 @@
 #ifndef NEVOLUTIONX_NETWORKMANAGER_H
 #define NEVOLUTIONX_NETWORKMANAGER_H
 
+#include <atomic>
 #include <thread>
 #include "config.hpp"
 

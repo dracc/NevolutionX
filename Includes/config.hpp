@@ -9,6 +9,7 @@
 #pragma clang diagnostic pop
 
 
+#ifdef NXDK
 class netConfig {
   bool enable;
   bool useDHCP;
@@ -33,6 +34,7 @@ public:
 };
 void to_json(nlohmann::json& j, netConfig const& o);
 void from_json(nlohmann::json const& j, netConfig& o);
+#endif
 
 class ftpConfig {
   bool enable;
@@ -110,7 +112,9 @@ void from_json(nlohmann::json const& j, homescreenConfig& o);
 class Settings {
 public:
   Settings() = default;
+#ifdef NXDK
   netConfig net;
+#endif
   ftpConfig ftp;
   mountConfig mount;
   loggingConfig logging;

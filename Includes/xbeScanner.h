@@ -1,7 +1,7 @@
 #ifndef NEVOLUTIONX_INCLUDES_XBESCANNER_H_
 #define NEVOLUTIONX_INCLUDES_XBESCANNER_H_
 
-#include <windows.h>
+#include <atomic>
 #include <functional>
 #include <list>
 #include <mutex>
@@ -9,6 +9,10 @@
 #include <thread>
 #include <utility>
 #include <vector>
+
+#ifdef NXDK
+#include <windows.h>
+#endif
 
 // TODO(#110): Reenable threading once hardware accelerated rendering is in place.
 // The current software-backed SDL approach causes the scanner thread to be starved, leading
@@ -56,8 +60,10 @@ private:
     bool openDir();
     void processFile(const std::string& xbePath);
 
+#ifdef NXDK
     HANDLE dirHandle{ INVALID_HANDLE_VALUE };
     WIN32_FIND_DATAA findData{};
+#endif
 
     char xbeName[XBE_NAME_SIZE + 1]{ 0 };
     std::vector<char> xbeData;

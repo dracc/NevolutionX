@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iomanip>
 
+#ifdef NXDK
 // Note: pulling this in can create a conflict with fflush as defined in
 // <fstream> leading to a compilation failure w/ clang 12.0.0 on macOS. It is
 // important that <fstream> is included before any lwip headers.
@@ -9,7 +10,6 @@
 #include <lwip/inet.h>
 // clang-format on
 
-#ifdef NXDK
 #define SEPARATOR "\\"
 #define HOME "A:" SEPARATOR
 #else
@@ -17,6 +17,7 @@
 #define HOME "." SEPARATOR
 #endif
 
+#ifdef NXDK
 static unsigned int parseIPV4(const std::string& val) {
   in_addr addr{ 0 };
 
@@ -71,6 +72,7 @@ void from_json(nlohmann::json const& j, netConfig& o) {
     o.setStaticNetmask(parseIPV4(j["static_netmask"]));
   }
 }
+#endif
 
 ftpConfig::ftpConfig() {
   enable = true;
@@ -190,7 +192,9 @@ void from_json(nlohmann::json const& j, homescreenConfig& o) {
 void to_json(nlohmann::json& j, Settings const& o) {
   j = nlohmann::json{ { "ftp", nlohmann::json(o.ftp) },
                       { "mount", nlohmann::json(o.mount) },
+#ifdef NXDK
                       { "network", nlohmann::json(o.net) },
+#endif
                       { "logging", nlohmann::json(o.logging) },
                       { "homescreenConfig", nlohmann::json(o.homescreen) } };
 }
@@ -202,9 +206,11 @@ void from_json(nlohmann::json const& j, Settings& o) {
   if (j.contains("mount")) {
     o.mount = j["mount"].get<mountConfig>();
   }
+#ifdef NXDK
   if (j.contains("network")) {
     o.net = j["network"].get<netConfig>();
   }
+#endif
   if (j.contains("logging")) {
     o.logging = j["logging"].get<loggingConfig>();
   }

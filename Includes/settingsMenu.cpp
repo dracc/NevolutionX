@@ -1,5 +1,4 @@
 #include "settingsMenu.hpp"
-#include <xboxkrnl/xboxkrnl.h>
 #include "audioMenu.hpp"
 #include "eeprom.hpp"
 #include "langMenu.hpp"
@@ -7,6 +6,10 @@
 #include "timeMenu.hpp"
 #include "videoMenu.hpp"
 #include "wipeCache.hpp"
+
+#ifdef NXDK
+#include <xboxkrnl/xboxkrnl.h>
+#endif
 
 /******************************************************************************************
  *                              switchingMenuItem
@@ -28,13 +31,16 @@ togglingEEPROMMenuItem::togglingEEPROMMenuItem(std::string const& label,
     MenuItem(label),
     bitmask(bmask), valueIndex(vI) {
 
+#ifdef NXDK
   uint32_t Value = getEEPROMValue<uint32_t>(valueIndex);
   value = (Value & bitmask) != 0;
 
   valuedLabel = label + (value ? "Yes" : "No");
+#endif
 }
 
 void togglingEEPROMMenuItem::execute(Menu*) {
+#ifdef NXDK
   value = !value;
   valuedLabel = label + (value ? "Yes" : "No");
 
@@ -42,6 +48,7 @@ void togglingEEPROMMenuItem::execute(Menu*) {
   uint32_t Value = getEEPROMValue<uint32_t>(valueIndex, Type);
   Value = (Value & ~bitmask) + (bitmask * value);
   ExSaveNonVolatileSetting(valueIndex, Type, &Value, sizeof(Value));
+#endif
 }
 
 std::string_view togglingEEPROMMenuItem::getLabel() const {

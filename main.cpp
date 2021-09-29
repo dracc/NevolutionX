@@ -45,9 +45,13 @@ int main(void) {
   }
 
   NetworkManager networkManager(config);
+#ifdef NXDK
   if (config.settings.net.getEnabled()) {
     networkManager.asyncInit();
   }
+#else
+  networkManager.asyncInit();
+#endif
 
   bool running = true;
 

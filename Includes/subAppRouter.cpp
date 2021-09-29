@@ -1,5 +1,6 @@
 #include "subAppRouter.h"
 #include <list>
+#include <memory>
 #include "infoLog.h"
 
 #define ANALOG_MAX_VALUE 32767.0f
@@ -17,6 +18,7 @@ SubAppRouter* SubAppRouter::getInstance() {
 }
 
 SubAppRouter::SubAppRouter() {
+#ifdef NXDK
   LARGE_INTEGER frequency;
   if (!QueryPerformanceFrequency(&frequency)) {
     InfoLog::outputLine(
@@ -33,6 +35,7 @@ SubAppRouter::SubAppRouter() {
     counter.QuadPart = 0;
   }
   lastFrameStartTicks = counter.QuadPart;
+#endif
 }
 
 static int getPlayerIndex(SDL_JoystickID id) {
@@ -59,6 +62,7 @@ void SubAppRouter::pop() {
 }
 
 void SubAppRouter::render(Font& font) {
+#ifdef NXDK
   if (ticksPerMillisecond) {
     LARGE_INTEGER counter;
     if (!QueryPerformanceCounter(&counter)) {
@@ -66,16 +70,20 @@ void SubAppRouter::render(Font& font) {
     }
     lastFrameStartTicks = counter.QuadPart;
   }
+#endif
 
   assert(!subAppStack.empty());
   std::shared_ptr<SubApp> ref = subAppStack.top();
   SubApp& app = *ref;
   app.render(font);
 
+#ifdef NXDK
   processButtonRepeatEvents();
+#endif
 }
 
 void SubAppRouter::handleAxisMotion(const SDL_ControllerAxisEvent& event) {
+#ifdef NXDK
   assert(!subAppStack.empty());
   std::shared_ptr<SubApp> ref = subAppStack.top();
   SubApp& app = *ref;
@@ -190,6 +198,7 @@ void SubAppRouter::handleAxisMotion(const SDL_ControllerAxisEvent& event) {
   }
 
   lastAxisState[lastStateKey] = value;
+#endif
 }
 
 void SubAppRouter::handleButtonDown(const SDL_ControllerButtonEvent& event) {
@@ -199,12 +208,13 @@ void SubAppRouter::handleButtonDown(const SDL_ControllerButtonEvent& event) {
   int playerID = getPlayerIndex(event.which);
 
   auto button = static_cast<SDL_GameControllerButton>(event.button);
-
+#ifdef NXDK
   int autoRepeatInterval = app.getAutoRepeatInterval(button);
   if (autoRepeatInterval > 0) {
     buttonRepeatTimers[std::make_pair(playerID, button)] =
         lastFrameStartTicks + ticksPerMillisecond * autoRepeatInterval;
   }
+#endif
 
   app.setRepeatEvent(false);
   routeButtonDown(app, playerID, button);
@@ -217,12 +227,15 @@ void SubAppRouter::handleButtonUp(const SDL_ControllerButtonEvent& event) {
   int playerID = getPlayerIndex(event.which);
   auto button = static_cast<SDL_GameControllerButton>(event.button);
 
+#ifdef NXDK
   buttonRepeatTimers.erase(std::make_pair(playerID, button));
+#endif
 
   app.setRepeatEvent(false);
   routeButtonUp(app, playerID, button);
 }
 
+#ifdef NXDK
 void SubAppRouter::processButtonRepeatEvents() {
   std::shared_ptr<SubApp> ref = subAppStack.top();
   SubApp& app = *ref;
@@ -254,6 +267,7 @@ void SubAppRouter::processButtonRepeatEvents() {
     buttonRepeatTimers.erase(deleteKey);
   }
 }
+#endif
 
 static void routeButtonDown(SubApp& app, int playerID, SDL_GameControllerButton button) {
   app.setActivePlayerID(playerID);

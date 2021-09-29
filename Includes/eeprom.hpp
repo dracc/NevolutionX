@@ -1,8 +1,9 @@
 #ifndef __EEPROM_H
 #define __EEPROM_H
 
-#include <xboxkrnl/xboxkrnl.h>
 #include <cstdint>
+#ifdef NXDK
+#include <xboxkrnl/xboxkrnl.h>
 
 template<typename T>
 T getEEPROMValue(uint32_t valueIndex) {
@@ -17,5 +18,6 @@ T getEEPROMValue(uint32_t valueIndex, ULONG& Type) {
   ExQueryNonVolatileSetting(valueIndex, &Type, &value, sizeof(value), &ResultLength);
   return value;
 }
+#endif // #ifdef NXDK
 
 #endif

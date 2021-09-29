@@ -1,6 +1,9 @@
 #include "videoMenu.hpp"
-#include <xboxkrnl/xboxkrnl.h>
 #include "eeprom.hpp"
+
+#ifdef NXDK
+#include <xboxkrnl/xboxkrnl.h>
+#endif
 
 static const uint32_t widescreen = 0x00010000;
 static const uint32_t letterbox = 0x00100000;
@@ -9,7 +12,7 @@ static const std::vector<uint32_t> ratios = { 0, widescreen, letterbox };
 
 videoRatioMenuItem::videoRatioMenuItem() :
     switchingMenuItem("Screen Ratio: ", { "Normal", "Widescreen", "Letterbox" }) {
-
+#ifdef NXDK
   uint32_t Value = getEEPROMValue<uint32_t>(valueIndex);
   selected = Value & 0x00110000;
   if (selected & widescreen) {
@@ -18,9 +21,11 @@ videoRatioMenuItem::videoRatioMenuItem() :
     selected = 2;
   }
   valuedLabel = label + values.at(selected);
+#endif
 }
 
 void videoRatioMenuItem::execute(Menu*) {
+#ifdef NXDK
   selected = (++selected) % values.size();
   valuedLabel = label + values.at(selected);
 
@@ -28,6 +33,7 @@ void videoRatioMenuItem::execute(Menu*) {
   uint32_t Value = getEEPROMValue<uint32_t>(valueIndex, Type);
   Value = (Value & 0xFFEEFFFF) + ratios.at(selected);
   ExSaveNonVolatileSetting(valueIndex, Type, &Value, sizeof(Value));
+#endif
 }
 
 videoMenu::videoMenu(MenuNode* parent, std::string const& label) : MenuNode(parent, label) {
