@@ -35,56 +35,56 @@ int init_systems(const Config& config) {
   }
   XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
   xmode = XVideoGetMode();
-  InfoLog::outputLine("Video set to %dx%d %dbpp @%dHz\n", xmode.width, xmode.height,
-                      xmode.bpp, xmode.refresh);
+  InfoLog::outputLine(InfoLog::DEBUG, "Video set to %dx%d %dbpp @%dHz\n", xmode.width,
+                      xmode.height, xmode.bpp, xmode.refresh);
 
   if (!nxMountDrive('C', "\\Device\\Harddisk0\\Partition2")) {
-    InfoLog::outputLine("Mounting error: Could not mount drive C\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Mounting error: Could not mount drive C\n");
   }
   if (!nxMountDrive('E', "\\Device\\Harddisk0\\Partition1")) {
-    InfoLog::outputLine("Mounting error: Could not mount drive E\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Mounting error: Could not mount drive E\n");
   }
   if (config.settings.mount.getFEnabled()
       && !nxMountDrive('F', "\\Device\\Harddisk0\\Partition6")) {
-    InfoLog::outputLine("Mounting warning: Could not mount drive F\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Mounting warning: Could not mount drive F\n");
   }
   if (config.settings.mount.getGEnabled()
       && !nxMountDrive('G', "\\Device\\Harddisk0\\Partition7")) {
-    InfoLog::outputLine("Mounting information: Drive G:\\ not mounted\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Mounting information: Drive G:\\ not mounted\n");
   }
   if (!nxMountDrive('X', "\\Device\\Harddisk0\\Partition3")) {
-    InfoLog::outputLine("Mounting error: Could not mount drive X\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Mounting error: Could not mount drive X\n");
   }
   if (!nxMountDrive('Y', "\\Device\\Harddisk0\\Partition4")) {
-    InfoLog::outputLine("Mounting error: Could not mount drive Y\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Mounting error: Could not mount drive Y\n");
   }
   if (!nxMountDrive('Z', "\\Device\\Harddisk0\\Partition5")) {
-    InfoLog::outputLine("Mounting error: Could not mount drive Z\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Mounting error: Could not mount drive Z\n");
   }
   if (nxIsDriveMounted('D')) {
     nxUnmountDrive('D');
   }
   if (!nxMountDrive('D', "\\Device\\CdRom0")) {
-    InfoLog::outputLine("Mounting warning: Could not mount DVD drive\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Mounting warning: Could not mount DVD drive\n");
   }
 #endif
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-    InfoLog::outputLine("Init error: %s", SDL_GetError());
+    InfoLog::outputLine(InfoLog::ERROR, "SDL_Init error: %s", SDL_GetError());
     return 3;
   }
 
   if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
-    InfoLog::outputLine("IMG Init Error: %s!\n", IMG_GetError());
+    InfoLog::outputLine(InfoLog::ERROR, "IMG Init Error: %s!\n", IMG_GetError());
     return 2;
   }
 
   if (TTF_Init() != 0) {
-    InfoLog::outputLine("TTF Init Error: %s", TTF_GetError());
+    InfoLog::outputLine(InfoLog::ERROR, "TTF Init Error: %s", TTF_GetError());
     return 2;
   }
 
   if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) != 0) {
-    InfoLog::outputLine("Init error: %s", SDL_GetError());
+    InfoLog::outputLine(InfoLog::ERROR, "SDL_INIT_GAMECONTROLLER error: %s", SDL_GetError());
     return 3;
   }
   return 0;

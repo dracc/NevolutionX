@@ -97,7 +97,7 @@ bool ftpConnection::update() {
     if (nbytes == 0) {
       // connection closed
     } else {
-      InfoLog::outputLine("Error: recv\n");
+      InfoLog::outputLine(InfoLog::ERROR, "Error: recv\n");
     }
     /* Report back to server that we're a dud! */
     return false;
@@ -204,7 +204,8 @@ bool ftpConnection::update() {
       } else if (!cmd.compare("execute")) {
         cmdExecute(arg);
       } else {
-        InfoLog::outputLine(("Received cmd " + cmd + ", arg " + arg + "\n").c_str());
+        InfoLog::outputLine(InfoLog::DEBUG,
+                            ("Received cmd " + cmd + ", arg " + arg + "\n").c_str());
         cmdUnimplemented(cmd);
       }
     } else {
@@ -330,7 +331,8 @@ void ftpConnection::cmdPort(std::string const& arg) {
   std::string p2 = arg.substr(cmdDataSep, std::string::npos);
 
   std::string port = std::to_string(stoi(p1) * 256 + stoi(p2));
-  InfoLog::outputLine((address + " " + port + " " + std::to_string(_fd) + "\n").c_str());
+  InfoLog::outputLine(InfoLog::INFO,
+                      (address + " " + port + " " + std::to_string(_fd) + "\n").c_str());
   dataFd = server->openConnection(address, port);
   if (dataFd != -1) {
     sendStdString(replies[8]);
@@ -444,7 +446,7 @@ void ftpConnection::cmdRetr(std::string const& arg) {
     if (arg[0] != '/') {
       fileName = pwd + arg;
     }
-    InfoLog::outputLine("Trying to send file %s!\n", fileName.c_str());
+    InfoLog::outputLine(InfoLog::DEBUG, "Trying to send file %s!\n", fileName.c_str());
     sendStdString("150 Sending file " + arg + "\r\n");
     sendFile(fileName);
     close(dataFd);
@@ -458,7 +460,7 @@ void ftpConnection::cmdStor(std::string const& arg) {
     if (arg[0] != '/') {
       fileName = pwd + arg;
     }
-    InfoLog::outputLine("Trying to receive file %s!\n", fileName.c_str());
+    InfoLog::outputLine(InfoLog::DEBUG, "Trying to receive file %s!\n", fileName.c_str());
     sendStdString("150 Receiving file " + arg + "\r\n");
     recvFile(fileName);
     close(dataFd);
@@ -470,7 +472,7 @@ void ftpConnection::cmdExecute(std::string const& path) {
 #ifdef NXDK
   XLaunchXBE(const_cast<char*>(path.c_str()));
 #else
-  InfoLog::outputLine("Launching %s\n", path.c_str());
+  InfoLog::outputLine(InfoLog::DEBUG, "Launching %s\n", path.c_str());
 #endif
 }
 
@@ -543,14 +545,15 @@ bool ftpConnection::sendFile(std::string const& fileName) {
   std::string filePath = unixToDosPath(fileName);
   HANDLE fHandle = CreateFile(filePath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL,
                               OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-  InfoLog::outputLine(("\n" + filePath + "\n").c_str());
+  InfoLog::outputLine(InfoLog::DEBUG, ("\n" + filePath + "\n").c_str());
   if (fHandle == INVALID_HANDLE_VALUE) {
-    InfoLog::outputLine("File opening failed. LOL.\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Failed to open %s. %x.\n", filePath.c_str(),
+                        GetLastError());
     return false;
   }
   unsigned char* sendBuffer = (unsigned char*)malloc(FTP_DATA_BUFFER_SIZE);
   if (sendBuffer == nullptr) {
-    InfoLog::outputLine("File sending buffer memory allocation failed.\n");
+    InfoLog::outputLine(InfoLog::ERROR, "File sending buffer memory allocation failed.\n");
     return false;
   }
   int bytesToRead = FTP_DATA_BUFFER_SIZE;
@@ -585,29 +588,30 @@ bool ftpConnection::recvFile(std::string const& fileName) {
   HANDLE fHandle = CreateFile(filePath.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
                               FILE_ATTRIBUTE_NORMAL, NULL);
   if (fHandle == INVALID_HANDLE_VALUE) {
-    InfoLog::outputLine("File creation failed. LOL. \n");
+    InfoLog::outputLine(InfoLog::ERROR, "Failed to create file %s. %x\n", filePath.c_str(),
+                        GetLastError());
     return false;
   }
 #endif
   unsigned char* recvBuffer = (unsigned char*)malloc(FTP_DATA_BUFFER_SIZE);
   if (!recvBuffer) {
-    InfoLog::outputLine("Could not create buffer for file receiving! \n");
+    InfoLog::outputLine(InfoLog::ERROR, "Could not create buffer for file receiving! \n");
     return false;
   }
-  InfoLog::outputLine(("\r\n" + filePath + "\r\n").c_str());
+  InfoLog::outputLine(InfoLog::DEBUG, ("\r\n" + filePath + "\r\n").c_str());
   unsigned long bytesWritten;
   ssize_t bytesRead;
   while ((bytesRead = recv(dataFd, recvBuffer, FTP_DATA_BUFFER_SIZE, 0))) {
     if (bytesRead == -1) {
-      InfoLog::outputLine("Error %d, aborting!\n", errno);
+      InfoLog::outputLine(InfoLog::ERROR, "Error %d, aborting!\n", errno);
       retVal = false;
       break;
     }
 #ifdef NXDK
     WriteFile(fHandle, recvBuffer, bytesRead, &bytesWritten, NULL);
     if (bytesWritten != bytesRead) {
-      InfoLog::outputLine("ERROR: Bytes read != Bytes written (%d, %d)\n", bytesRead,
-                          bytesWritten);
+      InfoLog::outputLine(InfoLog::ERROR, "ERROR: Bytes read != Bytes written (%d, %d)\n",
+                          bytesRead, bytesWritten);
       retVal = false;
     }
 #endif

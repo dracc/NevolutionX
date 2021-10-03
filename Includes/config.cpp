@@ -155,13 +155,17 @@ void from_json(nlohmann::json const& j, mountConfig& o) {
 
 void to_json(nlohmann::json& j, loggingConfig const& o) {
   // FIXME: Use a float for colors when https://github.com/XboxDev/nxdk/issues/508 is fixed.
-  j = nlohmann::json{ { "enable_overlay", o.getOverlayEnabled() },
+  j = nlohmann::json{ { "overlay_log_level", o.getOverlayLogLevel() },
+                      { "enable_overlay", o.getOverlayEnabled() },
                       { "overlay_duration_frames", o.getOverlayDurationFrames() },
                       { "overlay_bg_alpha_int",
                         static_cast<int>(o.getOverlayBackgroundAlpha() * 0xFF) } };
 }
 
 void from_json(nlohmann::json const& j, loggingConfig& o) {
+  if (j.contains("overlay_log_level")) {
+    o.setOverlayLogLevel(j["overlay_log_level"]);
+  }
   if (j.contains("enable_overlay") && j["enable_overlay"].is_boolean()) {
     o.setOverlayEnabled(j["enable_overlay"]);
   }

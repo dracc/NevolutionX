@@ -69,13 +69,13 @@ int Renderer::init(const char* bgpath) {
   SDL_Surface* bgsurf = IMG_Load(bgname);
   free(bgname);
   if (bgsurf == nullptr) {
-    InfoLog::outputLine("Creating background surface failed.\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Creating background surface failed.\n");
     return 3;
   }
   background = SDL_CreateTextureFromSurface(renderer, bgsurf);
   SDL_FreeSurface(bgsurf);
   if (background == nullptr) {
-    InfoLog::outputLine("Creating background texture failed.\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Creating background texture failed.\n");
     return 4;
   }
   return ret;

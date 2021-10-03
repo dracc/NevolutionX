@@ -12,11 +12,19 @@
 
 class InfoLog {
 public:
+  enum Level
+  {
+    ERROR,
+    WARNING,
+    INFO,
+    DEBUG
+  };
+
   static void configure(Config const& config);
   static void capture() { getInstance()->captured = true; }
 
-  static void outputLine(const char* format, ...);
-  static void outputLine(std::string const& line);
+  static void outputLine(Level level, const char* format, ...);
+  static void outputLine(Level level, std::string const& line);
 
   static bool isOutputCaptured() { return getInstance()->captured; }
 
@@ -28,6 +36,9 @@ public:
   static std::mutex& getLogMutex();
   static const std::list<std::string>& getLog();
 
+  static Level getOverlayLogLevel();
+  static void setOverlayLogLevel(Level level);
+
 private:
   // Tuple of string, frames remaining.
   typedef std::pair<std::string, int> OverlayItem;
@@ -36,7 +47,7 @@ private:
 
   InfoLog() = default;
   void configure(loggingConfig const& config);
-  void addLine(std::string const& line);
+  void addLine(Level level, std::string const& line);
   void renderAsOverlay(Renderer& r, Font& font);
 
   static InfoLog* singleton;
@@ -54,6 +65,8 @@ private:
   std::mutex logMutex;
   std::list<std::string> log;
   std::list<OverlayItem> overlayLog;
+
+  Level overlayLogLevel{ INFO };
 };
 
 #endif // NEVOLUTIONX_INCLUDES_INFOLOG_H_
