@@ -75,7 +75,7 @@ int setupNetwork(bool dhcp, staticIP static_ip_info) {
     time_t start = time(NULL);
     while (dhcp_supplied_address(g_pnetif) == 0) {
       if ((time(NULL) - start) > 7) {
-        InfoLog::outputLine("Couldn't get DHCP settings!");
+        InfoLog::outputLine(InfoLog::WARNING, "Couldn't get DHCP settings!");
         return ERR_NO_DHCP_RESPONSE;
       }
       NtYieldExecution();

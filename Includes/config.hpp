@@ -94,6 +94,7 @@ void to_json(nlohmann::json& j, mountConfig const& o);
 void from_json(nlohmann::json const& j, mountConfig& o);
 
 class loggingConfig {
+  std::string overlayLogLevel{ "WARNING" };
   bool enableOverlay{ true };
   int overlayDurationFrames{ 30 };
   float overlayBackgroundAlpha{ 0.75f };
@@ -101,10 +102,12 @@ class loggingConfig {
 public:
   loggingConfig() = default;
 
+  std::string getOverlayLogLevel() const { return overlayLogLevel; }
   bool getOverlayEnabled() const { return enableOverlay; }
   int getOverlayDurationFrames() const { return overlayDurationFrames; }
   float getOverlayBackgroundAlpha() const { return overlayBackgroundAlpha; }
 
+  void setOverlayLogLevel(const std::string& level) { overlayLogLevel = level; }
   void setOverlayEnabled(bool val) { enableOverlay = val; }
   void setOverlayDurationFrames(int val) { overlayDurationFrames = val; }
   void setOverlayBackgroundAlpha(float val) { overlayBackgroundAlpha = val; }

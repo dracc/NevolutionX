@@ -103,7 +103,7 @@ ftpServer::ftpServer(ftpConfig const* conf) : conf(conf) {
 int ftpServer::init() {
   int yes = 1;
   if ((i = getaddrinfo(NULL, std::to_string(conf->getPort()).c_str(), &hints, &ai)) != 0) {
-    InfoLog::outputLine("Error: selectserver\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Error: selectserver\n");
     return 5;
   }
 
@@ -126,13 +126,13 @@ int ftpServer::init() {
   freeaddrinfo(ai);
 
   if (p == NULL) {
-    InfoLog::outputLine("Error: selectServer: failed to bind\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Error: selectServer: failed to bind\n");
     return 1;
   }
 
   /* Start listening */
   if (listen(listener, 10) == -1) {
-    InfoLog::outputLine("Error: Listen\n");
+    InfoLog::outputLine(InfoLog::ERROR, "Error: Listen\n");
     return 2;
   }
   FD_SET(listener, &master);
@@ -145,7 +145,7 @@ int ftpServer::run() {
   for (;;) {
     readFds = master;
     if (select(fdmax + 1, &readFds, NULL, NULL, NULL) == -1) {
-      InfoLog::outputLine("Error: Select\n");
+      InfoLog::outputLine(InfoLog::ERROR, "Error: Select\n");
       return 3;
     }
     for (i = 0; i <= fdmax; ++i) {
@@ -156,7 +156,8 @@ int ftpServer::run() {
           newfd = accept(listener, (struct sockaddr*)&raddr, &addrlen);
 
           if (newfd == -1) {
-            InfoLog::outputLine("Error: accept: %s\n", sock_strerror(errno).c_str());
+            InfoLog::outputLine(InfoLog::ERROR, "Error: accept: %s\n",
+                                sock_strerror(errno).c_str());
           } else {
             FD_SET(newfd, &master); // add to master set
             if (newfd > fdmax) { // keep track of the max
@@ -178,7 +179,7 @@ void ftpServer::forgetConnection(int fd) {
   delete (clients[fd]);
   clients.erase(fd);
   FD_CLR(fd, &master);
-  InfoLog::outputLine("Closing %d!\n", fd);
+  InfoLog::outputLine(InfoLog::DEBUG, "Closing %d!\n", fd);
   close(fd); // bye!
 }
 
@@ -188,16 +189,18 @@ int ftpServer::openConnection(std::string const& addr, std::string const& port) 
   if ((rv = getaddrinfo(addr.c_str(), port.c_str(), &hints, &ai)) == 0) {
     if ((ret = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol)) != -1) {
       if (connect(ret, ai->ai_addr, ai->ai_addrlen) != 0) {
-        InfoLog::outputLine("Connecting socket %d failed; %s\n", ret,
+        InfoLog::outputLine(InfoLog::ERROR, "Connecting socket %d failed; %s\n", ret,
                             sock_strerror(errno).c_str());
         close(ret);
         ret = -1;
       }
     } else {
-      InfoLog::outputLine("Socket creation failed; %s\n", sock_strerror(errno).c_str());
+      InfoLog::outputLine(InfoLog::ERROR, "Socket creation failed; %s\n",
+                          sock_strerror(errno).c_str());
     }
   } else {
-    InfoLog::outputLine("Getting address info failed; %s\n", gai_strerror(rv));
+    InfoLog::outputLine(InfoLog::ERROR, "Getting address info failed; %s\n",
+                        gai_strerror(rv));
     ret = -1;
   }
   freeaddrinfo(ai);

@@ -32,6 +32,7 @@ SubAppRouter::SubAppRouter() {
   LARGE_INTEGER frequency;
   if (!QueryPerformanceFrequency(&frequency)) {
     InfoLog::outputLine(
+        InfoLog::ERROR,
         "Failed to query performance frequency, timing dependent operations will fail. "
         "%d\n",
         GetLastError());
@@ -41,7 +42,8 @@ SubAppRouter::SubAppRouter() {
 
   LARGE_INTEGER counter;
   if (!QueryPerformanceCounter(&counter)) {
-    InfoLog::outputLine("Failed to query performance counter %d\n", GetLastError());
+    InfoLog::outputLine(InfoLog::ERROR, "Failed to query performance counter %d\n",
+                        GetLastError());
     counter.QuadPart = 0;
   }
   lastFrameStartTicks = counter.QuadPart;
@@ -62,7 +64,7 @@ void SubAppRouter::push(const std::shared_ptr<SubApp>& app) {
 
 void SubAppRouter::pop() {
   if (subAppStack.size() == 1) {
-    InfoLog::outputLine("Attempt to pop only SubApp, ignoring...");
+    InfoLog::outputLine(InfoLog::WARNING, "Attempt to pop only SubApp, ignoring...");
     return;
   }
 
@@ -293,7 +295,7 @@ static void routeButtonDown(SubApp& app, int playerID, SDL_GameControllerButton 
     app.onStartPressed();
     break;
   default:
-    InfoLog::outputLine("Ignoring invalid button ID %d\n", button);
+    InfoLog::outputLine(InfoLog::WARNING, "Ignoring invalid button ID %d\n", button);
     break;
   }
 }
@@ -344,7 +346,7 @@ static void routeButtonUp(SubApp& app, int playerID, SDL_GameControllerButton bu
     app.onStartReleased();
     break;
   default:
-    InfoLog::outputLine("Ignoring invalid button ID %d\n", button);
+    InfoLog::outputLine(InfoLog::WARNING, "Ignoring invalid button ID %d\n", button);
     break;
   }
 }

@@ -61,7 +61,8 @@ int main(void) {
     if (SDL_IsGameController(i)) {
       controllers[i] = SDL_GameControllerOpen(i);
       if (!controllers[i]) {
-        InfoLog::outputLine("Could not open gamecontroller %i: %s\n", i, SDL_GetError());
+        InfoLog::outputLine(InfoLog::ERROR, "Could not open gamecontroller %i: %s\n", i,
+                            SDL_GetError());
         SDL_Delay(2000);
       }
     }

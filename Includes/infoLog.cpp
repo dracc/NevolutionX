@@ -1,4 +1,5 @@
 #include "infoLog.h"
+#include <algorithm>
 #include <cstdarg>
 #include <cstdio>
 
@@ -24,13 +25,28 @@ void InfoLog::configure(const Config& config) {
 }
 
 void InfoLog::configure(loggingConfig const& config) {
+  std::string const& levelString = config.getOverlayLogLevel();
+  std::string level;
+  level.resize(levelString.size());
+  std::transform(levelString.begin(), levelString.end(), level.begin(), tolower);
+
+  if (levelString == "debug") {
+    overlayLogLevel = DEBUG;
+  } else if (levelString == "info") {
+    overlayLogLevel = INFO;
+  } else if (levelString == "warning") {
+    overlayLogLevel = WARNING;
+  } else {
+    overlayLogLevel = ERROR;
+  }
+
   overlayEnabled = config.getOverlayEnabled();
   framesPerOverlayItem = config.getOverlayDurationFrames();
   overlayAlpha = static_cast<uint8_t>(config.getOverlayBackgroundAlpha() * 0xFF);
 }
 
-void InfoLog::outputLine(std::string const& line) {
-  InfoLog::getInstance()->addLine(line);
+void InfoLog::outputLine(Level level, std::string const& line) {
+  InfoLog::getInstance()->addLine(level, line);
 #ifdef NXDK
   OutputDebugStringA(line.c_str());
 #endif
@@ -44,22 +60,24 @@ void InfoLog::outputLine(std::string const& line) {
   }
 }
 
-void InfoLog::outputLine(const char* format, ...) {
+void InfoLog::outputLine(Level level, const char* format, ...) {
   char buffer[4096];
   va_list args;
   va_start(args, format);
   vsprintf(buffer, format, args);
 
-  outputLine(std::string(buffer));
+  outputLine(level, std::string(buffer));
 
   va_end(args);
 }
 
-void InfoLog::addLine(const std::string& line) {
+void InfoLog::addLine(Level level, std::string const& line) {
   std::lock_guard<std::mutex> lock(logMutex);
   log.push_back(line);
 
-  overlayLog.emplace_back(line, framesPerOverlayItem);
+  if (overlayLogLevel >= level) {
+    overlayLog.emplace_back(line, framesPerOverlayItem);
+  }
 }
 
 void InfoLog::renderAsOverlay(Renderer& r, Font& font) {
@@ -117,4 +135,12 @@ std::mutex& InfoLog::getLogMutex() {
 
 const std::list<std::string>& InfoLog::getLog() {
   return getInstance()->log;
+}
+
+InfoLog::Level InfoLog::getOverlayLogLevel() {
+  return getInstance()->overlayLogLevel;
+}
+
+void InfoLog::setOverlayLogLevel(InfoLog::Level level) {
+  getInstance()->overlayLogLevel = level;
 }

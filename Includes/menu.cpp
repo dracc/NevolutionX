@@ -192,8 +192,8 @@ void MenuXbe::superscroll(bool moveToPrevious) {
 
   auto it = superscrollIndex.find(firstChar);
   if (it == superscrollIndex.end()) {
-    InfoLog::outputLine("Failed to find %d (%c) in superscroll index", firstChar,
-                        static_cast<char>(firstChar));
+    InfoLog::outputLine(InfoLog::ERROR, "Failed to find %d (%c) in superscroll index",
+                        firstChar, static_cast<char>(firstChar));
     return;
   }
 
@@ -228,7 +228,8 @@ void MenuXbe::onScanCompleted(bool succeeded,
   remainingScanPaths.pop_front();
 
   if (!succeeded) {
-    InfoLog::outputLine("Failed to scan '%s' for XBEs, skipping...\n", path.c_str());
+    InfoLog::outputLine(InfoLog::WARNING, "Failed to scan '%s' for XBEs, skipping...\n",
+                        path.c_str());
   } else {
     discoveredItems.insert(discoveredItems.end(), std::make_move_iterator(begin(items)),
                            std::make_move_iterator(end(items)));
@@ -264,7 +265,8 @@ void MenuXbe::createChildren() {
     const auto& childLabel = newChildren[i]->getLabel();
 
     if (childLabel.empty()) {
-      InfoLog::outputLine("Child with empty label while building superscroll index.");
+      InfoLog::outputLine(InfoLog::WARNING,
+                          "Child with empty label while building superscroll index.");
       continue;
     }
 
@@ -294,7 +296,7 @@ MenuLaunch::~MenuLaunch() {
 }
 
 void MenuLaunch::execute(Menu*) {
-  InfoLog::outputLine("Launching xbe %s\n", this->path.c_str());
+  InfoLog::outputLine(InfoLog::DEBUG, "Launching xbe %s\n", this->path.c_str());
 #ifdef NXDK
   XBELauncher::launch(path);
 #endif
@@ -433,7 +435,7 @@ void Menu::superscrollDown() {
 }
 
 void Menu::back() {
-  InfoLog::outputLine("Setting menu to %s\n",
+  InfoLog::outputLine(InfoLog::DEBUG, "Setting menu to %s\n",
                       std::string(currentMenu->getParent()->getLabel()).c_str());
   currentMenu = currentMenu->getParent();
 }
