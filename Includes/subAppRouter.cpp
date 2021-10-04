@@ -7,6 +7,16 @@
 
 static void routeButtonDown(SubApp& app, int playerID, SDL_GameControllerButton button);
 static void routeButtonUp(SubApp& app, int playerID, SDL_GameControllerButton button);
+template<typename NegativeRelease,
+         typename NegativePress,
+         typename PositiveRelease,
+         typename PositivePress>
+static void routeAxisAsDigitalButton(int value,
+                                     int oldValue,
+                                     NegativeRelease nr,
+                                     NegativePress np,
+                                     PositiveRelease pr,
+                                     PositivePress pp);
 
 SubAppRouter* SubAppRouter::singleton = nullptr;
 
@@ -122,70 +132,38 @@ void SubAppRouter::handleAxisMotion(const SDL_ControllerAxisEvent& event) {
   switch (event.axis) {
   case SDL_CONTROLLER_AXIS_LEFTX:
     app.onLeftStickXChanged(value);
-
-    if (lastStateIterator->second > 0) {
-      app.onLeftStickDigitalRightReleased();
-    } else if (lastStateIterator->second < 0) {
-      app.onLeftStickDigitalLeftReleased();
-    }
-
-    if (value > 0) {
-      app.onLeftStickDigitalRightPressed();
-    } else if (value < 0) {
-      app.onLeftStickDigitalLeftPressed();
-    }
-
+    routeAxisAsDigitalButton(
+        value, lastStateIterator->second, [&app] { app.onLeftStickDigitalLeftReleased(); },
+        [&app] { app.onLeftStickDigitalLeftPressed(); },
+        [&app] { app.onLeftStickDigitalRightReleased(); },
+        [&app] { app.onLeftStickDigitalRightPressed(); });
     break;
 
   case SDL_CONTROLLER_AXIS_LEFTY:
     app.onLeftStickYChanged(value);
-
-    if (lastStateIterator->second > 0) {
-      app.onLeftStickDigitalDownReleased();
-    } else if (lastStateIterator->second < 0) {
-      app.onLeftStickDigitalUpReleased();
-    }
-
-    if (value > 0) {
-      app.onLeftStickDigitalDownPressed();
-    } else if (value < 0) {
-      app.onLeftStickDigitalUpPressed();
-    }
-
+    routeAxisAsDigitalButton(
+        value, lastStateIterator->second, [&app] { app.onLeftStickDigitalUpReleased(); },
+        [&app] { app.onLeftStickDigitalUpPressed(); },
+        [&app] { app.onLeftStickDigitalDownReleased(); },
+        [&app] { app.onLeftStickDigitalDownPressed(); });
     break;
 
   case SDL_CONTROLLER_AXIS_RIGHTX:
     app.onRightStickXChanged(value);
-
-    if (lastStateIterator->second > 0) {
-      app.onRightStickDigitalRightReleased();
-    } else if (lastStateIterator->second < 0) {
-      app.onRightStickDigitalLeftReleased();
-    }
-
-    if (value > 0) {
-      app.onRightStickDigitalRightPressed();
-    } else if (value < 0) {
-      app.onRightStickDigitalLeftPressed();
-    }
-
+    routeAxisAsDigitalButton(
+        value, lastStateIterator->second, [&app] { app.onRightStickDigitalLeftReleased(); },
+        [&app] { app.onRightStickDigitalLeftPressed(); },
+        [&app] { app.onRightStickDigitalRightReleased(); },
+        [&app] { app.onRightStickDigitalRightPressed(); });
     break;
 
   case SDL_CONTROLLER_AXIS_RIGHTY:
     app.onRightStickYChanged(value);
-
-    if (lastStateIterator->second > 0) {
-      app.onRightStickDigitalDownReleased();
-    } else if (lastStateIterator->second < 0) {
-      app.onRightStickDigitalUpReleased();
-    }
-
-    if (value > 0) {
-      app.onRightStickDigitalDownPressed();
-    } else if (value < 0) {
-      app.onRightStickDigitalUpPressed();
-    }
-
+    routeAxisAsDigitalButton(
+        value, lastStateIterator->second, [&app] { app.onRightStickDigitalUpReleased(); },
+        [&app] { app.onRightStickDigitalUpPressed(); },
+        [&app] { app.onRightStickDigitalDownReleased(); },
+        [&app] { app.onRightStickDigitalDownPressed(); });
     break;
 
   case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
@@ -368,5 +346,39 @@ static void routeButtonUp(SubApp& app, int playerID, SDL_GameControllerButton bu
   default:
     InfoLog::outputLine("Ignoring invalid button ID %d\n", button);
     break;
+  }
+}
+
+template<typename NegativeRelease,
+         typename NegativePress,
+         typename PositiveRelease,
+         typename PositivePress>
+static void routeAxisAsDigitalButton(int value,
+                                     int oldValue,
+                                     NegativeRelease negativeRelease,
+                                     NegativePress negativePress,
+                                     PositiveRelease positiveRelease,
+                                     PositivePress positivePress) {
+  int newSign = (value < 0) ? -1 : (value ? 1 : 0);
+  int oldSign = (oldValue < 0) ? -1 : (oldValue ? 1 : 0);
+
+  if (newSign == oldSign) {
+    return;
+  }
+
+  if (oldSign < 0) {
+    negativeRelease();
+  } else if (oldSign > 0) {
+    positiveRelease();
+  }
+
+  if (!newSign) {
+    return;
+  }
+
+  if (newSign < 0) {
+    negativePress();
+  } else {
+    positivePress();
   }
 }
