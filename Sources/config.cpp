@@ -211,6 +211,20 @@ void from_json(nlohmann::json const& j, homescreenConfig& o) {
   }
 }
 
+void to_json(nlohmann::json& j, screensaverConfig const& o) {
+  j = nlohmann::json{ { "enabled", o.getEnabled() },
+                      { "timeout_millis", o.getTimeoutMillis() } };
+}
+
+void from_json(nlohmann::json const& j, screensaverConfig& o) {
+  if (j.contains("enabled") && j["enabled"].is_boolean()) {
+    o.setEnabled(j["enabled"]);
+  }
+  if (j.contains("timeout_millis")) {
+    o.setTimeoutMillis(j["timeout_millis"]);
+  }
+}
+
 void to_json(nlohmann::json& j, Settings const& o) {
   j = nlohmann::json{ { "ftp", nlohmann::json(o.ftp) },
                       { "mount", nlohmann::json(o.mount) },
@@ -218,7 +232,8 @@ void to_json(nlohmann::json& j, Settings const& o) {
                       { "network", nlohmann::json(o.net) },
 #endif
                       { "logging", nlohmann::json(o.logging) },
-                      { "homescreenConfig", nlohmann::json(o.homescreen) } };
+                      { "homescreen", nlohmann::json(o.homescreen) },
+                      { "screensaver", nlohmann::json(o.screensaver) } };
 }
 
 void from_json(nlohmann::json const& j, Settings& o) {
@@ -241,6 +256,9 @@ void from_json(nlohmann::json const& j, Settings& o) {
   }
   if (j.contains("homescreen")) {
     o.homescreen = j["homescreen"].get<homescreenConfig>();
+  }
+  if (j.contains("screensaver")) {
+    o.screensaver = j["screensaver"].get<screensaverConfig>();
   }
 }
 

@@ -9,6 +9,7 @@
 #include "menu.hpp"
 #include "networkManager.hpp"
 #include "renderer.hpp"
+#include "screensaver.hpp"
 #include "sntpClient.hpp"
 #include "subAppRouter.hpp"
 #include "subsystems.hpp"
@@ -119,6 +120,10 @@ int main(void) {
   ftpServer* ftpServerInstance = nullptr;
   std::shared_ptr<sntpClient> sntpClientInstance;
 
+  auto const& screensaverSettings = config.settings.screensaver;
+  Screensaver screensaver(r, screensaverSettings.getEnabled(),
+                          screensaverSettings.getTimeoutMillis());
+
   auto lastFrameStart = std::chrono::steady_clock::now();
   while (running) {
     auto frameStart = std::chrono::steady_clock::now();
@@ -161,6 +166,7 @@ int main(void) {
     }
 
     InfoLog::renderOverlay(r, f);
+    screensaver.render();
 
     r.flip();
 
@@ -174,10 +180,13 @@ int main(void) {
         SDL_GameControllerClose(controllers[event.cdevice.which]);
         controllers.erase(event.cdevice.which);
       } else if (event.type == SDL_CONTROLLERBUTTONDOWN) {
+        screensaver.notifyInput();
         router.handleButtonDown(event.cbutton);
       } else if (event.type == SDL_CONTROLLERBUTTONUP) {
+        screensaver.notifyInput();
         router.handleButtonUp(event.cbutton);
       } else if (event.type == SDL_CONTROLLERAXISMOTION) {
+        screensaver.notifyInput();
         router.handleAxisMotion(event.caxis);
       }
     }

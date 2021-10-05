@@ -38,6 +38,11 @@
         {
             "show_fps": false,
             "show_ip": true
+        },
+        "screensaver":
+        {
+            "enabled": true,
+            "timeout_millis": 300000
         }
     },
     "menu":
