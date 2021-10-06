@@ -72,6 +72,24 @@ void from_json(nlohmann::json const& j, netConfig& o) {
     o.setStaticNetmask(parseIPV4(j["static_netmask"]));
   }
 }
+
+void to_json(nlohmann::json& j, sntpConfig const& o) {
+  j = nlohmann::json{ { "enable", o.getEnabled() },
+                      { "server", o.getServer() },
+                      { "port", o.getPort() } };
+}
+
+void from_json(nlohmann::json const& j, sntpConfig& o) {
+  if (j.contains("enable") && j["enable"].is_boolean()) {
+    o.setEnabled(j["enable"]);
+  }
+  if (j.contains("server")) {
+    o.setServer(j["server"]);
+  }
+  if (j.contains("port")) {
+    o.setPort(j["port"]);
+  }
+}
 #endif
 
 ftpConfig::ftpConfig() {
@@ -209,6 +227,9 @@ void from_json(nlohmann::json const& j, Settings& o) {
 #ifdef NXDK
   if (j.contains("network")) {
     o.net = j["network"].get<netConfig>();
+  }
+  if (j.contains("sntp")) {
+    o.sntp = j["sntp"].get<sntpConfig>();
   }
 #endif
   if (j.contains("logging")) {

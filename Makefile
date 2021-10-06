@@ -18,6 +18,7 @@ SRCS += \
 	$(INCDIR)/networking.cpp \
 	$(INCDIR)/renderer.cpp \
 	$(INCDIR)/settingsMenu.cpp \
+	$(INCDIR)/sntpClient.cpp \
 	$(INCDIR)/subAppRouter.cpp \
 	$(INCDIR)/subsystems.cpp \
 	$(INCDIR)/timeMenu.cpp \
