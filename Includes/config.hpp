@@ -34,6 +34,25 @@ public:
 };
 void to_json(nlohmann::json& j, netConfig const& o);
 void from_json(nlohmann::json const& j, netConfig& o);
+
+class sntpConfig {
+  bool enable{ false };
+  std::string server{ "pool.ntp.org" };
+  unsigned int port{ 123 };
+
+public:
+  sntpConfig() = default;
+
+  bool getEnabled() const { return enable; }
+  std::string const& getServer() const { return server; }
+  unsigned int getPort() const { return port; }
+
+  void setEnabled(bool val) { enable = val; }
+  void setServer(std::string const& val) { server = val; }
+  void setPort(unsigned int val) { port = val; }
+};
+void to_json(nlohmann::json& j, sntpConfig const& o);
+void from_json(nlohmann::json const& j, sntpConfig& o);
 #endif
 
 class ftpConfig {
@@ -114,6 +133,7 @@ public:
   Settings() = default;
 #ifdef NXDK
   netConfig net;
+  sntpConfig sntp;
 #endif
   ftpConfig ftp;
   mountConfig mount;

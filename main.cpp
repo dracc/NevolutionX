@@ -9,6 +9,7 @@
 #include "menu.hpp"
 #include "networkManager.h"
 #include "renderer.h"
+#include "sntpClient.h"
 #include "subAppRouter.h"
 #include "subsystems.h"
 #include "timeMenu.hpp"
@@ -115,14 +116,25 @@ int main(void) {
   int info_y = static_cast<int>(r.getHeight() * 0.85);
 
   ftpServer* ftpServerInstance = nullptr;
+  std::shared_ptr<sntpClient> sntpClientInstance;
 
   auto lastFrameStart = std::chrono::steady_clock::now();
   while (running) {
     auto frameStart = std::chrono::steady_clock::now();
-    if (config.settings.ftp.getEnabled() && networkManager.isNewlyInitialized()) {
-      ftpServerInstance = new ftpServer(&config.settings.ftp);
-      ftpServerInstance->init();
-      ftpServerInstance->runAsync();
+    if (networkManager.isNewlyInitialized()) {
+      if (config.settings.ftp.getEnabled()) {
+        ftpServerInstance = new ftpServer(&config.settings.ftp);
+        ftpServerInstance->init();
+        ftpServerInstance->runAsync();
+      }
+
+#ifdef NXDK
+      if (config.settings.sntp.getEnabled()) {
+        sntpClientInstance = std::make_shared<sntpClient>(config.settings.sntp.getServer(),
+                                                          config.settings.sntp.getPort());
+        sntpClientInstance->updateTimeAsync();
+      }
+#endif
     }
 
     r.setDrawColor(0, 89, 0);

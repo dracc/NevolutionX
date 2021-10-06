@@ -18,9 +18,9 @@
         },
         "sntp":
         {
-            "enable": true,
+            "enable": false,
             "port": 123,
-            "server": "5.9.110.236"
+            "server": "pool.ntp.org"
         },
         "mount":
         {

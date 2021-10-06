@@ -32,6 +32,7 @@ add_executable(${PROJECT_NAME}
   Includes/networkManager.cpp
   Includes/renderer.cpp
   Includes/settingsMenu.cpp
+  Includes/sntpClient.cpp
   Includes/subAppRouter.cpp
   Includes/subsystems.cpp
   Includes/timing.cpp
