@@ -74,7 +74,8 @@ void sntpClient::updateTime() const {
   message.originTimestamp.fractionalSeconds =
       htonl(message.originTimestamp.fractionalSeconds);
   if (message.originTimestamp.seconds || message.originTimestamp.fractionalSeconds) {
-    InfoLog::outputLine(InfoLog::INFO, "SNTP: Origin epoch is not 0: %lld\n", message.originTimestamp);
+    InfoLog::outputLine(InfoLog::INFO, "SNTP: Origin epoch is not 0: %lld\n",
+                        message.originTimestamp);
   }
 
   message.transmitTimestamp.seconds = htonl(message.transmitTimestamp.seconds);
@@ -95,7 +96,8 @@ void sntpClient::updateTime() const {
   }
 
   if (delta > allowedDriftSeconds) {
-    InfoLog::outputLine(InfoLog::DEBUG, "SNTP: Updating system clock (%llu seconds of drift)\n", delta);
+    InfoLog::outputLine(InfoLog::DEBUG,
+                        "SNTP: Updating system clock (%llu seconds of drift)\n", delta);
     NTSTATUS status = NtSetSystemTime(&serverTime, nullptr);
     if (!NT_SUCCESS(status)) {
       InfoLog::outputLine(InfoLog::INFO, "SNTP: NtSetSystemTime failed: %X\n", status);
