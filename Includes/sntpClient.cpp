@@ -58,7 +58,7 @@ void sntpClient::updateTime() const {
   socklen_t saddr_len = sizeof(saddr);
   int sent = sendto(s, &message, sizeof(message), 0, (struct sockaddr*)&saddr, saddr_len);
   if (sent != sizeof(message)) {
-    InfoLog::outputLine("SNTP: Failed to send request message\n");
+    InfoLog::outputLine(InfoLog::INFO, "SNTP: Failed to send request message\n");
     close(s);
     return;
   }
@@ -66,7 +66,7 @@ void sntpClient::updateTime() const {
   int received = recvfrom(s, &message, sizeof(message), 0, &saddr, &saddr_len);
   close(s);
   if (received != sizeof(message)) {
-    InfoLog::outputLine("SNTP: Failed to receive response: %d\n", received);
+    InfoLog::outputLine(InfoLog::INFO, "SNTP: Failed to receive response: %d\n", received);
     return;
   }
 
@@ -74,7 +74,7 @@ void sntpClient::updateTime() const {
   message.originTimestamp.fractionalSeconds =
       htonl(message.originTimestamp.fractionalSeconds);
   if (message.originTimestamp.seconds || message.originTimestamp.fractionalSeconds) {
-    InfoLog::outputLine("SNTP: Origin epoch is not 0: %lld\n", message.originTimestamp);
+    InfoLog::outputLine(InfoLog::INFO, "SNTP: Origin epoch is not 0: %lld\n", message.originTimestamp);
   }
 
   message.transmitTimestamp.seconds = htonl(message.transmitTimestamp.seconds);
@@ -95,10 +95,10 @@ void sntpClient::updateTime() const {
   }
 
   if (delta > allowedDriftSeconds) {
-    InfoLog::outputLine("SNTP: Updating system clock (%llu seconds of drift)\n", delta);
+    InfoLog::outputLine(InfoLog::DEBUG, "SNTP: Updating system clock (%llu seconds of drift)\n", delta);
     NTSTATUS status = NtSetSystemTime(&serverTime, nullptr);
     if (!NT_SUCCESS(status)) {
-      InfoLog::outputLine("SNTP: NtSetSystemTime failed: %X\n", status);
+      InfoLog::outputLine(InfoLog::INFO, "SNTP: NtSetSystemTime failed: %X\n", status);
     }
   }
 
@@ -108,7 +108,7 @@ void sntpClient::updateTime() const {
 #ifdef NXDK
 static int sntpConnect(std::string const& sntpHost, uint32_t port, struct sockaddr& saddr) {
   if (port > 0xFFFF) {
-    InfoLog::outputLine("SNTP: invalid port: %d\n", port);
+    InfoLog::outputLine(InfoLog::WARNING, "SNTP: invalid port: %d\n", port);
     return -1;
   }
 
@@ -124,14 +124,14 @@ static int sntpConnect(std::string const& sntpHost, uint32_t port, struct sockad
   struct addrinfo* ai;
   int status = getaddrinfo(sntpHost.c_str(), portString, &hints, &ai);
   if (status) {
-    InfoLog::outputLine("SNTP: getaddrinfo failed: %d\n", status);
+    InfoLog::outputLine(InfoLog::INFO, "SNTP: getaddrinfo failed: %d\n", status);
     return -1;
   }
 
   int ret;
   ret = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
   if (ret < 0) {
-    InfoLog::outputLine("SNTP: Failed to create socket: %d\n", errno);
+    InfoLog::outputLine(InfoLog::INFO, "SNTP: Failed to create socket: %d\n", errno);
     freeaddrinfo(ai);
     return ret;
   }
