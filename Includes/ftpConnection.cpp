@@ -602,14 +602,14 @@ bool ftpConnection::recvFile(std::string const& fileName) {
   unsigned long bytesWritten;
   ssize_t bytesRead;
   while ((bytesRead = recv(dataFd, recvBuffer, FTP_DATA_BUFFER_SIZE, 0))) {
-    if (bytesRead == -1) {
+    if (bytesRead < 0) {
       InfoLog::outputLine(InfoLog::ERROR, "Error %d, aborting!\n", errno);
       retVal = false;
       break;
     }
 #ifdef NXDK
     WriteFile(fHandle, recvBuffer, bytesRead, &bytesWritten, NULL);
-    if (bytesWritten != bytesRead) {
+    if (bytesWritten != static_cast<unsigned long>(bytesRead)) {
       InfoLog::outputLine(InfoLog::ERROR, "ERROR: Bytes read != Bytes written (%d, %d)\n",
                           bytesRead, bytesWritten);
       retVal = false;
