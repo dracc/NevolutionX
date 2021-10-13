@@ -1,6 +1,10 @@
 # NevolutionX
 Original Xbox dashboard created with nxdk.
 
+## Download
+[![Latest ISO](https://img.shields.io/badge/Latest-ISO-success)](https://github.com/dracc/NevolutionX/releases/latest/download/NevolutionX.zip)
+[![Latest QCOW2](https://img.shields.io/badge/Latest-QCOW2-success)](https://github.com/dracc/NevolutionX/releases/latest/download/nevox_hdd.zip)
+
 ## Motivation
 As the XboxDev community grew, the need for an open-source, nxdk based dashboard arose. There are other dashboard alternatives i.e. XBMC but none of them are built using nxdk.
 
