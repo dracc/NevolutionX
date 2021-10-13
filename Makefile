@@ -25,9 +25,12 @@ SRCS += \
 	$(INCDIR)/timing.cpp \
 	$(INCDIR)/videoMenu.cpp \
 	$(INCDIR)/wipeCache.cpp \
+	$(INCDIR)/xbeInfo.cpp \
 	$(INCDIR)/xbeLauncher.cpp \
 	$(INCDIR)/xbeScanner.cpp \
-	$(CURDIR)/3rdparty/SDL_FontCache/SDL_FontCache.c
+	$(INCDIR)/xpr0Image.cpp \
+	$(CURDIR)/3rdparty/SDL_FontCache/SDL_FontCache.c \
+	$(CURDIR)/3rdparty/s3tc-dxt-decompression/s3tc.cpp
 
 NXDK_DIR ?= $(CURDIR)/../nxdk
 NXDK_SDL = y
