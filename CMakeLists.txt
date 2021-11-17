@@ -19,28 +19,28 @@ include_directories(
 
 add_executable(${PROJECT_NAME}
   main.cpp
-  Includes/audioMenu.cpp
-  Includes/config.cpp
-  Includes/font.cpp
-  Includes/ftpConnection.cpp
-  Includes/ftpServer.cpp
-  Includes/infoLog.cpp
-  Includes/langMenu.cpp
-  Includes/logViewer.cpp
-  Includes/logViewerMenu.cpp
-  Includes/menu.cpp
-  Includes/networkManager.cpp
-  Includes/renderer.cpp
-  Includes/settingsMenu.cpp
-  Includes/sntpClient.cpp
-  Includes/subAppRouter.cpp
-  Includes/subsystems.cpp
-  Includes/timing.cpp
-  Includes/timeMenu.cpp
-  Includes/videoMenu.cpp
-  Includes/wipeCache.cpp
-  Includes/xbeLauncher.cpp
-  Includes/xbeScanner.cpp
+  Sources/audioMenu.cpp
+  Sources/config.cpp
+  Sources/font.cpp
+  Sources/ftpConnection.cpp
+  Sources/ftpServer.cpp
+  Sources/infoLog.cpp
+  Sources/langMenu.cpp
+  Sources/logViewer.cpp
+  Sources/logViewerMenu.cpp
+  Sources/menu.cpp
+  Sources/networkManager.cpp
+  Sources/renderer.cpp
+  Sources/settingsMenu.cpp
+  Sources/sntpClient.cpp
+  Sources/subAppRouter.cpp
+  Sources/subsystems.cpp
+  Sources/timing.cpp
+  Sources/timeMenu.cpp
+  Sources/videoMenu.cpp
+  Sources/wipeCache.cpp
+  Sources/xbeLauncher.cpp
+  Sources/xbeScanner.cpp
   3rdparty/SDL_FontCache/SDL_FontCache.c
   )
 

@@ -7,8 +7,8 @@
 #include <string>
 #include <utility>
 #include "config.hpp"
-#include "font.h"
-#include "renderer.h"
+#include "font.hpp"
+#include "renderer.hpp"
 
 class InfoLog {
 public:

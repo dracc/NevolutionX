@@ -4,8 +4,8 @@
 #include <SDL.h>
 #include <memory>
 #include <stack>
-#include "font.h"
-#include "subApp.h"
+#include "font.hpp"
+#include "subApp.hpp"
 
 #ifdef NXDK
 #include <windows.h>

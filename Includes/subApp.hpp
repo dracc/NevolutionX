@@ -3,7 +3,7 @@
 
 #include <SDL.h>
 #include <map>
-#include "font.h"
+#include "font.hpp"
 
 class SubApp {
 public:

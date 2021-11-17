@@ -1,12 +1,12 @@
-#include "xbeScanner.h"
+#include "xbeScanner.hpp"
 #include <chrono>
 #ifdef NXDK
 #include <windows.h>
 #include <winnt.h>
 #endif
 
-#include "infoLog.h"
-#include "timing.h"
+#include "infoLog.hpp"
+#include "timing.hpp"
 
 #define XBE_TYPE_MAGIC (0x48454258)
 #define SECTORSIZE 0x1000

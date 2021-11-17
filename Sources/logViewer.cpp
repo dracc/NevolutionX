@@ -1,7 +1,7 @@
-#include "logViewer.h"
+#include "logViewer.hpp"
 #include <iterator>
-#include "infoLog.h"
-#include "subAppRouter.h"
+#include "infoLog.hpp"
+#include "subAppRouter.hpp"
 
 // Dummy index indicating that the log should always show the most recent
 // message at the bottom of the screen.

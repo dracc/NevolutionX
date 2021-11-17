@@ -1,8 +1,8 @@
-#include "renderer.h"
+#include "renderer.hpp"
 #include <SDL_image.h>
 #include <algorithm>
 #include <cmath>
-#include "infoLog.h"
+#include "infoLog.hpp"
 
 #ifdef NXDK
 #include <hal/video.h>

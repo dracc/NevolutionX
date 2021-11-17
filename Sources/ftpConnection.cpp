@@ -4,8 +4,8 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include "ftpServer.h"
-#include "infoLog.h"
+#include "ftpServer.hpp"
+#include "infoLog.hpp"
 
 #ifdef NXDK
 #include <hal/xbox.h>
