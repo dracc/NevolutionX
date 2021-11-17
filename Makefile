@@ -1,32 +1,33 @@
 XBE_TITLE = NevolutionX
 INCDIR = $(CURDIR)/Includes
 RESOURCEDIR = $(CURDIR)/Resources
+SRCDIR = $(CURDIR)/Sources
 
 SRCS += \
 	$(CURDIR)/main.cpp \
-	$(INCDIR)/audioMenu.cpp \
-	$(INCDIR)/config.cpp \
-	$(INCDIR)/font.cpp \
-	$(INCDIR)/ftpConnection.cpp \
-	$(INCDIR)/ftpServer.cpp \
-	$(INCDIR)/infoLog.cpp \
-	$(INCDIR)/langMenu.cpp \
-	$(INCDIR)/logViewer.cpp \
-	$(INCDIR)/logViewerMenu.cpp \
-	$(INCDIR)/menu.cpp \
-	$(INCDIR)/networkManager.cpp \
-	$(INCDIR)/networking.cpp \
-	$(INCDIR)/renderer.cpp \
-	$(INCDIR)/settingsMenu.cpp \
-	$(INCDIR)/sntpClient.cpp \
-	$(INCDIR)/subAppRouter.cpp \
-	$(INCDIR)/subsystems.cpp \
-	$(INCDIR)/timeMenu.cpp \
-	$(INCDIR)/timing.cpp \
-	$(INCDIR)/videoMenu.cpp \
-	$(INCDIR)/wipeCache.cpp \
-	$(INCDIR)/xbeLauncher.cpp \
-	$(INCDIR)/xbeScanner.cpp \
+	$(SRCDIR)/audioMenu.cpp \
+	$(SRCDIR)/config.cpp \
+	$(SRCDIR)/font.cpp \
+	$(SRCDIR)/ftpConnection.cpp \
+	$(SRCDIR)/ftpServer.cpp \
+	$(SRCDIR)/infoLog.cpp \
+	$(SRCDIR)/langMenu.cpp \
+	$(SRCDIR)/logViewer.cpp \
+	$(SRCDIR)/logViewerMenu.cpp \
+	$(SRCDIR)/menu.cpp \
+	$(SRCDIR)/networkManager.cpp \
+	$(SRCDIR)/networking.cpp \
+	$(SRCDIR)/renderer.cpp \
+	$(SRCDIR)/settingsMenu.cpp \
+	$(SRCDIR)/sntpClient.cpp \
+	$(SRCDIR)/subAppRouter.cpp \
+	$(SRCDIR)/subsystems.cpp \
+	$(SRCDIR)/timeMenu.cpp \
+	$(SRCDIR)/timing.cpp \
+	$(SRCDIR)/videoMenu.cpp \
+	$(SRCDIR)/wipeCache.cpp \
+	$(SRCDIR)/xbeLauncher.cpp \
+	$(SRCDIR)/xbeScanner.cpp \
 	$(CURDIR)/3rdparty/SDL_FontCache/SDL_FontCache.c
 
 NXDK_DIR ?= $(CURDIR)/../nxdk

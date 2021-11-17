@@ -1,5 +1,5 @@
-#include "subsystems.h"
-#include "infoLog.h"
+#include "subsystems.hpp"
+#include "infoLog.hpp"
 
 #ifdef NXDK
 #include <hal/video.h>
@@ -14,7 +14,7 @@
 #include <SDL_ttf.h>
 
 #ifdef NXDK
-#include "networking.h"
+#include "networking.hpp"
 
 void mountHomeDir(const char Letter) {
   char targetPath[MAX_PATH];

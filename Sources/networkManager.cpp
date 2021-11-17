@@ -1,9 +1,9 @@
-#include "networkManager.h"
+#include "networkManager.hpp"
 #include <utility>
 
 #ifdef NXDK
 
-#include "networking.h"
+#include "networking.hpp"
 
 extern "C" {
 extern struct netif* g_pnetif;

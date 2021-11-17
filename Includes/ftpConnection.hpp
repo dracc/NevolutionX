@@ -9,7 +9,7 @@
 #define FTP_DATA_BUFFER_SIZE (64 * 1024)
 
 #include <string>
-#include "ftpServer.h"
+#include "ftpServer.hpp"
 
 class ftpServer;
 

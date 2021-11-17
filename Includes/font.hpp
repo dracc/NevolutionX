@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 #include "3rdparty/SDL_FontCache/SDL_FontCache.h"
-#include "renderer.h"
+#include "renderer.hpp"
 
 class Font {
 private:

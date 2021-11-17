@@ -2,8 +2,8 @@
 #define NEVOLUTIONX_INCLUDES_LOGVIEWER_H_
 
 #include <SDL.h>
-#include "renderer.h"
-#include "subApp.h"
+#include "renderer.hpp"
+#include "subApp.hpp"
 
 class logViewer : public SubApp {
 public:

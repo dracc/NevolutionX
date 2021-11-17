@@ -2,7 +2,7 @@
 #include "audioMenu.hpp"
 #include "eeprom.hpp"
 #include "langMenu.hpp"
-#include "logViewerMenu.h"
+#include "logViewerMenu.hpp"
 #include "timeMenu.hpp"
 #include "videoMenu.hpp"
 #include "wipeCache.hpp"

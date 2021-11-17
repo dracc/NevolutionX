@@ -1,4 +1,4 @@
-#include "xbeLauncher.h"
+#include "xbeLauncher.hpp"
 
 #ifdef NXDK
 #include <hal/video.h>

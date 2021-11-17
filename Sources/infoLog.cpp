@@ -1,4 +1,4 @@
-#include "infoLog.h"
+#include "infoLog.hpp"
 #include <algorithm>
 #include <cstdarg>
 #include <cstdio>

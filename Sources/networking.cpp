@@ -1,10 +1,10 @@
 // clang-format off
 // The lwip headers pull in fflush in a way that conflicts with STL use in the InfoLog class
 // and must be included last to prevent compilation errors.
-#include "infoLog.h"
+#include "infoLog.hpp"
 // clang-format on
 
-#include "networking.h"
+#include "networking.hpp"
 #include <lwip/dhcp.h>
 #include <lwip/dhcp6.h>
 #include <lwip/init.h>

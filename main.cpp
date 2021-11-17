@@ -2,18 +2,18 @@
 #include <memory>
 #include <vector>
 #include "config.hpp"
-#include "font.h"
-#include "ftpServer.h"
-#include "infoLog.h"
+#include "font.hpp"
+#include "ftpServer.hpp"
+#include "infoLog.hpp"
 #include "langMenu.hpp"
 #include "menu.hpp"
-#include "networkManager.h"
-#include "renderer.h"
-#include "sntpClient.h"
-#include "subAppRouter.h"
-#include "subsystems.h"
+#include "networkManager.hpp"
+#include "renderer.hpp"
+#include "sntpClient.hpp"
+#include "subAppRouter.hpp"
+#include "subsystems.hpp"
 #include "timeMenu.hpp"
-#include "timing.h"
+#include "timing.hpp"
 
 #ifdef NXDK
 #include <hal/video.h>

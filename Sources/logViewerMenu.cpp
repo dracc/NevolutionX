@@ -1,6 +1,6 @@
-#include "logViewerMenu.h"
-#include "logViewer.h"
-#include "subAppRouter.h"
+#include "logViewerMenu.hpp"
+#include "logViewer.hpp"
+#include "subAppRouter.hpp"
 
 logViewerMenu::logViewerMenu(MenuNode* parent, const std::string& label) :
     MenuItem(parent, label) {

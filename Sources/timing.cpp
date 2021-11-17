@@ -1,4 +1,4 @@
-#include "timing.h"
+#include "timing.hpp"
 
 long long millisSince(const std::chrono::steady_clock::time_point& ref) {
   auto now = std::chrono::steady_clock::now();

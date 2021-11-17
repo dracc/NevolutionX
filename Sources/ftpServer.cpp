@@ -1,6 +1,6 @@
-#include "ftpServer.h"
+#include "ftpServer.hpp"
 #include <algorithm>
-#include "infoLog.h"
+#include "infoLog.hpp"
 
 #ifdef NXDK
 #include <lwip/arch.h>

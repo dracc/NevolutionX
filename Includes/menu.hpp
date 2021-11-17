@@ -7,9 +7,9 @@
 #include <string>
 #include <vector>
 #include "config.hpp"
-#include "font.h"
-#include "subApp.h"
-#include "xbeScanner.h"
+#include "font.hpp"
+#include "subApp.hpp"
+#include "xbeScanner.hpp"
 
 class MenuNode;
 class Menu;

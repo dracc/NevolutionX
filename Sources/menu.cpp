@@ -1,10 +1,10 @@
 #include "menu.hpp"
 #include <memory>
 #include "3rdparty/NaturalSort/natural_sort.hpp"
-#include "infoLog.h"
+#include "infoLog.hpp"
 #include "settingsMenu.hpp"
-#include "xbeLauncher.h"
-#include "xbeScanner.h"
+#include "xbeLauncher.hpp"
+#include "xbeScanner.hpp"
 
 // Character used in the config.json to separate multiple path entries.
 #define PATH_DELIMITER ','

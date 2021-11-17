@@ -5,7 +5,7 @@
 #include <string>
 #include <thread>
 #include "config.hpp"
-#include "ftpConnection.h"
+#include "ftpConnection.hpp"
 #ifdef NXDK
 #include <lwip/netdb.h>
 #include <lwip/sockets.h>
