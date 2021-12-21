@@ -7,6 +7,7 @@ SRCS += \
 	$(CURDIR)/main.cpp \
 	$(SRCDIR)/audioMenu.cpp \
 	$(SRCDIR)/config.cpp \
+	$(SRCDIR)/dumper.cpp \
 	$(SRCDIR)/font.cpp \
 	$(SRCDIR)/ftpConnection.cpp \
 	$(SRCDIR)/ftpServer.cpp \
