@@ -31,13 +31,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y flex bison clang lld llvm clang-format
+          echo "${PWD}/nxdk/bin" >> $GITHUB_PATH
       - name: Check for new format errors
         run: |
           find . | grep -E '.*\.(c|cpp|h|hpp)$' | grep -Ev '(3rdparty|nxdk)/' | xargs clang-format --dry-run -Werror
       - name: Build
         env:
           NXDK_DIR: nxdk
-        run: make -j$(nproc)
+        run: |
+          make -j$(nproc)
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
