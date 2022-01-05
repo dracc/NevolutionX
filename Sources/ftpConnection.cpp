@@ -270,7 +270,8 @@ void ftpConnection::cmdCwd(std::string const& arg) {
     std::string tmpDosPwd = unixToDosPath(tmpPwd);
     HANDLE soughtFolder;
     if ((soughtFolder = CreateFileA(tmpDosPwd.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING,
-                                    FILE_ATTRIBUTE_NORMAL, NULL))
+                                    FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS,
+                                    NULL))
         != INVALID_HANDLE_VALUE) {
       pwd = tmpPwd;
       sprintf(buf, replies[6].c_str(), pwd.c_str());
