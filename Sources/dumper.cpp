@@ -10,15 +10,15 @@ Dumper::Dumper(std::string const& label) : MenuItem(label) {
 }
 
 void Dumper::execute(Menu*) {
-  std::string folder = "C:\\Backup";
-  HANDLE backupFolder = CreateFileA(folder.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING,
-                                    FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS,
-                                    NULL);
+#ifdef NXDK
+  const std::string backupPath = "C:\\Backup";
+  HANDLE backupFolder = CreateFileA(
+      backupPath.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING,
+      FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
   if (backupFolder == INVALID_HANDLE_VALUE) {
-    CreateDirectory(folder.c_str(), nullptr);
-    backupFolder = CreateFileA(folder.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING,
-                               FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS,
-                               NULL);
+    CreateDirectory(backupPath.c_str(), nullptr);
+    backupFolder = CreateFileA(backupPath.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING,
+                               FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
   }
   if (backupFolder == INVALID_HANDLE_VALUE) {
     InfoLog::outputLine(InfoLog::WARNING, "C:\\Backup folder not found nor created!");
@@ -29,4 +29,5 @@ void Dumper::execute(Menu*) {
     InfoLog::outputLine(InfoLog::INFO, "Dumped BIOS to C:\\Backup\\bios.bin");
   }
   FindClose(backupFolder);
+#endif
 }
