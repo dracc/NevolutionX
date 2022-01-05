@@ -1,6 +1,8 @@
 #include "dumper.hpp"
+#ifdef NXDK
 #include <winapi/fileapi.h>
 #include <fstream>
+#endif
 #include "infoLog.hpp"
 #include "menu.hpp"
 
