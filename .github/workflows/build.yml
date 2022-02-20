@@ -42,5 +42,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: NevolutionX
-          path: '*.iso'
+          path: |
+            *.iso
+            bin
           if-no-files-found: error
