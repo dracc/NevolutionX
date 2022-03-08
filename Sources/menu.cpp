@@ -5,6 +5,16 @@
 #include "settingsMenu.hpp"
 #include "xbeLauncher.hpp"
 #include "xbeScanner.hpp"
+#ifdef NXDK
+// clang-format off
+#ifdef FC_USE_SDL_GPU
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#include "SDL_gpu.h"
+#pragma clang diagnostic pop
+#endif
+// clang-format on
+#endif
 
 // Character used in the config.json to separate multiple path entries.
 #define PATH_DELIMITER ','
@@ -384,6 +394,12 @@ void Menu::render(Font& font) {
     dimensions = font.draw(menutext, coordinates);
 
     if (i == this->currentMenu->getSelected()) {
+#ifdef FC_USE_SDL_GPU
+      GPU_Rect rect = { std::get<0>(coordinates) - 10, std::get<1>(coordinates),
+                        std::get<0>(dimensions) + 20, std::get<1>(dimensions) };
+      SDL_Color color = { 0xFF, 0xFF, 0xFF, 0xFF };
+      GPU_Rectangle2(renderer.getRenderer(), rect, color);
+#else
       SDL_Rect rect;
       rect.w = std::get<0>(dimensions) + 20;
       rect.h = std::get<1>(dimensions);
@@ -391,6 +407,7 @@ void Menu::render(Font& font) {
       rect.y = std::get<1>(coordinates);
       renderer.setDrawColor(0xFF, 0xFF, 0xFF, 0xFF);
       SDL_RenderDrawRect(renderer.getRenderer(), &rect);
+#endif
     }
 
     coordinates = std::pair<float, float>(

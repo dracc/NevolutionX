@@ -4,8 +4,14 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "3rdparty/SDL_FontCache/SDL_FontCache.h"
 #include "renderer.hpp"
+
+// clang-format off
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#include "3rdparty/SDL_FontCache/SDL_FontCache.h"
+#pragma clang diagnostic pop
+// clang-format on
 
 class Font {
 private:

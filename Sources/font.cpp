@@ -1,13 +1,17 @@
 #include "font.hpp"
 #include <cassert>
-#include "3rdparty/SDL_FontCache/SDL_FontCache.h"
-#include "infoLog.hpp"
+
 
 Font::Font(Renderer& renderer, const char* path) : renderer(renderer) {
   fcFont = FC_CreateFont();
   assert(fcFont);
+#ifdef FC_USE_SDL_GPU
+  bool load_success = FC_LoadFont(fcFont, path, 20, FC_MakeColor(250, 250, 250, 255),
+                                  TTF_STYLE_NORMAL);
+#else
   bool load_success = FC_LoadFont(fcFont, renderer.getRenderer(), path, 20,
                                   FC_MakeColor(250, 250, 250, 255), TTF_STYLE_NORMAL);
+#endif
   assert(load_success);
 }
 

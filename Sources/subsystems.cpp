@@ -6,7 +6,10 @@
 #include <hal/xbox.h>
 #include <nxdk/mount.h>
 #include <nxdk/path.h>
+#include <pbkit/nv_objects.h>
 #include <pbkit/pbkit.h>
+#include "GL/gl.h"
+#include "pbgl.h"
 #endif
 
 #include <SDL.h>
@@ -15,6 +18,12 @@
 
 #ifdef NXDK
 #include "networking.hpp"
+
+// clang-format off
+#ifdef FC_USE_SDL_GPU
+#include "nxdk-sdl-gpu/nxdkSDLGPU.h"
+#endif // FC_USE_SDL_GPU
+// clang-format on
 
 void mountHomeDir(const char Letter) {
   char targetPath[MAX_PATH];
@@ -33,6 +42,7 @@ int init_systems(const Config& config) {
   void* p = NULL;
   while (XVideoListModes(&xmode, 0, 0, &p)) {
   }
+  xmode.bpp = 16;
   XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
   xmode = XVideoGetMode();
   InfoLog::outputLine(InfoLog::DEBUG, "Video set to %dx%d %dbpp @%dHz\n", xmode.width,
@@ -67,11 +77,27 @@ int init_systems(const Config& config) {
   if (!nxMountDrive('D', "\\Device\\CdRom0")) {
     InfoLog::outputLine(InfoLog::ERROR, "Mounting warning: Could not mount DVD drive\n");
   }
+
+  pb_set_color_format(NV097_SET_SURFACE_FORMAT_COLOR_LE_R5G6B5, false);
+  int status = pbgl_init(GL_TRUE);
+  if (status) {
+    InfoLog::outputLine(InfoLog::ERROR, "pbgl_init error: %d", status);
+    return 4;
+  }
+
+  pbgl_set_swap_interval(1);
 #endif
+
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     InfoLog::outputLine(InfoLog::ERROR, "SDL_Init error: %s", SDL_GetError());
     return 3;
   }
+
+#ifdef NXDK
+#ifdef FC_USE_SDL_GPU
+  pbglConfigureSDLVideoDevice();
+#endif
+#endif
 
   if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
     InfoLog::outputLine(InfoLog::ERROR, "IMG Init Error: %s!\n", IMG_GetError());

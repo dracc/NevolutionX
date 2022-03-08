@@ -4,3 +4,9 @@
 [submodule "3rdparty/NaturalSort"]
 	path = 3rdparty/NaturalSort
 	url = https://github.com/scopeInfinity/NaturalSort.git
+[submodule "3rdparty/pbgl"]
+	path = 3rdparty/pbgl
+	url = https://github.com/abaire/pbgl.git
+[submodule "3rdparty/sdl-gpu"]
+	path = 3rdparty/sdl-gpu
+	url = https://github.com/abaire/sdl-gpu.git
