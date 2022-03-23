@@ -38,8 +38,15 @@ NXDK_DISABLE_AUTOMOUNT_D = y
 
 GEN_XISO = ${XBE_TITLE}.iso
 
-CXXFLAGS += -I$(CURDIR) -I$(INCDIR) -Wall -Wextra -std=gnu++11
-CFLAGS   += -std=gnu11
+CXXFLAGS += -I$(CURDIR) \
+            -I$(INCDIR) \
+            -Wall \
+            -Wextra \
+            -std=gnu++11 \
+            -DSDL_DISABLE_JOYSTICK_INIT_DELAY
+
+CFLAGS   += -std=gnu11 \
+            -DSDL_DISABLE_JOYSTICK_INIT_DELAY
 
 ifneq ($(DEBUG),y)
 CFLAGS += -O2
