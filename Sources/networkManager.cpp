@@ -28,6 +28,8 @@ void NetworkManager::thread_main(NetworkManager* manager) {
   static_ip.gateway.addr = net.getStaticGateway();
   static_ip.ip.addr = net.getStaticIP();
   static_ip.netmask.addr = net.getStaticNetmask();
+  static_ip.dns1.addr = net.getStaticDns1();
+  static_ip.dns2.addr = net.getStaticDns2();
 
   int status = setupNetwork(net.getUseDHCP(), static_ip);
   if (status) {

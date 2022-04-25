@@ -7,7 +7,9 @@
             "use_dhcp": true,
             "static_ip": "10.0.1.7",
             "static_gateway": "10.0.1.1",
-            "static_netmask": "255.255.255.0"
+            "static_netmask": "255.255.255.0",
+            "static_dns1": "0.0.0.0",
+            "static_dns2": "0.0.0.0"
         },
         "ftp":
         {

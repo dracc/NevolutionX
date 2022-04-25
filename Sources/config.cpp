@@ -45,6 +45,12 @@ netConfig::netConfig() : enable(true), useDHCP(true) {
 
   IP4_ADDR(&addr, 255, 255, 255, 0);
   staticNetmask = addr.addr;
+
+  IP4_ADDR(&addr, 0, 0, 0, 0);
+  staticDns1 = addr.addr;
+
+  IP4_ADDR(&addr, 0, 0, 0, 0);
+  staticDns2 = addr.addr;
 }
 
 void to_json(nlohmann::json& j, netConfig const& o) {
@@ -52,7 +58,9 @@ void to_json(nlohmann::json& j, netConfig const& o) {
                       { "use_dhcp", o.getUseDHCP() },
                       { "static_ip", ipV4String(o.getStaticIP()) },
                       { "static_gateway", ipV4String(o.getStaticGateway()) },
-                      { "static_netmask", ipV4String(o.getStaticNetmask()) } };
+                      { "static_netmask", ipV4String(o.getStaticNetmask()) },
+                      { "static_dns1", ipV4String(o.getStaticDns1()) },
+                      { "static_dns2", ipV4String(o.getStaticDns2()) } };
 }
 
 void from_json(nlohmann::json const& j, netConfig& o) {
@@ -70,6 +78,12 @@ void from_json(nlohmann::json const& j, netConfig& o) {
   }
   if (j.contains("static_netmask")) {
     o.setStaticNetmask(parseIPV4(j["static_netmask"]));
+  }
+  if (j.contains("static_dns1")) {
+    o.setStaticDns1(parseIPV4(j["static_dns1"]));
+  }
+  if (j.contains("static_dns2")) {
+    o.setStaticDns2(parseIPV4(j["static_dns2"]));
   }
 }
 

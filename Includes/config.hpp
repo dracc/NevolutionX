@@ -16,6 +16,8 @@ class netConfig {
   unsigned int staticGateway;
   unsigned int staticIP;
   unsigned int staticNetmask;
+  unsigned int staticDns1;
+  unsigned int staticDns2;
 
 public:
   netConfig();
@@ -25,12 +27,16 @@ public:
   unsigned int getStaticGateway() const { return staticGateway; }
   unsigned int getStaticIP() const { return staticIP; }
   unsigned int getStaticNetmask() const { return staticNetmask; }
+  unsigned int getStaticDns1() const { return staticDns1; }
+  unsigned int getStaticDns2() const { return staticDns2; }
 
   void setEnabled(bool val) { enable = val; }
   void setUseDHCP(bool val) { useDHCP = val; }
   void setStaticGateway(unsigned int val) { staticGateway = val; }
   void setStaticIP(unsigned int val) { staticIP = val; }
   void setStaticNetmask(unsigned int val) { staticNetmask = val; }
+  void setStaticDns1(unsigned int val) { staticDns1 = val; }
+  void setStaticDns2(unsigned int val) { staticDns2 = val; }
 };
 void to_json(nlohmann::json& j, netConfig const& o);
 void from_json(nlohmann::json const& j, netConfig& o);
