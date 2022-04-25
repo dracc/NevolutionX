@@ -14,6 +14,8 @@ typedef struct _staticIP {
   ip4_addr_t gateway;
   ip4_addr_t ip;
   ip4_addr_t netmask;
+  ip4_addr_t dns1;
+  ip4_addr_t dns2;
 } staticIP;
 
 int setupNetwork(bool useDHCP, staticIP static_ip_info);
