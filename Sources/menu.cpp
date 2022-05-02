@@ -298,7 +298,11 @@ MenuLaunch::~MenuLaunch() {
 void MenuLaunch::execute(Menu*) {
   InfoLog::outputLine(InfoLog::DEBUG, "Launching xbe %s\n", this->path.c_str());
 #ifdef NXDK
-  XBELauncher::launch(path);
+  std::string usePath = path;
+  if (path[0] == 'D') {
+    usePath.replace(0, 2, "\\Device\\CdRom0");
+  }
+  XBELauncher::launch(usePath);
 #endif
 }
 

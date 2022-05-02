@@ -491,6 +491,9 @@ std::string ftpConnection::unixToDosPath(std::string const& path) {
   }
   ret = ret.substr(1, 1) + ":" + path.substr(2, std::string::npos);
   std::replace(ret.begin(), ret.end(), '/', '\\');
+  if (ret[1] == 'D') {
+    ret.replace(1, 2, "Device\\CdRom0");
+  }
   return ret;
 }
 
