@@ -395,7 +395,7 @@ void ftpConnection::cmdRnto(std::string const& arg) {
     fileName = pwd + arg;
   }
 #ifdef NXDK
-  if (MoveFileA(rnfr.c_str(), fileName.c_str())) {
+  if (MoveFileA(unixToDosPath(rnfr).c_str(), unixToDosPath(fileName).c_str())) {
     sendStdString(replies[12]);
   } else {
     sendStdString(replies[13]);
