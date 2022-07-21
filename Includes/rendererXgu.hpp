@@ -22,26 +22,38 @@ public:
   void clear();
   void flip();
 
-  SDL_Renderer* getRenderer() { return renderer; }
   int getWidth() const { return width; }
   int getHeight() const { return height; }
 
   int setDrawColor(uint8_t r = 0x40, uint8_t g = 0x40, uint8_t b = 0xE0, uint8_t a = 0x00);
 
-  void drawTexture(SDL_Texture* tex, SDL_Rect& src, SDL_Rect& dst);
-  void drawTexture(SDL_Texture* tex, SDL_Rect& dst);
-  void drawTexture(SDL_Texture* tex, int x, int y);
+  void drawTexture(Texture* tex, SDL_Rect& src, SDL_Rect& dst);
+  void drawTexture(Texture* tex, SDL_Rect& dst);
+  void drawTexture(Texture* tex, int x, int y);
 
   void fillRectangle(const SDL_Rect& dst);
   void fillRectangle(const SDL_FRect& dst);
-
-  void blitSurface(SDL_Surface* bg, SDL_Surface* fg, int offset);
 
   void drawBackground();
   void initTexture(std::string const& path);
 
 private:
   Texture* background = nullptr;
+
+  XguVec4 v_obj_rot = { 0, 0, 0, 1 };
+  XguVec4 v_obj_scale = { 1, 1, 1, 1 };
+  XguVec4 v_obj_pos = { 0, 0, 0, 1 };
+
+  XguVec4 v_cam_pos = { 0, 0, 240, 1 };
+  XguVec4 v_cam_rot = { 0, 0, 0, 1 };
+  XguVec4 v_light_color = { 1, 1, 1, 1 };
+  XguVec4 v_light_pos = { 0, 140, 0, 1 };
+  XguVec4 v_light_ambient = { 1, 0, 0, 0 };
+
+  XguMatrix4x4 m_model;
+  XguMatrix4x4 m_view;
+  XguMatrix4x4 m_proj;
+  XguMatrix4x4 m_viewport;
 
   uint32_t color;
   int height = 0;
