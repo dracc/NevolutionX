@@ -1,6 +1,7 @@
 {
     "settings":
     {
+        "active_theme_directory": "default",
         "network":
         {
             "enable": true,
