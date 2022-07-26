@@ -18,6 +18,7 @@ SRCS += \
 	$(SRCDIR)/networkManager.cpp \
 	$(SRCDIR)/networking.cpp \
 	$(SRCDIR)/renderer.cpp \
+	$(SRCDIR)/screensaver.cpp \
 	$(SRCDIR)/settingsMenu.cpp \
 	$(SRCDIR)/sntpClient.cpp \
 	$(SRCDIR)/subAppRouter.cpp \
