@@ -23,7 +23,6 @@
 #include <lwip/timeouts.h>
 #include <netif/etharp.h>
 #include <nxdk/mount.h>
-#include <pktdrv.h>
 #include <windows.h> // Used for file I/O
 #include <xboxkrnl/xboxkrnl.h>
 #else
