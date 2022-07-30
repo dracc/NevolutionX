@@ -21,6 +21,7 @@ add_executable(${PROJECT_NAME}
   main.cpp
   Sources/audioMenu.cpp
   Sources/config.cpp
+  Sources/dumper.cpp
   Sources/font.cpp
   Sources/ftpConnection.cpp
   Sources/ftpServer.cpp

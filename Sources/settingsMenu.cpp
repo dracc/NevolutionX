@@ -1,5 +1,6 @@
 #include "settingsMenu.hpp"
 #include "audioMenu.hpp"
+#include "dumper.hpp"
 #include "eeprom.hpp"
 #include "langMenu.hpp"
 #include "logViewerMenu.hpp"
@@ -69,6 +70,7 @@ void settingsMenu::init() {
   addNode(std::make_shared<LangMenu>(this, "Language select"));
   addNode(std::make_shared<TimeMenu>(this, "Timezone select"));
   addNode(std::make_shared<logViewerMenu>(this, "Log viewer"));
+  addNode(std::make_shared<Dumper>("Dump system files"));
   addNode(std::make_shared<MenuExec>("Wipe cache partitions", [](Menu*) { wipe_cache(); }));
   ;
 }
