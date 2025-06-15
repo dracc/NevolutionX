@@ -92,6 +92,10 @@ XBEScanner::QueueItem::~QueueItem() {
 void XBEScanner::QueueItem::scan() {
 #ifdef NXDK
   if (dirHandle == INVALID_HANDLE_VALUE) {
+    auto pathEnd = &path.back();
+    if (strcmp(pathEnd, "\\") != 0) {
+      path.append("\\");
+    }
     InfoLog::outputLine(InfoLog::INFO, "Starting scan of %s", path.c_str());
     results.clear();
     scanStart = std::chrono::steady_clock::now();
