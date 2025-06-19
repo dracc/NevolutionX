@@ -28,8 +28,7 @@ std::string_view switchingMenuItem::getLabel() const {
 togglingEEPROMMenuItem::togglingEEPROMMenuItem(std::string const& label,
                                                uint32_t vI,
                                                uint32_t bmask) :
-    MenuItem(label),
-    bitmask(bmask), valueIndex(vI) {
+    MenuItem(label), bitmask(bmask), valueIndex(vI) {
 
 #ifdef NXDK
   uint32_t Value = getEEPROMValue<uint32_t>(valueIndex);
