@@ -45,7 +45,7 @@ void sntpClient::ntpToNTTime(sntpClient::sntpTimestamp const& ntpTime, uint64_t&
 
 void sntpClient::updateTime() const {
 #ifdef NXDK
-  struct sockaddr saddr {};
+  struct sockaddr saddr{};
   int s = sntpConnect(host, port, saddr);
 
   sntpMessage message{};
@@ -114,7 +114,7 @@ static int sntpConnect(std::string const& sntpHost, uint32_t port, struct sockad
     return -1;
   }
 
-  struct addrinfo hints {};
+  struct addrinfo hints{};
   hints.ai_family = PF_INET;
   hints.ai_socktype = SOCK_DGRAM;
   hints.ai_flags = AI_PASSIVE;
