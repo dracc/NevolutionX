@@ -18,11 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone Tree
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Clone nxdk
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: XboxDev/nxdk
           path: nxdk
@@ -39,7 +39,7 @@ jobs:
           eval $(./nxdk/bin/activate -s)
           make -j$(nproc)
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: NevolutionX
           path: |
