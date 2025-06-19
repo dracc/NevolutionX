@@ -23,9 +23,8 @@ public:
          uint32_t dststart,
          int32_t stdbias,
          int32_t dstbias) :
-      name(name),
-      bias(bias), stdname(stdname), dstname(dstname), stdstart(stdstart),
-      dststart(dststart), stdbias(stdbias), dstbias(dstbias){};
+      name(name), bias(bias), stdname(stdname), dstname(dstname), stdstart(stdstart),
+      dststart(dststart), stdbias(stdbias), dstbias(dstbias) {};
 };
 
 class TimeItem : public MenuItem {
