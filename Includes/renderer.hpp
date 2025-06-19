@@ -2,6 +2,7 @@
 #define RENDERER_H
 
 #include <SDL.h>
+#include <string>
 #include <vector>
 
 int min(int lhs, int rhs);
@@ -13,7 +14,7 @@ public:
   ~Renderer();
 
   int init();
-  int init(const char* bg);
+  int init(std::string const& backgroundImagePath);
   int clear();
   void flip();
 

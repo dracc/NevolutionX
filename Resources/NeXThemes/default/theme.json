@@ -1,0 +1,11 @@
+{
+    "title": "Default",
+    "background": {
+        "480": "480.png",
+        "720": "720.png"
+    },
+    "menu": {
+        "font": "vegur.ttf",
+        "font_color": "FFFFFF"
+    }
+}

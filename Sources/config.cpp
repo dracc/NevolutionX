@@ -226,16 +226,20 @@ void from_json(nlohmann::json const& j, homescreenConfig& o) {
 }
 
 void to_json(nlohmann::json& j, Settings const& o) {
-  j = nlohmann::json{ { "ftp", nlohmann::json(o.ftp) },
+  j = nlohmann::json{ { "active_theme_directory", o.activeThemeDirectory },
+                      { "ftp", nlohmann::json(o.ftp) },
                       { "mount", nlohmann::json(o.mount) },
 #ifdef NXDK
                       { "network", nlohmann::json(o.net) },
 #endif
                       { "logging", nlohmann::json(o.logging) },
-                      { "homescreenConfig", nlohmann::json(o.homescreen) } };
+                      { "homescreen", nlohmann::json(o.homescreen) } };
 }
 
 void from_json(nlohmann::json const& j, Settings& o) {
+  if (j.contains("active_theme_directory")) {
+    o.activeThemeDirectory = j["active_theme_directory"];
+  }
   if (j.contains("ftp")) {
     o.ftp = j["ftp"].get<ftpConfig>();
   }
