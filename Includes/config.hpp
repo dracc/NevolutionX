@@ -137,6 +137,22 @@ public:
 void to_json(nlohmann::json& j, homescreenConfig const& o);
 void from_json(nlohmann::json const& j, homescreenConfig& o);
 
+class screensaverConfig {
+  bool enabled{ true };
+  unsigned int timeoutMillis{ 5 * 60 * 1000 };
+
+public:
+  screensaverConfig() = default;
+
+  bool getEnabled() const { return enabled; }
+  unsigned int getTimeoutMillis() const { return timeoutMillis; }
+
+  void setEnabled(bool val) { enabled = val; }
+  void setTimeoutMillis(unsigned int val) { timeoutMillis = val; }
+};
+void to_json(nlohmann::json& j, screensaverConfig const& o);
+void from_json(nlohmann::json const& j, screensaverConfig& o);
+
 class Settings {
 public:
   Settings() = default;
@@ -148,6 +164,7 @@ public:
   mountConfig mount;
   loggingConfig logging;
   homescreenConfig homescreen;
+  screensaverConfig screensaver;
 };
 void to_json(nlohmann::json& j, Settings const& o);
 void from_json(nlohmann::json const& j, Settings& o);
