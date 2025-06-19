@@ -6,6 +6,7 @@
 #include <list>
 #include <mutex>
 #include <queue>
+#include <string>
 #include <thread>
 #include <utility>
 #include <vector>
